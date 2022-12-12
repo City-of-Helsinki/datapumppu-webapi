@@ -1,0 +1,7 @@
+.vs/
+WebAPI/obj/
+WebAPI/bin/
+WebAPI/WebComponents/*/dist/
+WebAPI/WebComponents/*/node_modules/
+WebAPI/ScriptFiles/components/*.js
+WebAPI/*.csproj.user
