@@ -23,7 +23,10 @@ namespace WebAPI
             });
 
             builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
-            builder.Services.AddHostedService<LiveMeetingObserver>();
+            
+            
+            // Removed for now, until we know what to do about it
+            //builder.Services.AddHostedService<LiveMeetingObserver>();
 
             var app = builder.Build();
 
