@@ -12,6 +12,8 @@ namespace WebAPI
 
             builder.Services.AddControllers();
 
+            builder.Services.AddHealthChecks();
+
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -42,6 +44,8 @@ namespace WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<LiveMeetingsHub>("/live");
+                endpoints.MapHealthChecks("/healthz");
+                endpoints.MapHealthChecks("/readiness");
             });
 
             app.Run();
