@@ -1,70 +1,41 @@
 
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import parse from 'html-react-parser';
-
+import EditableItem from './EditableItem';
+import { useTranslation } from 'react-i18next';
 
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = React.useState(false)
     const agenda = props.agenda
     const index = props.index
-    const style = {
-        item: {
-            flexDirection: "row",
-            backgroundColor: accordionOpen ? '#ECECEC' : 'white',
-            width: '100%',
-            padding: '15px',
-            margin: '4px'
-
-        },
-        title: {
-            fontWeight: 'bold',
-        },
-        content: {
-            paddingTop: '15px'
-        },
-        icon: {
-            fontSize: '10px',
-            paddingRight: '10px',
-        },
-        attachment: {
-            paddingBottom: '15px'
-        }
-    }
-
-    return (
-        <div style={style.item}>
-            <div role="button" aria-pressed="false" style={style.title} onClick={() => setAccordionOpen(!accordionOpen)}>
-                <span style={style.icon} className={
+    const { t } = useTranslation();
+    
+        return (
+        <div className={accordionOpen ? "item item-open" : 'item'}>
+            <button className='agendaTitleButton' onClick={() => setAccordionOpen(!accordionOpen)}>
+                <span className={
                     accordionOpen
-                        ? "glyphicon glyphicon-triangle-top"
-                        : "glyphicon glyphicon-triangle-bottom"
+                        ? "icon glyphicon glyphicon-triangle-top"
+                        : "icon glyphicon glyphicon-triangle-bottom"
                 } />
                 {index}. {agenda.subject}
-            </div>
+            </button>
             {accordionOpen &&
-                <div style={style.content} >
+                <div className='content' >
                     {agenda.attachments?.map((attachment, index) => {
                         return (
-                            <div style={style.attachment} key={'attach'+index}>
-                                Liite {index + 1} {''}
+                            <div className='attachment' key={'attach' + index}>
+                                {t("Attachment")} {index + 1} {''}
                                 {attachment.public ?
                                     <a href={attachment.file_uri}>{attachment.name}</a>
-                                    : 'Ei-julkinen'}
+                                    : t("Non-public")}
                             </div>
                         )
 
                     })}
                     {agenda.content?.map((resolution, index) => {
                         return (
-                            <div key={'res'+index}>
-                                <div style={style.title}>
-                                    {resolution.type}
-                                </div>
-                                <div>
-                                    {parse(resolution.text)}
-                                </div>
-                            </div>
+                            <EditableItem resolution={resolution} key={'res' + index} />
                         )
                     })}
                 </div>
