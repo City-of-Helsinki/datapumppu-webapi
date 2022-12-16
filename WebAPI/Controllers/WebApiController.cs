@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -12,6 +13,14 @@ namespace WebAPI.Controllers
         public IActionResult Get()
         {
             return new OkObjectResult(new { text = "button text from the api" });
+        }
+        [HttpGet]
+        [Route("translations")]
+        public async Task<IActionResult> GetTranslations(string lang)
+        {
+            var text = await System.IO.File
+                .ReadAllTextAsync("./Resources/"+lang+"/translation.json");     
+            return File(Encoding.UTF8.GetBytes(text), "application/json");
         }
 
         [HttpGet]

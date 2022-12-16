@@ -1,5 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const stylesHandler = MiniCssExtractPlugin.loader;
 
 module.exports = {
   // Where files should be sent once they are bundled
@@ -11,6 +13,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "test-page", "test-page.html"),
     }),
+    new MiniCssExtractPlugin(),
+
   ],
   // webpack 5 comes with devServer which loads in development mode
   devServer: {
@@ -24,14 +28,14 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /nodeModules/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader'
         }
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        test: /\.css$/i,
+        use: [stylesHandler, "css-loader"],
       }
     ]
   }
