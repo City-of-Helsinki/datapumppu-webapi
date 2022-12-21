@@ -1,19 +1,14 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controllers.Filters;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api")]
-    public class WebApiController : ControllerBase
+    [TypeFilter(typeof(WebAPIExceptionFilter))]
+    public class TranslationsController : ControllerBase
     {
-
-        [HttpGet]
-        [Route("buttontext")]
-        public IActionResult Get()
-        {
-            return new OkObjectResult(new { text = "button text from the api" });
-        }
         [HttpGet]
         [Route("translations")]
         public async Task<IActionResult> GetTranslations(string lang)
@@ -22,13 +17,5 @@ namespace WebAPI.Controllers
                 .ReadAllTextAsync("./Resources/"+lang+"/translation.json");     
             return File(Encoding.UTF8.GetBytes(text), "application/json");
         }
-
-        [HttpGet]
-        [Route("health")]
-        public IActionResult HealthCheck()
-        {
-            return Ok();
-        }
-
     }
 }

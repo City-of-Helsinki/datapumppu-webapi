@@ -1,36 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using WebAPI.Controllers.Filters;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("components")]
+    [TypeFilter(typeof(WebAPIExceptionFilter))]
     public class WebComponentsController : ControllerBase
     {
 
         private readonly IConfiguration _configuration;
+        private ILogger<WebComponentsController> _logger;
 
-        public WebComponentsController(IConfiguration configuration)
+        public WebComponentsController(IConfiguration configuration,
+            ILogger<WebComponentsController> logger)
         {
             _configuration = configuration;
-        }
-
-        [HttpGet]
-        [Route("example.js")]
-        public async Task<IActionResult> GetExample()
-        {
-            var text = await System.IO.File
-                .ReadAllTextAsync("./ScriptFiles/components/example.js");
-            var apiUrl = _configuration["API_URL"];
-            
-            if (apiUrl == null) 
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            text = text.Replace("#--API_URL--#", apiUrl);
-
-            return File(Encoding.UTF8.GetBytes(text), "application/javascript");
+            _logger = logger;
         }
 
         [HttpGet]
@@ -55,6 +42,8 @@ namespace WebAPI.Controllers
         [Route("meeting.js")]
         public async Task<IActionResult> GetMeeting()
         {
+            _logger.LogInformation("GET meeting.js");
+
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/meeting.js");
             var apiUrl = _configuration["API_URL"];
@@ -73,6 +62,8 @@ namespace WebAPI.Controllers
         [Route("decision.js")]
         public async Task<IActionResult> GetDecision()
         {
+            _logger.LogInformation("GET decision.js");
+
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/decision.js");
             var apiUrl = _configuration["API_URL"];
