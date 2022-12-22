@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import EditableItem from './EditableItem';
 import { useTranslation } from 'react-i18next';
-import './theme.css'
 
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = React.useState(false)

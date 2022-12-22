@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react'
 import AgendaItem from './AgendaItem'
-import './theme.css'
+
 export default function Meeting() {
     const [agenda, setAgenda] = React.useState([]);
     useEffect(() => {
