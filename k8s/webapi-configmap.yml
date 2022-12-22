@@ -6,3 +6,4 @@ metadata:
 data:
   ServiceBusTopicName: <Servicebus Topic Name>
   ApiUrl: <#--API_URL--#>
+  StorageUrl: <#--STORAGE_URL--#>

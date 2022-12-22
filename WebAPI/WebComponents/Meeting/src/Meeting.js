@@ -1,11 +1,12 @@
 
 import React, { useEffect } from 'react'
 import AgendaItem from './AgendaItem'
+import './theme.css'
 export default function Meeting() {
     const [agenda, setAgenda] = React.useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            await fetch('http://localhost:5154/api/meetinginfo/meeting/2022/20', { mode: 'cors' })
+            await fetch('#--STORAGE_URL--#/api/meetinginfo/meeting/2022/20')
                 .then(async (res) => {
                     return await res.json()
                 })
