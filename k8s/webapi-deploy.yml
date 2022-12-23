@@ -40,6 +40,11 @@ spec:
                 configMapKeyRef:
                   name: webapi-configmap
                   key: ApiUrl
+            - name: STORAGE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: webapi-configmap
+                  key: StorageUrl
           imagePullPolicy: Always
           readinessProbe:
             httpGet:

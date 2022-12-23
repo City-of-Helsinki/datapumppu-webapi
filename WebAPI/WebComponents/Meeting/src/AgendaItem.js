@@ -18,11 +18,13 @@ export default function AgendaItem(props) {
                         ? "icon glyphicon glyphicon-triangle-top"
                         : "icon glyphicon glyphicon-triangle-bottom"
                 } />
-                {index}. {agenda.subject}
+                {index}. {agenda.title}
             </button>
             {accordionOpen &&
                 <div className='content' >
-                    {agenda.attachments?.map((attachment, index) => {
+                    {/* 
+                    commented out for now as attachments are not returned within agendas yet!!
+                     {agenda.attachments?.map((attachment, index) => {
                         return (
                             <div className='attachment' key={'attach' + index}>
                                 {t("Attachment")} {index + 1} {''}
@@ -32,12 +34,8 @@ export default function AgendaItem(props) {
                             </div>
                         )
 
-                    })}
-                    {agenda.content?.map((resolution, index) => {
-                        return (
-                            <EditableItem resolution={resolution} key={'res' + index} />
-                        )
-                    })}
+                    })} */}
+                    {agenda.html && <div dangerouslySetInnerHTML={{__html: agenda.html}} />}
                 </div>
             }
         </div>

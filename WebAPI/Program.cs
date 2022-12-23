@@ -1,4 +1,5 @@
 using WebAPI.LiveMeetings;
+using WebAPI.StorageClient;
 
 namespace WebAPI
 {
@@ -23,6 +24,9 @@ namespace WebAPI
                     builder.SetIsOriginAllowed(_ => true);
                 });
             });
+
+            builder.Services.AddScoped<IStorageApiClient, StorageApiClient>();
+            builder.Services.AddScoped<IStorageConnection, StorageConnection>();
 
             builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
             
