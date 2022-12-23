@@ -8,11 +8,14 @@ export default function Meeting() {
         const fetchData = async () => {
             await fetch('#--API_URL--#/meetings/meeting?year=#--MEETING_YEAR--#&sequenceNumber=#--MEETING_SEQUENCE_NUM--#')
                 .then(async (res) => {
-                    return await res.json()
+                    if (res.status !== 204) {
+                        return await res.json()
+                    }
                 })
                 .then((json) => {
-                    console.log(json)
-                    setAgenda(json.agendas)
+                    if (json && Object.keys(json).length > 0) {
+                        setAgenda(json.agendas)
+                    }
                 })
         }
         fetchData()

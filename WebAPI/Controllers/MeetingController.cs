@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
 using WebAPI.StorageClient;
 
@@ -23,12 +22,16 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("meeting")]
-        public async Task<StorageMeetingDTO> GetMeeting(string year, string sequenceNumber)
+        public async Task<IActionResult> GetMeeting(string year, string sequenceNumber)
         {
             _logger.LogInformation("Executing GetMeeting()");
             var meeting = await _storageApiClient.RequestMeeting(year, sequenceNumber);
+            if (meeting == null)
+            {
+                return NoContent();
+            }
 
-            return meeting;
+            return Ok(meeting);
         }
     }
-}
+};
