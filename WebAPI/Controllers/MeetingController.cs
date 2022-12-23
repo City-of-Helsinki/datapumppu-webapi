@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.DTOs;
+using WebAPI.Controllers.Filters;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("meetings")]
+    [TypeFilter(typeof(WebAPIExceptionFilter))]
     public class MeetingController: ControllerBase
     {
         private readonly IConfiguration _configuration;
