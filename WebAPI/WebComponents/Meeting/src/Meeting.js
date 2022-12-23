@@ -6,7 +6,7 @@ export default function Meeting() {
     const [agenda, setAgenda] = React.useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            await fetch('#--STORAGE_URL--#/api/meetinginfo/meeting/2022/20')
+            await fetch('#--API_URL--#/meetings/next')
                 .then(async (res) => {
                     return await res.json()
                 })
