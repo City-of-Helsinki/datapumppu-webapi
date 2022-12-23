@@ -54,8 +54,8 @@ namespace WebAPI.Controllers
             }
 
             text = text.Replace("#--API_URL--#", apiUrl);
-            text = text.Replace("#--YEAR--#", year);
-            text = text.Replace("#--SEQUENCE_NUM--#", sequenceNumber);
+            text = text.Replace("#--MEETING_YEAR--#", year);
+            text = text.Replace("#--MEETING_SEQUENCE_NUM--#", sequenceNumber);
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
 
