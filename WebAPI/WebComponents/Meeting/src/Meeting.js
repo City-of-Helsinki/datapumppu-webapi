@@ -20,7 +20,7 @@ export default function Meeting() {
 
     return (
         <div className="container">
-            {agenda.map((agendaItem, index) => {
+            {agenda?.map((agendaItem, index) => {
                 return <AgendaItem key={index} index={index + 1} agenda={agendaItem} />
             })}
         </div>
