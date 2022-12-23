@@ -20,11 +20,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("next")]
-        public async Task<StorageMeetingDTO> GetMeeting()
+        [Route("meeting")]
+        public async Task<StorageMeetingDTO> GetMeeting(string year, string sequenceNumber)
         {
             _logger.LogInformation("Executing GetMeeting()");
-            var meeting = await _storageApiClient.RequestMeeting("2022", "20");
+            var meeting = await _storageApiClient.RequestMeeting(year, sequenceNumber);
 
             return meeting;
         }

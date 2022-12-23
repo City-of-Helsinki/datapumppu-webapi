@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("meeting.js")]
-        public async Task<IActionResult> GetMeeting()
+        public async Task<IActionResult> GetMeeting(string year, string sequenceNumber)
         {
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/meeting.js");
@@ -65,7 +65,8 @@ namespace WebAPI.Controllers
             }
 
             text = text.Replace("#--API_URL--#", apiUrl);
-
+            text = text.Replace("#--YEAR--#", year);
+            text = text.Replace("#--SEQUENCE_NUM--#", sequenceNumber);
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
 
