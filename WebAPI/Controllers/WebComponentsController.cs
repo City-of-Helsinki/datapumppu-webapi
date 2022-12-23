@@ -57,14 +57,14 @@ namespace WebAPI.Controllers
         {
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/meeting.js");
-            var storageUrl = _configuration["STORAGE_URL"];
+            var apiUrl = _configuration["API_URL"];
 
-            if (storageUrl == null) 
+            if (apiUrl == null) 
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            text = text.Replace("#--STORAGE_URL--#", storageUrl);
+            text = text.Replace("#--API_URL--#", apiUrl);
 
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
