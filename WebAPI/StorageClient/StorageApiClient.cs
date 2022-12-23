@@ -27,7 +27,8 @@ namespace WebAPI.StorageClient
             _logger.LogInformation("Executing RequestMeeting()");
             using var connection = _storageConnection.CreateConnection();
             var response = await connection.GetAsync($"api/meetinginfo/meeting/{year}/{sequenceNumber}");
-            if((int)response.StatusCode == StatusCodes.Status204NoContent){
+            if ((int)response.StatusCode == StatusCodes.Status204NoContent)
+            {
                 return null;
             }
 

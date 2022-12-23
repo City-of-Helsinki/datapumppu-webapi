@@ -26,7 +26,8 @@ namespace WebAPI.Controllers
         {
             _logger.LogInformation("Executing GetMeeting()");
             var meeting = await _storageApiClient.RequestMeeting(year, sequenceNumber);
-            if(meeting == null){
+            if (meeting == null)
+            {
                 return NoContent();
             }
 
