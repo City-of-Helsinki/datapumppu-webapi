@@ -7,7 +7,7 @@ namespace WebAPI.StorageClient
 {
     public interface IStorageApiClient
     {
-        Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber);
+        Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -22,11 +22,11 @@ namespace WebAPI.StorageClient
             _storageConnection = storageConnection;
         }
 
-        public async Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber)
+        public async Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language)
         {
             _logger.LogInformation("Executing RequestMeeting()");
             using var connection = _storageConnection.CreateConnection();
-            var response = await connection.GetAsync($"api/meetinginfo/meeting/{year}/{sequenceNumber}");
+            var response = await connection.GetAsync($"api/meetinginfo/meeting/{year}/{sequenceNumber}/{language}");
             if ((int)response.StatusCode == StatusCodes.Status204NoContent)
             {
                 return null;

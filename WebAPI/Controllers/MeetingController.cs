@@ -22,10 +22,10 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("meeting")]
-        public async Task<IActionResult> GetMeeting(string year, string sequenceNumber)
+        public async Task<IActionResult> GetMeeting(string year, string sequenceNumber, string lang)
         {
             _logger.LogInformation("Executing GetMeeting()");
-            var meeting = await _storageApiClient.RequestMeeting(year, sequenceNumber);
+            var meeting = await _storageApiClient.RequestMeeting(year, sequenceNumber, lang);
             if (meeting == null)
             {
                 return NoContent();
