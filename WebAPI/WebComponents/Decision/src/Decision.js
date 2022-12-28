@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 export default function Decision () {
   // Declare a new state variable, which we'll call "count"
   const [count, setCount] = React.useState(0)
-  const [decisionHtml, setDecisionHtml] = React.useState('')
+  const [motionHtml, setMotionHtml] = React.useState('')
   const [attachments, setAttachments] = React.useState(undefined)
   const [title, setTitle] = React.useState('')
 
@@ -13,12 +13,12 @@ export default function Decision () {
     const fetchData = async () => {
       const response = await fetch('#--API_URL--#/decisions/#--CASE_ID_LABEL--#/#--LANG--#"')
       const decision = await response.json()
-      setDecisionHtml(decision.motion)
+      setMotionHtml(decision.motion)
       setAttachments(decision.attachments)
       setTitle(decision.title)
     }
     fetchData()
-  }, [setDecisionHtml])
+  }, [setMotionHtml])
 
   console.log("title", title)
 
@@ -27,7 +27,7 @@ export default function Decision () {
     <div>
       <h3>{title}</h3>
       <div>
-        {decisionHtml && <div dangerouslySetInnerHTML={{ __html: decisionHtml }} />}
+        {motionHtml && <div dangerouslySetInnerHTML={{ __html: motionHtml }} />}
       </div>
       <h4>{lang.toLowerCase() == 'fi' ? "Linkit" : "Hyperlänkar"}</h4>
       <div>
