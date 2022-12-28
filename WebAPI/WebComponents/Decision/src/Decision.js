@@ -22,13 +22,14 @@ export default function Decision () {
 
   console.log("title", title)
 
+  const lang = "#--LANG--#"
   return (
     <div>
       <h3>{title}</h3>
       <div>
         {decisionHtml && <div dangerouslySetInnerHTML={{ __html: decisionHtml }} />}
       </div>
-      <h4>{"#--LANG--#" === "fi" ? "Linkit" : "Hyperlänkar"}</h4>
+      <h4>{lang.toLowerCase() == 'fi' ? "Linkit" : "Hyperlänkar"}</h4>
       <div>
         <ul>
         {attachments && attachments.map((attachment, index) =>          
