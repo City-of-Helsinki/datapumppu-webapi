@@ -75,11 +75,9 @@ namespace WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            //text = text.Replace("#--API_URL--#", apiUrl);0
             text = text.Replace("#--API_URL--#", apiUrl);
             text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
             text = text.Replace("#--LANG--#", lang);
-
 
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }

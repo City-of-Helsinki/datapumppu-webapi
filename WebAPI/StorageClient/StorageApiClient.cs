@@ -9,7 +9,7 @@ namespace WebAPI.StorageClient
     {
         Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language);
 
-        Task<StorageDecisionDTO> RequestDecision(string caseIdLabel, string language);
+        Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -37,9 +37,9 @@ namespace WebAPI.StorageClient
             return await response.Content.ReadFromJsonAsync<StorageMeetingDTO>();
         }
 
-        public async Task<StorageDecisionDTO> RequestDecision(string caseIdLabel, string language)
+        public async Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language)
         {
-            _logger.LogInformation("Executing RequestMeeting()");
+            _logger.LogInformation("Executing RequestDecision()");
             using var connection = _storageConnection.CreateConnection();
             var response = await connection.GetAsync($"api/decisions/{caseIdLabel}/{language}");
             var decision = await response.Content.ReadFromJsonAsync<StorageDecisionDTO>();
