@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("decision.js")]
-        public async Task<IActionResult> GetDecision()
+        public async Task<IActionResult> GetDecision(string caseIdLabel, string lang)
         {
             _logger.LogInformation("GET decision.js");
 
@@ -76,7 +76,9 @@ namespace WebAPI.Controllers
             }
 
             text = text.Replace("#--API_URL--#", apiUrl);
-            
+            text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
+            text = text.Replace("#--LANG--#", lang);
+
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
     }
