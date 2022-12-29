@@ -61,6 +61,28 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("pages/decision.html")]
+        public async Task<IActionResult> GetDecisionPage(string caseIdLabel, string lang)
+        {
+            _logger.LogInformation("GET GetDecisionPage");
+
+            var text = await System.IO.File
+                .ReadAllTextAsync("./Pages//decision-page.html");
+            var apiUrl = _configuration["API_URL"];
+
+            if (apiUrl == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            text = text.Replace("#--API_URL--#", apiUrl);
+            text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
+            text = text.Replace("#--LANG--#", lang);
+
+            return Content(text, "text/html");
+        }
+
+        [HttpGet]
         [Route("decision.js")]
         public async Task<IActionResult> GetDecision(string caseIdLabel, string lang)
         {
