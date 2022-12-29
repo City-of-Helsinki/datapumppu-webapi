@@ -1,6 +1,8 @@
 
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import { jsPDF } from "jspdf";
+import { html2canvas } from "html2canvas";
 
 export default function Decision () {
   // Declare a new state variable, which we'll call "count"
@@ -20,21 +22,32 @@ export default function Decision () {
     fetchData()
   }, [setMotionHtml])
 
-  console.log("title", title)
+  const downloadAsPdf = (e) => {
+    e.preventDefault()
+    let doc = new jsPDF("landscape", 'pt', 'A4');
+    doc.html(document.getElementById('element-to-print'), {
+      callback: () => {
+        doc.save('#--CASE_ID_LABEL--#.pdf');
+      }
+    })
+  }
 
-  const lang = "#--LANG--#"
+  const lang = "#--LANG--#".toLowerCase()
   return (
     <div>
-      <h3>{title}</h3>
-      <div>
-        {motionHtml && <div dangerouslySetInnerHTML={{ __html: motionHtml }} />}
+      <button onClick={downloadAsPdf}>{lang === 'fi' ? 'Lataa PDF' : 'Ladda PDF'} </button>
+      <div id="element-to-print">
+        <h3>{title}</h3>
+        <div>
+          {motionHtml && <div dangerouslySetInnerHTML={{ __html: motionHtml }} />}
+        </div>
+        <h4>{lang === 'fi' ? "Linkit" : "Hyperlänkar"}</h4>
       </div>
-      <h4>{lang.toLowerCase() == 'fi' ? "Linkit" : "Hyperlänkar"}</h4>
       <div>
         <ul>
-        {attachments && attachments.map((attachment, index) =>          
-          <li key={index}><a href={attachment.fileURI}>{attachment.title}</a></li>
-        )}
+          {attachments && attachments.map((attachment, index) =>          
+            <li key={index}><a href={attachment.fileURI}>{attachment.title}</a></li>
+          )}
         </ul>
       </div>
     </div>
