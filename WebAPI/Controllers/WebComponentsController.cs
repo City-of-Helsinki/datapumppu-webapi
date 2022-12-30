@@ -61,6 +61,29 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("pages/motion.html")]
+        public async Task<IActionResult> GetMotionPage(string caseIdLabel, string lang)
+        {
+            _logger.LogInformation("GET GetMotionPage");
+
+            var text = await System.IO.File
+                .ReadAllTextAsync("./Pages//decision-page.html");
+            var apiUrl = _configuration["API_URL"];
+
+            if (apiUrl == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            text = text.Replace("#--API_URL--#", apiUrl);
+            text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
+            text = text.Replace("#--LANG--#", lang);
+            text = text.Replace("#--SHOW_MOTION--#", "true");
+
+            return Content(text, "text/html");
+        }
+
+        [HttpGet]
         [Route("pages/decision.html")]
         public async Task<IActionResult> GetDecisionPage(string caseIdLabel, string lang)
         {
@@ -78,13 +101,14 @@ namespace WebAPI.Controllers
             text = text.Replace("#--API_URL--#", apiUrl);
             text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
             text = text.Replace("#--LANG--#", lang);
+            text = text.Replace("#--SHOW_MOTION--#", "false");
 
             return Content(text, "text/html");
         }
 
         [HttpGet]
         [Route("decision.js")]
-        public async Task<IActionResult> GetDecision(string caseIdLabel, string lang)
+        public async Task<IActionResult> GetDecision(string caseIdLabel, string lang, bool showMotion)
         {
             _logger.LogInformation("GET decision.js");
 
@@ -100,6 +124,7 @@ namespace WebAPI.Controllers
             text = text.Replace("#--API_URL--#", apiUrl);
             text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
             text = text.Replace("#--LANG--#", lang);
+            text = text.Replace("#--SHOW_CONTENT--#", showMotion ? "motion" : "decision");
 
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
