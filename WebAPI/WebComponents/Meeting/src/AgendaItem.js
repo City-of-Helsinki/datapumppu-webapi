@@ -11,7 +11,9 @@ export default function AgendaItem(props) {
     const { t } = useTranslation();
     
     const decisionResolutionText = t('Decision resolution')
-    const decisionPathText = t('Open')
+    const decisionText = t('Decision')
+    const openText = t('Open')
+    const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=fi`
     const decisionPath = `#--API_URL--#/components/pages/decision.html?caseIdLabel=${agenda.caseIDLabel}&lang=fi`
         return (
         <div className={accordionOpen ? "item item-open" : 'item'}>
@@ -26,9 +28,14 @@ export default function AgendaItem(props) {
             {accordionOpen &&
                 <div className='content'>
                     {agenda.caseIDLabel &&
+                    <div>
                         <div>
-                            {decisionResolutionText} <a href={decisionPath}>{decisionPathText}</a>
+                            {decisionResolutionText} <a href={motionPath}>{openText}</a>
                         </div>
+                        <div>
+                            {decisionText} <a href={decisionPath}>{openText}</a>
+                        </div>
+                    </div>
                     }
                     {/* 
                     commented out for now as attachments are not returned within agendas yet!!

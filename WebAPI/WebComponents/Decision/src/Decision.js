@@ -6,8 +6,7 @@ import { html2canvas } from "html2canvas";
 
 export default function Decision () {
   // Declare a new state variable, which we'll call "count"
-  const [count, setCount] = React.useState(0)
-  const [motionHtml, setMotionHtml] = React.useState('')
+  const [contentHtml, setContentHtml] = React.useState('')
   const [attachments, setAttachments] = React.useState(undefined)
   const [title, setTitle] = React.useState('')
 
@@ -15,12 +14,15 @@ export default function Decision () {
     const fetchData = async () => {
       const response = await fetch('#--API_URL--#/decisions/#--CASE_ID_LABEL--#/#--LANG--#"')
       const decision = await response.json()
-      setMotionHtml(decision.motion)
+
+      const show = "#--SHOW_CONTENT--#"
+
+      setContentHtml(show.toLocaleLowerCase() === "motion" ? decision.motion : decision.html)
       setAttachments(decision.attachments)
       setTitle(decision.title)
     }
     fetchData()
-  }, [setMotionHtml])
+  }, [setContentHtml])
 
   const downloadAsPdf = (e) => {
     e.preventDefault()
@@ -39,7 +41,7 @@ export default function Decision () {
       <div id="element-to-print">
         <h3>{title}</h3>
         <div>
-          {motionHtml && <div dangerouslySetInnerHTML={{ __html: motionHtml }} />}
+          {contentHtml && <div dangerouslySetInnerHTML={{ __html: contentHtml }} />}
         </div>
         <h4>{lang === 'fi' ? "Linkit" : "Hyperlänkar"}</h4>
       </div>
