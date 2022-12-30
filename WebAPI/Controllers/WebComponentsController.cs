@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
         [Route("pages/motion.html")]
         public async Task<IActionResult> GetMotionPage(string caseIdLabel, string lang)
         {
-            _logger.LogInformation("GET GetDecisionPage");
+            _logger.LogInformation("GET GetMotionPage");
 
             var text = await System.IO.File
                 .ReadAllTextAsync("./Pages//decision-page.html");
