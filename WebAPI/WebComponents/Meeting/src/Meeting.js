@@ -23,7 +23,7 @@ export default function Meeting() {
 
     return (
         <div className="container">
-            {agenda?.map((agendaItem, index) => {
+            {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
                 return <AgendaItem key={index} index={index + 1} agenda={agendaItem} />
             })}
         </div>
