@@ -1,11 +1,10 @@
-
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
-import EditableItem from './EditableItem';
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next';
+import SeatMap from './SeatMap'
 
 export default function AgendaItem(props) {
-    const [accordionOpen, setAccordionOpen] = React.useState(false)
+    const [accordionOpen, setAccordionOpen] = useState(false)
+    const [showSeatMap, setShowSeatMap] = useState(false)
     const agenda = props.agenda
     const index = props.index
     const { t } = useTranslation();
@@ -51,6 +50,18 @@ export default function AgendaItem(props) {
 
                     })} */}
                     {agenda.html && <div dangerouslySetInnerHTML={{__html: agenda.html}} />}
+
+                    <div onClick={() => setShowSeatMap(!showSeatMap)}>
+                        <span className={
+                            showSeatMap
+                                ? "icon glyphicon glyphicon-triangle-top"
+                                : "icon glyphicon glyphicon-triangle-bottom"
+                        } 
+                        />
+                        <bold>{t("Show seat map")}</bold>
+                    </div>
+
+                    {showSeatMap && <SeatMap></SeatMap>}
                 </div>
             }
         </div>
