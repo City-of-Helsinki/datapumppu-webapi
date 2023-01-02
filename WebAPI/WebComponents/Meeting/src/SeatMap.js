@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import SeatRow from './SeatRow'
 
-const champer = {
+const champerStyle = {
     fontSize: "65%",
     height: "60em",
     pageBreakInside: "avoid",
@@ -103,7 +103,7 @@ export default function SeatMap() {
     }
 
     return (
-        <div style={champer}>
+        <div style={champerStyle}>
             <SeatRow seats={seats}></SeatRow>
             <SeatRow rowNr={0} seats={seats}></SeatRow>
             <SeatRow rowNr={1} seats={seats}></SeatRow>
