@@ -118,8 +118,3 @@ export default function SeatMap() {
         </div>
     )
 }
-
-
-
-
-
