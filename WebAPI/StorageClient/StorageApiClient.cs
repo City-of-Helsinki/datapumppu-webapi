@@ -10,6 +10,8 @@ namespace WebAPI.StorageClient
         Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language);
 
         Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language);
+
+        Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -47,5 +49,14 @@ namespace WebAPI.StorageClient
             return decision;
         }
 
+        public async Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber)
+        {
+            _logger.LogInformation("Executing RequestSeats()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/seats/{meetingId}/{caseNumber}");
+            var seats = await response.Content.ReadFromJsonAsync<SeatDTO[]>();
+
+            return seats?.ToList() ?? new List<SeatDTO>();
+        }
     }
 }

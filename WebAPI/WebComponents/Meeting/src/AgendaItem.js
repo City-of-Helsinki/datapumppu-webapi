@@ -5,8 +5,7 @@ import SeatMap from './SeatMap'
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
     const [showSeatMap, setShowSeatMap] = useState(false)
-    const agenda = props.agenda
-    const index = props.index
+    const { agenda, index, meetingId } = props
     const { t } = useTranslation();
     
     const decisionResolutionText = t('Decision resolution')
@@ -61,7 +60,7 @@ export default function AgendaItem(props) {
                         <bold>{t("Show seat map")}</bold>
                     </div>
 
-                    {showSeatMap && <SeatMap></SeatMap>}
+                    {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}
                 </div>
             }
         </div>
