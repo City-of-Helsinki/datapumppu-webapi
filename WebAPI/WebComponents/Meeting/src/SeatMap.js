@@ -34,9 +34,14 @@ export default function SeatMap(props) {
         const tempSeatMap = []
         seats.forEach(seat => {
             if (!isNaN(seat.seatId)) {
-                tempSeatMap[Number(seat.seatId)] = {
-                    name: seat.personFI
+
+                let name = seat.person;
+                if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+                    name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
+                } else {
+                    name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
                 }
+                tempSeatMap[Number(seat.seatId)] = { name }
             }
         })
 
