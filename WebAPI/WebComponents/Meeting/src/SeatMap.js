@@ -40,8 +40,7 @@ export default function SeatMap(props) {
             }
         })
 
-        setSeatMap(tempSeatMap)
-        console.log("tempSeatMap", tempSeatMap)
+        setSeatMap(tempSeatMap)        
     }, [seats])
 
     return (
