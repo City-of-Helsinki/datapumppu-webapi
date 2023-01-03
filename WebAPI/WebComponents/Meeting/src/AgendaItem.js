@@ -14,8 +14,7 @@ export default function AgendaItem(props) {
         const fetchData = async () => {
             const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
             if (response.status === 200) {
-                const votingData = await response.json();
-                console.log("votingData", votingData)
+                const votingData = await response.json()
                 setVoting(votingData)
             }
         }
