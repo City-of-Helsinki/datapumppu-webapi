@@ -56,7 +56,7 @@ namespace WebAPI.StorageClient
             var response = await connection.GetAsync($"api/seats/{meetingId}/{caseNumber}");
             var seats = await response.Content.ReadFromJsonAsync<SeatDTO[]>();
 
-            return seats.ToList();
+            return seats?.ToList() ?? new List<SeatDTO>();
         }
     }
 }

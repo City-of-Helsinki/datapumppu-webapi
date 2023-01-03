@@ -8,5 +8,4 @@
 
         public string? SeatId { get; set; }
     }
-
 }
