@@ -22,7 +22,7 @@ export default function SeatMap(props) {
             const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
             if (response.status === 200) {
                 const data = await response.json();
-                console.log("data", data)
+
                 setSeats(data)
             }
         }

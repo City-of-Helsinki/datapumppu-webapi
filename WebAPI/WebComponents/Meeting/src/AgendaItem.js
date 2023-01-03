@@ -1,19 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import SeatMap from './SeatMap'
+import Voting from './Voting'
 
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
     const [showSeatMap, setShowSeatMap] = useState(false)
+    const [voting, setVoting] = useState(undefined)
     const { agenda, index, meetingId } = props
     const { t } = useTranslation();
     
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
+            if (response.status === 200) {
+                const votingData = await response.json();
+                console.log("votingData", votingData)
+                setVoting(votingData)
+            }
+        }
+
+        if (accordionOpen === true && voting === undefined) {
+            fetchData()
+        }
+    }, [accordionOpen])
+
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
     const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=fi`
     const decisionPath = `#--API_URL--#/components/pages/decision.html?caseIdLabel=${agenda.caseIDLabel}&lang=fi`
-        return (
+    return (
         <div className={accordionOpen ? "item item-open" : 'item'}>
             <button className='agendaTitleButton' onClick={() => setAccordionOpen(!accordionOpen)}>
                 <span className={
@@ -61,6 +78,8 @@ export default function AgendaItem(props) {
                     </div>
 
                     {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}
+
+                    {voting !== undefined && <Voting voting={voting} meetingId={meetingId} caseNumber={agenda.agendaPoint}></Voting>}
                 </div>
             }
         </div>
