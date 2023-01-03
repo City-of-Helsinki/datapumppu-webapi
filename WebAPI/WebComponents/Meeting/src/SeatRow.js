@@ -100,7 +100,7 @@ export default function SeatRow(props) {
 
     const createSeat = (seat) => {
         return (
-            <div style={ stygetSeatStyle(seat.voteType) }>
+            <div style={ getSeatStyle(seat?.voteType) }>
                 { seat?.name }
             </div>
         )
