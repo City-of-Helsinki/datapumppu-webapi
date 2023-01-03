@@ -4,6 +4,7 @@ import AgendaItem from './AgendaItem'
 
 export default function Meeting() {
     const [agenda, setAgenda] = useState([]);
+    const [decisions, setDecisions] = useState([]);
     const [meetingId, setMeetingId] = useState("");
     useEffect(() => {
         const fetchData = async () => {
@@ -16,6 +17,7 @@ export default function Meeting() {
                 .then((json) => {
                     if (json && Object.keys(json).length > 0) {
                         setAgenda(json.agendas)
+                        setDecisions(json.decisions)
                         setMeetingId(json.meetingID)
                     }
                 })
@@ -26,7 +28,13 @@ export default function Meeting() {
     return (
         <div className="container">
             {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                return <AgendaItem key={index} index={index + 1} agenda={agendaItem} meetingId={meetingId}/>
+                return <AgendaItem
+                    key={index}
+                    index={index + 1}
+                    agenda={agendaItem}
+                    decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                    meetingId={meetingId}
+                />
             })}
         </div>
     )

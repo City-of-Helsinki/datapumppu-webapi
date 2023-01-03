@@ -7,7 +7,7 @@ export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
     const [showSeatMap, setShowSeatMap] = useState(false)
     const [voting, setVoting] = useState(undefined)
-    const { agenda, index, meetingId } = props
+    const { agenda, index, meetingId, decision } = props
     const { t } = useTranslation();
     
     useEffect(() => {
@@ -27,8 +27,8 @@ export default function AgendaItem(props) {
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
-    const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=fi`
-    const decisionPath = `#--API_URL--#/components/pages/decision.html?caseIdLabel=${agenda.caseIDLabel}&lang=fi`
+    const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=#--LANGUAGE--#`
+    const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     return (
         <div className={accordionOpen ? "item item-open" : 'item'}>
             <button className='agendaTitleButton' onClick={() => setAccordionOpen(!accordionOpen)}>
@@ -46,6 +46,10 @@ export default function AgendaItem(props) {
                         <div>
                             {decisionResolutionText} <a href={motionPath}>{openText}</a>
                         </div>
+                    </div>
+                    }
+                    {decision?.caseID &&
+                    <div>
                         <div>
                             {decisionText} <a href={decisionPath}>{openText}</a>
                         </div>
