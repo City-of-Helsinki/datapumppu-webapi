@@ -20,7 +20,6 @@ export default function SeatMap(props) {
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
-            console.log("response", response)
             if (response.status === 200) {
                 const data = await response.json();
                 console.log("data", data)
