@@ -12,6 +12,8 @@ namespace WebAPI.StorageClient
         Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language);
 
         Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
+
+        Task<StorageVotingDTO?> RequestVote(string meetingId, string caseNumber);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -57,6 +59,19 @@ namespace WebAPI.StorageClient
             var seats = await response.Content.ReadFromJsonAsync<SeatDTO[]>();
 
             return seats?.ToList() ?? new List<SeatDTO>();
+        }
+
+        public async Task<StorageVotingDTO?> RequestVote(string meetingId, string caseNumber)
+        {
+            _logger.LogInformation("Executing RequestVote()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/voting/{meetingId}/{caseNumber}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<StorageVotingDTO>();
         }
     }
 }

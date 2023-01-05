@@ -48,6 +48,21 @@ const deskStyle = {
     height: "100%"
 }
 
+const redDeskStyle = {
+    ...deskStyle,
+    backgroundColor: "red"
+}
+
+const greenDeskStyle = {
+    ...deskStyle,
+    backgroundColor: "green"
+}
+
+const blueDeskStyle = {
+    ...deskStyle,
+    backgroundColor: "blue"
+}
+
 const guestBoxStyle = {
     border: "1px dotted #444444",
     marginTop: "2%",
@@ -73,9 +88,19 @@ export default function SeatRow(props) {
     const { seats, rowNr } = props
     const isQuest = !!props.isQuest;
 
+    const getSeatStyle = (voteType) => {
+
+        switch (voteType) {
+            case 0: return greenDeskStyle
+            case 1: return redDeskStyle
+            case 2: return blueDeskStyle
+            default: return deskStyle
+        }
+    }
+
     const createSeat = (seat) => {
         return (
-            <div style={deskStyle}>
+            <div style={ getSeatStyle(seat?.voteType) }>
                 { seat?.name }
             </div>
         )
