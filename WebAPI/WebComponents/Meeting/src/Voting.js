@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
-import { iconStyle, itemOpenStyle } from './styles';
+import { iconStyle, itemOpenStyle, itemStyle } from './styles';
 
 const champerStyle = {
     fontSize: "65%",
@@ -68,7 +68,7 @@ export default function Voting(props) {
             <div>{t("Empty")}: {voting.emptyCount}</div>
             <div>{t("Absent")}: {voting.absentCount}</div>
             
-            <div style={showVotes ? itemOpenStyle : item}>
+            <div style={showVotes ? itemOpenStyle : itemStyle}>
             <div onClick={() => setShowVotes(!showVotes)}>
                 <span style={iconStyle} className={
                     showVotes
