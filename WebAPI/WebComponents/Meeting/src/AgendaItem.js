@@ -14,7 +14,8 @@ const agendaTitleButtonStyle = {
     border: "none",
     fontWeight: "bold",
     textAlign: "start",
-    padding: "8px 8px 6px 8px"
+    padding: "8px 8px 6px 8px",
+    color: "black"
 }
 
 export default function AgendaItem(props) {
