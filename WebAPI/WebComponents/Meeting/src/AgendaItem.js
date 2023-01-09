@@ -2,25 +2,40 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import SeatMap from './SeatMap'
 import Voting from './Voting'
+import Statements from './Statements'
 
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
     const [showSeatMap, setShowSeatMap] = useState(false)
     const [voting, setVoting] = useState(undefined)
+    const [statements, setStatements] = useState(undefined)
     const { agenda, index, meetingId, decision } = props
     const { t } = useTranslation();
     
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchVotingData = async () => {
             const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
             if (response.status === 200) {
-                const votingData = await response.json()
-                setVoting(votingData)
+                const data = await response.json()
+                setVoting(data)
+            }
+        }
+
+        const fetchStatementsData = async () => {
+            const response = await fetch(`#--API_URL--#/statement/${meetingId}/${agenda.agendaPoint}`)
+            if (response.status === 200) {
+                const data = await response.json()
+                setStatements(data)
             }
         }
 
         if (accordionOpen === true && voting === undefined) {
-            fetchData()
+
+            fetchStatementsData()
+            
+            if (voting === undefined) {
+                fetchVotingData()
+            }
         }
     }, [accordionOpen])
 
@@ -69,6 +84,8 @@ export default function AgendaItem(props) {
 
                     })} */}
                     {agenda.html && <div dangerouslySetInnerHTML={{__html: agenda.html}} />}
+                    
+                    { statements && <Statements statements={statements}></Statements> }
 
                     <div onClick={() => setShowSeatMap(!showSeatMap)}>
                         <span className={
