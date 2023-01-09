@@ -3,6 +3,19 @@ import { useTranslation } from 'react-i18next';
 import SeatMap from './SeatMap'
 import Voting from './Voting'
 import Statements from './Statements'
+import { iconStyle, itemStyle, itemOpenStyle } from './styles';
+
+const contentStyle = {
+    paddingTop: "15px"
+}
+
+const agendaTitleButtonStyle = {
+    backgroundColor: "inherit",
+    border: "none",
+    fontWeight: "bold",
+    textAlign: "start",
+    padding: "8px 8px 6px 8px"
+}
 
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
@@ -45,17 +58,17 @@ export default function AgendaItem(props) {
     const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=#--LANGUAGE--#`
     const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     return (
-        <div className={accordionOpen ? "item item-open" : 'item'}>
-            <button className='agendaTitleButton' onClick={() => setAccordionOpen(!accordionOpen)}>
-                <span className={
+        <div style={accordionOpen ? itemOpenStyle : itemStyle}>
+            <button style={agendaTitleButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                <span style={iconStyle} className={
                     accordionOpen
-                        ? "icon glyphicon glyphicon-triangle-top"
-                        : "icon glyphicon glyphicon-triangle-bottom"
+                        ? "glyphicon glyphicon-triangle-top"
+                        : "glyphicon glyphicon-triangle-bottom"
                 } />
                 {index}. {agenda.title}
             </button>
             {accordionOpen &&
-                <div className='content'>
+                <div style={contentStyle}>
                     {agenda.caseIDLabel &&
                     <div>
                         <div>
@@ -88,10 +101,10 @@ export default function AgendaItem(props) {
                     { statements && <Statements statements={statements}></Statements> }
 
                     <div onClick={() => setShowSeatMap(!showSeatMap)}>
-                        <span className={
+                        <span style={iconStyle} className={
                             showSeatMap
-                                ? "icon glyphicon glyphicon-triangle-top"
-                                : "icon glyphicon glyphicon-triangle-bottom"
+                                ? "glyphicon glyphicon-triangle-top"
+                                : "glyphicon glyphicon-triangle-bottom"
                         } 
                         />
                         <bold>{t("Show seat map")}</bold>

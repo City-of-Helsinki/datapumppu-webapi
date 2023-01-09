@@ -2,6 +2,14 @@
 import { useEffect, useState } from 'react'
 import AgendaItem from './AgendaItem'
 
+const containerStyle = {
+    maxWidth: "800px",
+    WebkitTransition: "all 2s ease",
+    MozTransition: "all 2s ease",
+    OTransition: "all 2s ease",
+    transition: "all 2s ease"  
+}
+
 export default function Meeting() {
     const [agenda, setAgenda] = useState([]);
     const [decisions, setDecisions] = useState([]);
@@ -26,7 +34,7 @@ export default function Meeting() {
     }, [setAgenda])
 
     return (
-        <div className="container">
+        <div style={containerStyle}>
             {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
                 return <AgendaItem
                     key={index}
