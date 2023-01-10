@@ -24,7 +24,6 @@ export default function Meeting() {
     const [showLogin, setShowLogin] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
 
-
     useEffect(() => {
         const fetchData = async () => {
             await fetch('#--API_URL--#/meetings/meeting?year=#--MEETING_YEAR--#&sequenceNumber=#--MEETING_SEQUENCE_NUM--#&lang=#--LANGUAGE--#')
@@ -62,8 +61,8 @@ export default function Meeting() {
             body: JSON.stringify({ username: username, password: password })
         }
         var response = await fetch('#--API_URL--#/login/', request)
-        var body = await response.json()
         if (response.ok) {
+            var body = await response.json()
             localStorage.setItem("userToken", body.token)
             setLoggedIn(true)
             setShowHeader(true)
