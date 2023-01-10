@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
                 var token = GenerateToken(user);
                 return Ok(new { token });
             }
-            return NotFound();
+            return Forbid();
         }
         private string GenerateToken(UserDTO user)
         {
