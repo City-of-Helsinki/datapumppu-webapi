@@ -7,9 +7,9 @@ import { stateToHTML } from 'draft-js-export-html'
 
 
 export default function EditableItem(props) {
-    const { resolution } = props
+    const { html } = props
     const [userInput, setUserInput] = React.useState(false)
-    const [editorState, setEditorState] = useState(EditorState.createWithContent(stateFromHTML(resolution.text)));
+    const [editorState, setEditorState] = useState(EditorState.createWithContent(stateFromHTML(html)));
 
     const onChange = editorState => {
         setEditorState(editorState)

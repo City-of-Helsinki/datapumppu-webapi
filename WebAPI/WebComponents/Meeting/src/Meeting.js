@@ -11,6 +11,9 @@ const containerStyle = {
     OTransition: "all 2s ease",
     transition: "all 2s ease"
 }
+const agendaStyle = {
+    paddingTop: "35px"
+}
 
 export default function Meeting() {
     const [agenda, setAgenda] = useState([]);
@@ -21,11 +24,6 @@ export default function Meeting() {
     const [showLogin, setShowLogin] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
 
-    const style = {
-        agenda: {
-            paddingTop: "35px"
-        }
-    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -97,16 +95,18 @@ export default function Meeting() {
         <div style={containerStyle}>
             {showHeader && <Header submitLogout={submitLogout} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
-
-            {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                return <AgendaItem
-                    key={index}
-                    index={index + 1}
-                    agenda={agendaItem}
-                    decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
-                    meetingId={meetingId}
-                />
-            })}
+            <div style={agendaStyle}>
+                {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                    return <AgendaItem
+                        editable={loggedIn}
+                        key={index}
+                        index={index + 1}
+                        agenda={agendaItem}
+                        decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                        meetingId={meetingId}
+                    />
+                })}
+            </div>
         </div>
     )
 }
