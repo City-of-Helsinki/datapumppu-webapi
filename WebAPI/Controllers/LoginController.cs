@@ -36,12 +36,13 @@ namespace WebAPI.Controllers
             }
             return Forbid();
         }
+
         private string GenerateToken(UserDTO user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT_KEY"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
+            var token = new JwtSecurityToken(_configuration["JWT_ISSUER"],
+                _configuration["JWT_AUDIENCE"],
                 expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
