@@ -4,6 +4,7 @@ import SeatMap from './SeatMap'
 import Voting from './Voting'
 import Statements from './Statements'
 import { iconStyle, itemStyle, itemOpenStyle } from './styles';
+import EditableItem from './EditableItem';
 
 const contentStyle = {
     paddingTop: "15px"
@@ -23,9 +24,9 @@ export default function AgendaItem(props) {
     const [showSeatMap, setShowSeatMap] = useState(false)
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
-    const { agenda, index, meetingId, decision } = props
+    const { agenda, index, meetingId, decision, editable } = props
     const { t } = useTranslation();
-    
+
     useEffect(() => {
         const fetchVotingData = async () => {
             const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
@@ -44,9 +45,7 @@ export default function AgendaItem(props) {
         }
 
         if (accordionOpen === true && voting === undefined) {
-
             fetchStatementsData()
-            
             if (voting === undefined) {
                 fetchVotingData()
             }
@@ -71,18 +70,18 @@ export default function AgendaItem(props) {
             {accordionOpen &&
                 <div style={contentStyle}>
                     {agenda.caseIDLabel &&
-                    <div>
                         <div>
-                            {decisionResolutionText} <a href={motionPath}>{openText}</a>
+                            <div>
+                                {decisionResolutionText} <a href={motionPath}>{openText}</a>
+                            </div>
                         </div>
-                    </div>
                     }
                     {decision?.caseID &&
-                    <div>
                         <div>
-                            {decisionText} <a href={decisionPath}>{openText}</a>
+                            <div>
+                                {decisionText} <a href={decisionPath}>{openText}</a>
+                            </div>
                         </div>
-                    </div>
                     }
                     {/* 
                     commented out for now as attachments are not returned within agendas yet!!
@@ -97,18 +96,18 @@ export default function AgendaItem(props) {
                         )
 
                     })} */}
-                    {agenda.html && <div dangerouslySetInnerHTML={{__html: agenda.html}} />}
-                    
-                    { statements && <Statements statements={statements}></Statements> }
+                    {agenda.html && (editable ? <EditableItem html={agenda.html} /> : <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
+
+                    {statements && <Statements statements={statements}></Statements>}
 
                     <div onClick={() => setShowSeatMap(!showSeatMap)}>
                         <span style={iconStyle} className={
                             showSeatMap
                                 ? "glyphicon glyphicon-triangle-top"
                                 : "glyphicon glyphicon-triangle-bottom"
-                        } 
+                        }
                         />
-                        <bold>{t("Show seat map")}</bold>
+                        <b>{t("Show seat map")}</b>
                     </div>
 
                     {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}

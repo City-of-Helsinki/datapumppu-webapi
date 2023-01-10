@@ -1,5 +1,8 @@
 using WebAPI.LiveMeetings;
 using WebAPI.StorageClient;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WebAPI
 {
@@ -29,8 +32,20 @@ namespace WebAPI
             builder.Services.AddScoped<IStorageConnection, StorageConnection>();
 
             builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
-            
-            
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["JWT_ISSUER"],
+                    ValidAudience = builder.Configuration["JWT_AUDIENCE"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT_KEY"]))
+                };
+            });
             // Removed for now, until we know what to do about it
             //builder.Services.AddHostedService<LiveMeetingObserver>();
 
@@ -42,7 +57,7 @@ namespace WebAPI
 
             app.UseRouting();
 
-            // Configure the HTTP request pipeline.
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
