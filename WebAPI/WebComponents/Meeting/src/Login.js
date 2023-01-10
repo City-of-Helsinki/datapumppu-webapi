@@ -27,7 +27,8 @@ export default function Header(props) {
     input: {
       width: "100%",
       marginBottom: "10px",
-      padding: "10px 5px"
+      padding: "10px 5px",
+      color: "black",
     },
     buttonRow: {
       marginTop: "10px",
