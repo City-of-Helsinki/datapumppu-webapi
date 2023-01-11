@@ -16,6 +16,8 @@ namespace WebAPI.StorageClient
         Task<StorageVotingDTO?> RequestVote(string meetingId, string caseNumber);
 
         Task<List<StatementDTO>> RequestStatements(string meetingId, string caseNumber);
+
+        Task<bool> CheckLogin(string username, string password);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -29,6 +31,15 @@ namespace WebAPI.StorageClient
             _logger = logger;
             _storageConnection = storageConnection;
         }
+
+        public async Task<bool> CheckLogin(string username, string password)
+        {
+            _logger.LogInformation("Executing CheckLogin()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/auth/validate?username={username}&password={password}");
+            return response.IsSuccessStatusCode;
+        }
+
 
         public async Task<List<StatementDTO>> RequestStatements(string meetingId, string caseNumber)
         {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
+using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
 {
@@ -14,30 +15,33 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<LoginController> _logger;
+        private readonly IStorageApiClient _storageApiClient;
 
-        public LoginController(IConfiguration configuration, ILogger<LoginController> logger)
+        public LoginController(IConfiguration configuration,
+            ILogger<LoginController> logger,
+            IStorageApiClient storageApiClient)
         {
             _configuration = configuration;
             _logger = logger;
+            _storageApiClient = storageApiClient;
         }
 
         [AllowAnonymous]
         [Route("login")]
         [HttpPost]
-        public ActionResult Login([FromBody] UserDTO userLogin)
+        public async Task<IActionResult> Login([FromBody] UserDTO userLogin)
         {
             _logger.LogInformation("Executing Login()");
 
-            var user = Authenticate(userLogin);
-            if (user != null)
+            if (await _storageApiClient.CheckLogin(userLogin.Username, userLogin.Password))
             {
-                var token = GenerateToken(user);
+                var token = GenerateToken();
                 return Ok(new { token });
             }
             return Forbid();
         }
 
-        private string GenerateToken(UserDTO user)
+        private string GenerateToken()
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT_KEY"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -46,17 +50,6 @@ namespace WebAPI.Controllers
                 expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private UserDTO? Authenticate(UserDTO userLogin)
-        {
-            var currentUser = UserConstant.Users.FirstOrDefault(x => x.Username.ToLower() ==
-                userLogin.Username.ToLower() && x.Password == userLogin.Password);
-            if (currentUser != null)
-            {
-                return currentUser;
-            }
-            return null;
         }
 
         [HttpGet]
