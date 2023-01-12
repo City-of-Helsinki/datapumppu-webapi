@@ -13,13 +13,15 @@ export default function  Statements(props) {
     const { t } = useTranslation();
 
     const getTimespan = (seconds) => {
-        return `${ Math.round(seconds / 60) }:${ Math.round(seconds % 60) }`
+        return `${ Math.round(seconds / 60) }:${ String(Math.round(seconds % 60)).padStart(2, '0') }`
     }
 
     const getStatement = (statement) => {
         return (
             <div>
-                { statement.person }: { getTimespan(statement.durationSeconds) }
+                <a href={`#T${statement.videoPosition}`}>
+                    { statement.person }: { getTimespan(statement.durationSeconds) }
+                </a>
             </div>
         )
     }
