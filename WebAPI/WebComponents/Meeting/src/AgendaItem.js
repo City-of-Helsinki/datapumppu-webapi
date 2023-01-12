@@ -98,9 +98,8 @@ export default function AgendaItem(props) {
                     })} */}
                     {agenda.html && (editable ?
                         <EditableItem
-                            agendaPoint={agenda.agendaPoint}
+                            agendaItem={agenda}
                             meetingId={meetingId}
-                            html={agenda.html}
                             language={"#--LANGUAGE--#"} /> : <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
 
                     {statements && <Statements statements={statements}></Statements>}

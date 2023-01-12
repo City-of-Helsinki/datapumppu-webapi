@@ -7,9 +7,9 @@ import { stateToHTML } from 'draft-js-export-html'
 
 
 export default function EditableItem(props) {
-    const { html, meetingId, agendaPoint, language} = props
+    const { agendaItem, meetingId, language} = props
     const [userInput, setUserInput] = React.useState(false)
-    const [editorState, setEditorState] = useState(EditorState.createWithContent(stateFromHTML(html)));
+    const [editorState, setEditorState] = useState(EditorState.createWithContent(stateFromHTML(agendaItem.html)));
 
     const onChange = editorState => {
         setEditorState(editorState)
@@ -28,7 +28,8 @@ export default function EditableItem(props) {
     };
 
     const submitChanges = () => {
-        console.log(stateToHTML(editorState.getCurrentContent()));
+        const editedHtml = stateToHTML(editorState.getCurrentContent());
+        const agendaPoint = agendaItem.agendaPoint
         const request = {
             method: 'POST',
             headers: {
@@ -36,13 +37,14 @@ export default function EditableItem(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem("userToken")
             },
             body: JSON.stringify({
-                html: stateToHTML(editorState.getCurrentContent()),
+                html: editedHtml,
                 meetingId,
                 agendaPoint,
                 language
             })
         }
         fetch('#--API_URL--#/editor/edit', request)
+        agendaItem.html = editedHtml
 
         setUserInput(false)
     }
