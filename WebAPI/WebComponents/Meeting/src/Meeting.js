@@ -60,7 +60,7 @@ export default function Meeting() {
             },
             body: JSON.stringify({ username: username, password: password })
         }
-        var response = await fetch('#--API_URL--#/login/', request)
+        var response = await fetch('#--API_URL--#/editor/login/', request)
         if (response.ok) {
             var body = await response.json()
             localStorage.setItem("userToken", body.token)
@@ -80,7 +80,7 @@ export default function Meeting() {
                 'Authorization': 'Bearer ' + localStorage.getItem("userToken")
             }
         }
-        var response = await fetch('#--API_URL--#/logout', request)
+        var response = await fetch('#--API_URL--#/editor/logout', request)
         if (response.ok) {
             localStorage.clear()
             setLoggedIn(false)

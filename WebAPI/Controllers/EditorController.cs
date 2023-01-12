@@ -10,15 +10,16 @@ using WebAPI.StorageClient;
 namespace WebAPI.Controllers
 {
     [ApiController]
+    [Route("editor")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
-    public class LoginController : ControllerBase
+    public class EditorController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger<LoginController> _logger;
+        private readonly ILogger<EditorController> _logger;
         private readonly IStorageApiClient _storageApiClient;
 
-        public LoginController(IConfiguration configuration,
-            ILogger<LoginController> logger,
+        public EditorController(IConfiguration configuration,
+            ILogger<EditorController> logger,
             IStorageApiClient storageApiClient)
         {
             _configuration = configuration;
@@ -41,6 +42,23 @@ namespace WebAPI.Controllers
             return Forbid();
         }
 
+        [HttpPost("edit")]
+        [Authorize]
+        public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaPointDTO editItem)
+        {
+            await _storageApiClient.UpdateAgendaPoint(editItem);
+            return Ok();
+        }
+
+
+        [HttpGet]
+        [Route("logout")]
+        [Authorize]
+        public ActionResult Logout()
+        {
+            return Ok();
+        }
+
         private string GenerateToken()
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT_KEY"]));
@@ -52,12 +70,5 @@ namespace WebAPI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        [HttpGet]
-        [Route("logout")]
-        [Authorize]
-        public ActionResult Logout()
-        {
-            return Ok();
-        }
     }
 };
