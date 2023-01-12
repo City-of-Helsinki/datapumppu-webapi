@@ -19,7 +19,9 @@ export default function  Statements(props) {
     const getStatement = (statement) => {
         return (
             <div>
-                { statement.person }: { getTimespan(statement.durationSeconds) }
+                <a href={`#T${statement.videoPosition}`}>
+                    { statement.person }: { getTimespan(statement.durationSeconds) }
+                </a>
             </div>
         )
     }
