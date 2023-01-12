@@ -17,7 +17,7 @@ namespace WebAPI.StorageClient
 
         Task<bool> CheckLogin(string username, string password);
 
-        Task<bool> UpdateAgendaPoint(EditAgendaItemDTO dto);
+        Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -40,7 +40,7 @@ namespace WebAPI.StorageClient
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateAgendaPoint(EditAgendaItemDTO dto)
+        public async Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto)
         {
             _logger.LogInformation("Executing UpdateAgendaPoint()");
 

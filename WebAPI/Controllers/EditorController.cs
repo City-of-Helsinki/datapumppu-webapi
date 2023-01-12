@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
 
         [HttpPost("edit")]
         [Authorize]
-        public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaItemDTO editItem)
+        public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaPointDTO editItem)
         {
             await _storageApiClient.UpdateAgendaPoint(editItem);
             return Ok();
