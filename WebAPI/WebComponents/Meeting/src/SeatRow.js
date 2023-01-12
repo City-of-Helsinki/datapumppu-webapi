@@ -45,22 +45,25 @@ const deskStyle = {
     backgroundColor: "#eeeeee",
     marginBottom: "5%",
     boxSizing: "border-box",
-    height: "100%"
+    height: "100%",
 }
 
 const redDeskStyle = {
     ...deskStyle,
-    backgroundColor: "red"
+    backgroundColor: "#e62224",
+    color: "#ffffff"
 }
 
 const greenDeskStyle = {
     ...deskStyle,
-    backgroundColor: "green"
+    backgroundColor: "#64bb46",
+    color: "#ffffff"
 }
 
 const blueDeskStyle = {
     ...deskStyle,
-    backgroundColor: "blue"
+    backgroundColor: "#98d8e1",
+    color: "#ffffff"
 }
 
 const guestBoxStyle = {
