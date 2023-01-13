@@ -18,6 +18,7 @@ namespace WebAPI.StorageClient
         Task<bool> CheckLogin(string username, string password);
 
         Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto);
+        Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO);
     }
 
     public class StorageApiClient : IStorageApiClient
@@ -103,6 +104,14 @@ namespace WebAPI.StorageClient
             }
 
             return await response.Content.ReadFromJsonAsync<StorageVotingDTO>();
+        }
+
+        public async Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO)
+        {
+            _logger.LogInformation("Executing UpdateVideoSync()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.PostAsJsonAsync($"api/videosync/position", videoSyncDTO);
+            return response.IsSuccessStatusCode;
         }
     }
 }
