@@ -12,9 +12,12 @@ namespace WebAPI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IStorageApiClient _storageApiClient;
-        private readonly ILogger<MeetingController> _logger;
+        private readonly ILogger<DecisionsController> _logger;
 
-        public DecisionsController(IConfiguration configuration, IStorageApiClient storageApiClient, ILogger<MeetingController> logger)
+        public DecisionsController(
+            IConfiguration configuration,
+            IStorageApiClient storageApiClient,
+            ILogger<DecisionsController> logger)
         {
             _configuration = configuration;
             _storageApiClient = storageApiClient;
