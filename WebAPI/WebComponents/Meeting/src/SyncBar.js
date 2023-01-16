@@ -5,6 +5,7 @@ export default function SyncBar(props) {
   const { meetingId } = props
 
   const submitSync = (videoposition) => {
+    const timestamp = new Date().toISOString()
     const request = {
       method: 'POST',
       headers: {
@@ -12,11 +13,12 @@ export default function SyncBar(props) {
         'Authorization': 'Bearer ' + localStorage.getItem("userToken")
       },
       body: JSON.stringify({
-        videoposition,
-        meetingId
+        "MeetingID": meetingId,
+        "Timestamp": timestamp,
+        "VideoPosition": videoposition
       })
     }
-    fetch('#--API_URL--#/editor/videosync', request)
+    fetch('http://localhost:5212/editor/videosync', request)
     props.closeSyncBar()
   }
 
@@ -29,6 +31,7 @@ export default function SyncBar(props) {
     var array = inputValue.split(":")
     return parseInt(array[0] * 60) + parseInt(array[1])
   }
+
   const convertToMMSS = (seconds) => {
     const mm = Math.floor(seconds / 60)
     const ss = Math.floor(seconds % 60)
