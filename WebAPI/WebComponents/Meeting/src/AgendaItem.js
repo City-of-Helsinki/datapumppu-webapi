@@ -55,7 +55,7 @@ export default function AgendaItem(props) {
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
-    const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=#--LANGUAGE--#`
+    const motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
     const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     return (
         <div style={accordionOpen ? itemOpenStyle : itemStyle}>
