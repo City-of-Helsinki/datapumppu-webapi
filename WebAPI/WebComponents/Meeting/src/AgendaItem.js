@@ -83,19 +83,17 @@ export default function AgendaItem(props) {
                             </div>
                         </div>
                     }
-                    {/* 
-                    commented out for now as attachments are not returned within agendas yet!!
-                     {agenda.attachments?.map((attachment, index) => {
-                        return (
-                            <div className='attachment' key={'attach' + index}>
-                                {t("Attachment")} {index + 1} {''}
-                                {attachment.public ?
-                                    <a href={attachment.file_uri}>{attachment.name}</a>
-                                    : t("Non-public")}
-                            </div>
-                        )
-
-                    })} */}
+                    {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
+                            return (
+                                <div className='attachment' key={'attach' + index}>
+                                    {t("Attachment")} { attachment.attachmentNumber } {''}
+                                    {attachment.fileURI ?
+                                        <a href={attachment.fileURI}>{attachment.title}</a>
+                                        : t("Non-public")}
+                                </div>
+                            )
+                        })
+                    }
                     {agenda.html && (editable ?
                         <EditableItem
                             agendaItem={agenda}

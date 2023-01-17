@@ -13,5 +13,7 @@
         public string? Html { get; set; }
 
         public string? DecisionHistoryHTML { get; set; }
+
+        public StorageAttachmentDTO[] Attachments { get; set; } = new StorageAttachmentDTO[0];
     }
 }

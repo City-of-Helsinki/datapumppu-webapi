@@ -71,14 +71,9 @@ export default function Voting(props) {
         setSeatMap(tempSeatMap)        
     }, [seats])
 
-    const createVoteElement = (vote) => {
-
-        const getLink = (name) => {
-            const parts = name.split(" ")            
-            return parts?.length > 1 ? `https://paatokset.hel.fi/fi/paattajat/exl${parts[1] + parts[0]}` : ""
-        }
+    const createVoterElement = (vote) => {
         return (
-            <div><a href={getLink(vote.name)}>{ vote.name} </a></div>            
+            <div>{ vote.name}</div>
         )
     }
 
@@ -138,16 +133,16 @@ export default function Voting(props) {
                     <div onClick={downloadPDF} data-html2canvas-ignore={"true"}>{t("Download voting map pdf")}</div>
                     <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
                         <div>{t("FOR")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoteElement(vote)) }
+                        { voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote)) }
 
                         <div>{t("AGAINST")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoteElement(vote)) }
+                        { voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote)) }
 
                         <div>{t("EMPTY")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoteElement(vote)) }
+                        { voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote)) }
 
                         <div>{t("ABSENT")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoteElement(vote)) }
+                        { voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote)) }
 
                     </div>
                 </div>
