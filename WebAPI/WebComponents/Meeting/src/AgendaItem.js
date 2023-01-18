@@ -55,7 +55,7 @@ export default function AgendaItem(props) {
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
-    const motionPath = `#--API_URL--#/components/pages/motion.html?caseIdLabel=${agenda.caseIDLabel}&lang=#--LANGUAGE--#`
+    const motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
     const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     return (
         <div style={accordionOpen ? itemOpenStyle : itemStyle}>
@@ -83,19 +83,17 @@ export default function AgendaItem(props) {
                             </div>
                         </div>
                     }
-                    {/* 
-                    commented out for now as attachments are not returned within agendas yet!!
-                     {agenda.attachments?.map((attachment, index) => {
-                        return (
-                            <div className='attachment' key={'attach' + index}>
-                                {t("Attachment")} {index + 1} {''}
-                                {attachment.public ?
-                                    <a href={attachment.file_uri}>{attachment.name}</a>
-                                    : t("Non-public")}
-                            </div>
-                        )
-
-                    })} */}
+                    {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
+                            return (
+                                <div className='attachment' key={'attach' + index}>
+                                    {t("Attachment")} { attachment.attachmentNumber } {''}
+                                    {attachment.fileURI ?
+                                        <a href={attachment.fileURI}>{attachment.title}</a>
+                                        : t("Non-public")}
+                                </div>
+                            )
+                        })
+                    }
                     {agenda.html && (editable ?
                         <EditableItem
                             agendaItem={agenda}
