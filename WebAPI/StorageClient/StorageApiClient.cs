@@ -15,7 +15,7 @@ namespace WebAPI.StorageClient
 
         Task<List<StatementDTO>> GetStatements(string meetingId, string caseNumber);
 
-        Task<List<StatementDTO>> GetStatementsByPerson(string name, int year);
+        Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang);
 
         Task<bool> CheckLogin(string username, string password);
 
@@ -51,11 +51,11 @@ namespace WebAPI.StorageClient
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<List<StatementDTO>> GetStatementsByPerson(string name, int year)
+        public async Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang)
         {
             _logger.LogInformation("GetStatementsByPerson()");
             using var connection = _storageConnection.CreateConnection();
-            var response = await connection.GetAsync($"api/statements/person?name={name}&year={year}");
+            var response = await connection.GetAsync($"api/statements/person?name={name}&year={year}&lang={lang}");
             var statements = await response.Content.ReadFromJsonAsync<StatementDTO[]>();
 
             return statements?.ToList() ?? new List<StatementDTO>();
