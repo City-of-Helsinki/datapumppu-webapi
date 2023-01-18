@@ -26,10 +26,11 @@ namespace WebAPI.Controllers.ExternalAPI
         [HttpGet()]
         public async Task<IActionResult> GetStatementsByPerson(
             [FromQuery] string name,
-            [FromQuery] int year)
+            [FromQuery] int year,
+            [FromQuery] string lang)
         {
             _logger.LogInformation($"GetStatementsByPerson {name} {year}");
-            return new OkObjectResult(await _storageApiClient.GetStatementsByPerson(name, year));
+            return new OkObjectResult(await _storageApiClient.GetStatementsByPerson(name, year, lang));
         }
     }
 }
