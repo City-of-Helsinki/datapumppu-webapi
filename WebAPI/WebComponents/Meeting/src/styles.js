@@ -128,15 +128,23 @@ const headerStyle = {
         textAlign: "center",
         display: "flex",
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "space-between",
+
     },
-    logoutBtn: {
-        float: "right",
-        marginRight: "20px",
+    syncBtn: {
+        fontSize: "20px",
         color: "white",
         backgroundColor: "inherit",
-        border: "none"
-    }
+        border: "none",
+    },
+    logoutBtn: {
+        marginRight: "20px",
+        fontSize: "20px",
+        color: "white",
+        backgroundColor: "inherit",
+        border: "none",
+    },
 }
 
 const editorStyle = {
