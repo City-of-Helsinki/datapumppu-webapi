@@ -3,21 +3,17 @@ import { useTranslation } from 'react-i18next';
 import SeatMap from './SeatMap'
 import Voting from './Voting'
 import Statements from './Statements'
-import { iconStyle, itemStyle, itemOpenStyle } from './styles';
+import {
+    itemStyle,
+    itemOpenStyle,
+    agendaButtonStyle,
+    agendaTitleStyle,
+    contentStyle,
+    attachmentTable,
+    linkStyle
+} from './styles';
 import EditableItem from './EditableItem';
-
-const contentStyle = {
-    paddingTop: "15px"
-}
-
-const agendaTitleButtonStyle = {
-    backgroundColor: "inherit",
-    border: "none",
-    fontWeight: "bold",
-    textAlign: "start",
-    padding: "8px 8px 6px 8px",
-    color: "black"
-}
+import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
@@ -59,42 +55,67 @@ export default function AgendaItem(props) {
     const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     return (
         <div style={accordionOpen ? itemOpenStyle : itemStyle}>
-            <button style={agendaTitleButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
-                <span style={iconStyle} className={
-                    accordionOpen
-                        ? "glyphicon glyphicon-triangle-top"
-                        : "glyphicon glyphicon-triangle-bottom"
-                } />
-                {index}. {agenda.title}
-            </button>
+            <div style={agendaTitleStyle}>
+                <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                    <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                        {accordionOpen
+                            ? <FaCaretUp />
+                            : <FaCaretDown />}
+                    </div>
+                    <div style={{ paddingRight: "10px" }}>
+                        {index}.</div>
+                    <div style={{ paddingRight: "10px" }}>
+                        {agenda.title}</div>
+                </button>
+                {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>}
+
+            </div>
             {accordionOpen &&
+
                 <div style={contentStyle}>
-                    <a href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>
-                    {agenda.caseIDLabel &&
-                        <div>
-                            <div>
-                                {decisionResolutionText} <a href={motionPath}>{openText}</a>
+
+                    <div style={attachmentTable.table}>
+                        {
+                            agenda.caseIDLabel &&
+                            <div style={attachmentTable.row}>
+                                <div style={attachmentTable.cell}>
+                                    {decisionResolutionText}
+                                </div>
+                                <div style={attachmentTable.cell}>
+                                    <a style={linkStyle} href={motionPath}>{openText}</a>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    {decision?.caseID &&
-                        <div>
-                            <div>
-                                {decisionText} <a href={decisionPath}>{openText}</a>
+                        }
+                        {decision?.caseID &&
+                            <div style={attachmentTable.row}>
+                                <div style={attachmentTable.cell}>
+                                    {decisionText}
+                                </div>
+                                <div style={attachmentTable.cell}>
+
+                                    <a style={linkStyle} href={decisionPath}>{openText}</a>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
+                        }
+                        {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
                             return (
-                                <div className='attachment' key={'attach' + index}>
-                                    {t("Attachment")} { attachment.attachmentNumber } {''}
-                                    {attachment.fileURI ?
-                                        <a href={attachment.fileURI}>{attachment.title}</a>
-                                        : t("Non-public")}
+
+                                <div className='attachment' key={'attach' + index} style={attachmentTable.row}>
+                                    <div style={attachmentTable.cell}>
+                                        {t("Attachment")} {attachment.attachmentNumber} {''}
+                                    </div>
+                                    <div style={attachmentTable.cell}>
+
+                                        {attachment.fileURI ?
+                                            <a style={linkStyle} href={attachment.fileURI}>{attachment.title}</a>
+                                            : t("Non-public")}
+                                    </div>
                                 </div>
                             )
                         })
-                    }
+
+                        }
+                    </div>
                     {agenda.html && (editable ?
                         <EditableItem
                             agendaItem={agenda}
@@ -102,15 +123,16 @@ export default function AgendaItem(props) {
                             language={"#--LANGUAGE--#"} /> : <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
 
                     {statements && <Statements statements={statements}></Statements>}
+                    <div style={{ padding: "30px 10px 0 0" }}>
 
-                    <div onClick={() => setShowSeatMap(!showSeatMap)}>
-                        <span style={iconStyle} className={
-                            showSeatMap
-                                ? "glyphicon glyphicon-triangle-top"
-                                : "glyphicon glyphicon-triangle-bottom"
-                        }
-                        />
-                        <b>{t("Show seat map")}</b>
+                        <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
+                            <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                                {showSeatMap
+                                    ? <FaCaretUp />
+                                    : <FaCaretDown />}
+                            </div>
+                            <b>{t("Show seat map")}</b>
+                        </button>
                     </div>
 
                     {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}
