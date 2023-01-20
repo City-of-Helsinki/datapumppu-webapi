@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 
 export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
-  const { meetingId } = props
+  const { meetingId, agendaPointTimestamp } = props
 
   const submitSync = (videoposition) => {
-    const timestamp = new Date().toISOString()
     const request = {
       method: 'POST',
       headers: {
@@ -14,7 +13,7 @@ export default function SyncBar(props) {
       },
       body: JSON.stringify({
         "MeetingID": meetingId,
-        "Timestamp": timestamp,
+        "Timestamp": agendaPointTimestamp,
         "VideoPosition": videoposition
       })
     }
