@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Filters;
+using WebAPI.Data;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
@@ -9,14 +10,14 @@ namespace WebAPI.Controllers
     [TypeFilter(typeof(WebAPIExceptionFilter))]
     public class MeetingController: ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly IStorageApiClient _storageApiClient;
+        private readonly IMeetingDataProvider _meetingDataProvider;
         private readonly ILogger<MeetingController> _logger;
 
-        public MeetingController(IConfiguration configuration, IStorageApiClient storageApiClient, ILogger<MeetingController> logger)
+        public MeetingController(
+            IMeetingDataProvider meetingDataProvider,
+            ILogger<MeetingController> logger)
         {
-            _configuration = configuration;
-            _storageApiClient = storageApiClient;
+            _meetingDataProvider = meetingDataProvider;
             _logger = logger;
         }
 
@@ -25,7 +26,8 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetMeeting(string year, string sequenceNumber, string lang)
         {
             _logger.LogInformation("Executing GetMeeting()");
-            var meeting = await _storageApiClient.RequestMeeting(year, sequenceNumber, lang);
+
+            var meeting = await _meetingDataProvider.GetMeeting(year, sequenceNumber, lang);
             if (meeting == null)
             {
                 return NoContent();
