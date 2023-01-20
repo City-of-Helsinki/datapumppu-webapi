@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import AgendaItem from './AgendaItem'
 import Login from './Login';
 import Header from './Header';
+import SyncBar from './SyncBar';
 
 const containerStyle = {
     maxWidth: "800px",
@@ -32,6 +33,7 @@ export default function Meeting() {
 
     const [showHeader, setShowHeader] = useState(false)
     const [showLogin, setShowLogin] = useState(false)
+    const [showSyncBar, setShowSyncBar] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
 
     const { t } = useTranslation();
@@ -104,7 +106,7 @@ export default function Meeting() {
 
     return (
         <div style={containerStyle}>
-            {showHeader && <Header submitLogout={submitLogout} />}
+            {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
             <div style={agendaStyle}>
                 {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
@@ -118,7 +120,18 @@ export default function Meeting() {
                     />
                 })}
             </div>
-            {(!agenda || agenda?.length === 0) && <div style={agendaTitleStyle}>{t('Agenda and Proceeding').toUpperCase()}</div>}
+            {showSyncBar && agenda &&
+                <SyncBar
+                    meetingId={meetingId}
+                    agendaPointTimestamp={agenda.find(item => item.agendaPoint === 2)?.timestamp}
+                    closeSyncBar={() => setShowSyncBar(false)}
+                />
+            }
+            {(!agenda || agenda?.length === 0) &&
+                <div style=
+                    {agendaTitleStyle}>{t('Agenda and Proceeding').toUpperCase()}
+                </div>
+            }
         </div>
     )
 }
