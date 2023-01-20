@@ -108,9 +108,10 @@ export default function Meeting() {
                     />
                 })}
             </div>
-            {showSyncBar &&
+            {showSyncBar && agenda &&
                 <SyncBar
                     meetingId={meetingId}
+                    agendaPointTimestamp={agenda.find(item => item.agendaPoint === 2)?.timestamp}
                     closeSyncBar={() => setShowSyncBar(false)}
                 />
             }
