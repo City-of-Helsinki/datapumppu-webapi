@@ -39,7 +39,6 @@ export default function SyncBar(props) {
 
   return (
     <div style={syncBarStyle.footer}>
-      {/* <div style={{ alignItems: 'left', padding: '10px', color: "white" }}> */}
         VIDEO POSITION AT THE START OF AGENDA 2:
         <input
           value={inputValue}
@@ -50,7 +49,6 @@ export default function SyncBar(props) {
         <button style={syncBarStyle.button} onClick={() => getCurrentVideoPosition()}>SYNC</button>
         <button style={syncBarStyle.button} onClick={() => submitSync(convertToSec(inputValue))}>SAVE</button>
       </div>
-    // </div>
   );
 }
 
