@@ -13,7 +13,9 @@ namespace WebAPI.StorageClient
 
         Task<StorageVotingDTO?> RequestVote(string meetingId, string caseNumber);
 
-        Task<List<StatementDTO>> RequestStatements(string meetingId, string caseNumber);
+        Task<List<StatementDTO>> GetStatements(string meetingId, string caseNumber);
+
+        Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang);
 
         Task<bool> CheckLogin(string username, string password);
 
@@ -50,9 +52,19 @@ namespace WebAPI.StorageClient
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<List<StatementDTO>> RequestStatements(string meetingId, string caseNumber)
+        public async Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang)
         {
-            _logger.LogInformation("Executing RequestStatements()");
+            _logger.LogInformation("GetStatementsByPerson()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statements/person?name={name}&year={year}&lang={lang}");
+            var statements = await response.Content.ReadFromJsonAsync<StatementDTO[]>();
+
+            return statements?.ToList() ?? new List<StatementDTO>();
+        }
+
+        public async Task<List<StatementDTO>> GetStatements(string meetingId, string caseNumber)
+        {
+            _logger.LogInformation("GetStatements()");
             using var connection = _storageConnection.CreateConnection();
             var response = await connection.GetAsync($"api/statements/{meetingId}/{caseNumber}");
             var statements = await response.Content.ReadFromJsonAsync<StatementDTO[]>();

@@ -13,5 +13,11 @@
         public string? Html { get; set; }
 
         public string? DecisionHistoryHTML { get; set; }
+
+        public StorageAttachmentDTO[] Attachments { get; set; } = new StorageAttachmentDTO[0];
+
+        public DateTime? Timestamp { get; set; }
+
+        public int? VideoPosition { get; set; }
     }
 }

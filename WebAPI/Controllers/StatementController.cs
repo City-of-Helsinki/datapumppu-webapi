@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetStatements(string meetingId, string caseNumber)
         {
             _logger.LogInformation("Executing GetStatements()");
-            var turns = await _storageApiClient.RequestStatements(meetingId, caseNumber);
+            var turns = await _storageApiClient.GetStatements(meetingId, caseNumber);
             
             return new OkObjectResult(turns);
         }
