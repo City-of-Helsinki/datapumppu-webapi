@@ -3,18 +3,10 @@ import { useEffect, useState } from 'react'
 import AgendaItem from './AgendaItem'
 import Login from './Login';
 import Header from './Header';
-import SyncBar from './SyncBar';
-
-const containerStyle = {
-    maxWidth: "800px",
-    WebkitTransition: "all 2s ease",
-    MozTransition: "all 2s ease",
-    OTransition: "all 2s ease",
-    transition: "all 2s ease"
-}
-const agendaStyle = {
-    paddingTop: "35px"
-}
+import {
+    containerStyle,
+    agendaStyle,
+} from './styles';
 
 export default function Meeting() {
     const [agenda, setAgenda] = useState([]);
@@ -97,16 +89,16 @@ export default function Meeting() {
             {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
             <div style={agendaStyle}>
-                {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                    return <AgendaItem
-                        editable={loggedIn}
-                        key={index}
-                        index={index + 1}
-                        agenda={agendaItem}
-                        decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
-                        meetingId={meetingId}
-                    />
-                })}
+                    {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                        return <AgendaItem
+                            editable={loggedIn}
+                            key={index}
+                            index={index + 1}
+                            agenda={agendaItem}
+                            decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                            meetingId={meetingId}
+                        />
+                    })}
             </div>
             {showSyncBar &&
                 <SyncBar
