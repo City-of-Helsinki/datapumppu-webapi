@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next';
 import AgendaItem from './AgendaItem'
 import Login from './Login';
 import Header from './Header';
@@ -15,6 +16,15 @@ const agendaStyle = {
     paddingTop: "35px"
 }
 
+const agendaTitleStyle = {
+    backgroundColor: "inherit",
+    border: "none",
+    fontWeight: "bold",
+    textAlign: "start",
+    padding: "8px 8px 6px 8px",
+    color: "black"
+}
+
 export default function Meeting() {
     const [agenda, setAgenda] = useState([]);
     const [decisions, setDecisions] = useState([]);
@@ -23,6 +33,8 @@ export default function Meeting() {
     const [showHeader, setShowHeader] = useState(false)
     const [showLogin, setShowLogin] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,6 +118,7 @@ export default function Meeting() {
                     />
                 })}
             </div>
+            {(!agenda || agenda?.length === 0) && <div style={agendaTitleStyle}>{t('Agenda and Proceeding').toUpperCase()}</div>}
         </div>
     )
 }
