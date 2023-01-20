@@ -39,7 +39,6 @@ const agendaButtonStyle = {
     textAlign: "start",
     display: "flex",
     margin: "8px 8px 6px 8px",
-    alignItems: "center"
 }
 const agendaTitleStyle = {
     ...agendaButtonStyle,
@@ -142,6 +141,11 @@ const editorStyle = {
     marginTop: "2px"
 }
 
+const linkStyle = {
+    ...textStyles,
+    color: "#0072c6"
+}
+
 export {
     iconStyle,
     itemStyle,
@@ -154,5 +158,6 @@ export {
     attachmentTable,
     loginStyle,
     headerStyle,
-    editorStyle
+    editorStyle,
+    linkStyle
 }

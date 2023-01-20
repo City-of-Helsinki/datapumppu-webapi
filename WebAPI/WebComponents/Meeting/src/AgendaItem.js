@@ -8,7 +8,9 @@ import {
     itemOpenStyle,
     agendaButtonStyle,
     agendaTitleStyle,
-    contentStyle, attachmentTable
+    contentStyle, 
+    attachmentTable,
+    linkStyle
 } from './styles';
 import EditableItem from './EditableItem';
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
@@ -74,7 +76,7 @@ export default function AgendaItem(props) {
                                     {decisionResolutionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
-                                    <a href={motionPath}>{openText}</a>
+                                    <a style={linkStyle} href={motionPath}>{openText}</a>
                                 </div>
                             </div>
                         }
@@ -85,7 +87,7 @@ export default function AgendaItem(props) {
                                 </div>
                                 <div style={attachmentTable.cell}>
 
-                                    <a href={decisionPath}>{openText}</a>
+                                    <a style={linkStyle} href={decisionPath}>{openText}</a>
                                 </div>
                             </div>
                         }
@@ -99,7 +101,7 @@ export default function AgendaItem(props) {
                                     <div style={attachmentTable.cell}>
 
                                         {attachment.fileURI ?
-                                            <a href={attachment.fileURI}>{attachment.title}</a>
+                                            <a style={linkStyle} href={attachment.fileURI}>{attachment.title}</a>
                                             : t("Non-public")}
                                     </div>
                                 </div>
