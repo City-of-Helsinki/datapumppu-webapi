@@ -1,8 +1,9 @@
 
-import { useEffect, useState } from 'react'
-import AgendaItem from './AgendaItem'
+import { useEffect, useState } from 'react';
+import AgendaItem from './AgendaItem';
 import Login from './Login';
 import Header from './Header';
+import SyncBar from './SyncBar';
 import {
     containerStyle,
     agendaStyle,

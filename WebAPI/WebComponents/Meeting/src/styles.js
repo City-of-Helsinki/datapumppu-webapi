@@ -146,6 +146,25 @@ const headerStyle = {
         border: "none",
     },
 }
+const syncBarStyle = {
+    footer: {
+        ...textStyles,
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: 'black',
+        padding: "10px",
+        color: "white"
+    },
+    button: {
+        padding: "5px",
+        marginLeft: "2px",
+
+    },
+    input: { margin: '5px', padding: '5px', width: "50px" }
+
+}
 
 const editorStyle = {
     border: "1px solid #414143",
@@ -172,5 +191,6 @@ export {
     loginStyle,
     headerStyle,
     editorStyle,
-    linkStyle
+    linkStyle,
+    syncBarStyle
 }
