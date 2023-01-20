@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default function Header(props) {
-
   const style = {
     header: {
       position: "fixed",
@@ -15,16 +14,18 @@ export default function Header(props) {
       width: "100%",
       textAlign: "center"
     },
- 
     logoutBtn: {
       float: "right",
+    },
+    syncBtn: {
+      float: "left",
     }
-
   }
 
   return (
     <div style={style.header}>
-        EDIT
+      <button style={style.syncBtn} onClick={props.toggleSyncBar}>SYNC</button>
+      EDIT
       <button style={style.logoutBtn} onClick={props.submitLogout}>X</button></div>
   )
 }

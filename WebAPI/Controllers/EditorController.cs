@@ -50,6 +50,13 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("videosync")]
+        [Authorize]
+        public async Task<IActionResult> UpdateVideoSync([FromBody] VideoSyncDTO videoSync)
+        {
+            await _storageApiClient.UpdateVideoSync(videoSync);
+            return Ok();
+        }
 
         [HttpGet]
         [Route("logout")]
