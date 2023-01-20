@@ -69,6 +69,7 @@ export default function AgendaItem(props) {
             </button>
             {accordionOpen &&
                 <div style={contentStyle}>
+                    <a href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>
                     {agenda.caseIDLabel &&
                         <div>
                             <div>
