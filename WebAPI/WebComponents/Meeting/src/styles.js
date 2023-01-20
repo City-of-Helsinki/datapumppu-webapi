@@ -38,11 +38,16 @@ const agendaButtonStyle = {
     fontWeight: "bold",
     textAlign: "start",
     display: "flex",
-    margin: "8px 8px 6px 8px",
+    maxWidth: "70%",
+    cursor: "pointer",
+    textDecoration: "none"
 }
 const agendaTitleStyle = {
-    ...agendaButtonStyle,
-    maxWidth: "70%",
+    display: "flex",
+    flexDirection: "row",
+    margin: "8px 8px 6px 8px",
+    justifyContent: "space-between",
+
 }
 
 const containerStyle = {

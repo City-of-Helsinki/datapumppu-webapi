@@ -8,7 +8,7 @@ import {
     itemOpenStyle,
     agendaButtonStyle,
     agendaTitleStyle,
-    contentStyle, 
+    contentStyle,
     attachmentTable,
     linkStyle
 } from './styles';
@@ -55,19 +55,25 @@ export default function AgendaItem(props) {
     const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     return (
         <div style={accordionOpen ? itemOpenStyle : itemStyle}>
-            <button style={agendaTitleStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
-                <div style={{ paddingRight: "10px", marginTop: "4px" }}>
-                    {accordionOpen
-                        ? <FaCaretUp />
-                        : <FaCaretDown />}
-                </div>
-                <div style={{ paddingRight: "10px" }}>
-                    {index}.</div>
-                <div style={{ paddingRight: "10px" }}>
-                    {agenda.title}</div>
-            </button>
+            <div style={agendaTitleStyle}>
+                <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                    <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                        {accordionOpen
+                            ? <FaCaretUp />
+                            : <FaCaretDown />}
+                    </div>
+                    <div style={{ paddingRight: "10px" }}>
+                        {index}.</div>
+                    <div style={{ paddingRight: "10px" }}>
+                        {agenda.title}</div>
+                </button>
+                {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>}
+
+            </div>
             {accordionOpen &&
+
                 <div style={contentStyle}>
+
                     <div style={attachmentTable.table}>
                         {
                             agenda.caseIDLabel &&
