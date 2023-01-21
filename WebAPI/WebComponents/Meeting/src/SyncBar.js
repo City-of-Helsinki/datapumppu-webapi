@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { syncBarStyle } from './styles';
-import getVideoPosition from './videoApi'
+import GetVideoPosition from './video'
 
 export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
@@ -24,7 +24,7 @@ export default function SyncBar(props) {
   }
 
   const getCurrentVideoPosition = () => {
-    let videoPosition = getVideoPosition()
+    let videoPosition = GetVideoPosition()
     setInputValue(convertToMMSS(videoPosition))
   }
 
