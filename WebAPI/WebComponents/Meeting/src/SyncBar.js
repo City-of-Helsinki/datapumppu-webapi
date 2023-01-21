@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { syncBarStyle } from './styles';
+import getVideoPosition from './videoApi'
+
 export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
   const { meetingId, agendaPointTimestamp } = props
@@ -22,13 +24,7 @@ export default function SyncBar(props) {
   }
 
   const getCurrentVideoPosition = () => {
-    let videoPosition = 0;
-    const playerApi = flowplayer("#odPlayer")
-    if (playerApi) {
-      console.log("playerApi.video.time", playerApi.video.time)
-      videoPosition = playerApi.video.time
-    }
-    
+    let videoPosition = getVideoPosition()
     setInputValue(convertToMMSS(videoPosition))
   }
 
