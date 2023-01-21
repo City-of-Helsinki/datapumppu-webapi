@@ -22,7 +22,13 @@ export default function SyncBar(props) {
   }
 
   const getCurrentVideoPosition = () => {
-    const videoPosition = 0;
+    let videoPosition = 0;
+    const playerApi = flowplayer("#odPlayer")
+    if (playerApi) {
+      console.log("playerApi.video.time", playerApi.video.time)
+      videoPosition = playerApi.video.time
+    }
+    
     setInputValue(convertToMMSS(videoPosition))
   }
 
