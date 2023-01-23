@@ -27,6 +27,7 @@ const agendaTitleStyle = {
 }
 
 export default function Meeting() {
+    const [accordionOpen, setAccordionOpen] = useState(true);
     const [agenda, setAgenda] = useState([]);
     const [decisions, setDecisions] = useState([]);
     const [meetingId, setMeetingId] = useState("");
@@ -108,29 +109,30 @@ export default function Meeting() {
         <div style={containerStyle}>
             {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
-            <div style={agendaStyle}>
-                {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                    return <AgendaItem
-                        editable={loggedIn}
-                        key={index}
-                        index={index + 1}
-                        agenda={agendaItem}
-                        decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
-                        meetingId={meetingId}
-                    />
-                })}
+            <div style={agendaTitleStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                {accordionOpen && <span className='glyphicon glyphicon-chevron-down'></span>}
+                {t('Agenda and Proceeding').toUpperCase()}
             </div>
+            {accordionOpen &&
+                <div style={agendaStyle}>
+                    {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                        return <AgendaItem
+                            editable={loggedIn}
+                            key={index}
+                            index={index + 1}
+                            agenda={agendaItem}
+                            decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                            meetingId={meetingId}
+                        />
+                    })}
+                </div>
+            }
             {showSyncBar && agenda &&
                 <SyncBar
                     meetingId={meetingId}
                     agendaPointTimestamp={agenda.find(item => item.agendaPoint === 2)?.timestamp}
                     closeSyncBar={() => setShowSyncBar(false)}
                 />
-            }
-            {(!agenda || agenda?.length === 0) &&
-                <div style=
-                    {agendaTitleStyle}>{t('Agenda and Proceeding').toUpperCase()}
-                </div>
             }
         </div>
     )
