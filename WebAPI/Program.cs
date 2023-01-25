@@ -51,6 +51,7 @@ namespace WebAPI
             });
             // Removed for now, until we know what to do about it
             //builder.Services.AddHostedService<LiveMeetingObserver>();
+            builder.Services.AddHostedService<KafkaLiveMeetingObserver>();
 
             var app = builder.Build();
 
