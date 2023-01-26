@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { syncBarStyle } from './styles';
+import GetVideoPosition from './video'
 
 export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
@@ -17,12 +19,12 @@ export default function SyncBar(props) {
         "VideoPosition": videoposition
       })
     }
-    fetch('http://localhost:5212/editor/videosync', request)
+    fetch('#--API_URL--#/editor/videosync', request)
     props.closeSyncBar()
   }
 
   const getCurrentVideoPosition = () => {
-    const videoPosition = 0;
+    let videoPosition = GetVideoPosition()
     setInputValue(convertToMMSS(videoPosition))
   }
 
@@ -38,19 +40,17 @@ export default function SyncBar(props) {
   }
 
   return (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: 'black' }}>
-      <div style={{ alignItems: 'left', padding: '10px', color: "white" }}>
+    <div style={syncBarStyle.footer}>
         VIDEO POSITION AT THE START OF AGENDA 2:
         <input
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
           placeholder="0:00"
-          style={{ margin: '5px', padding: '5px', width: "50px" }}
+          style={syncBarStyle.input}
         />
-        <button style={{ padding: '5px' }} onClick={() => getCurrentVideoPosition()}>SYNC</button>
-        <button style={{ padding: '5px' }} onClick={() => submitSync(convertToSec(inputValue))}>SAVE</button>
+        <button style={syncBarStyle.button} onClick={() => getCurrentVideoPosition()}>SYNC</button>
+        <button style={syncBarStyle.button} onClick={() => submitSync(convertToSec(inputValue))}>SAVE</button>
       </div>
-    </div>
   );
 }
 

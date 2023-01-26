@@ -3,6 +3,7 @@ using WebAPI.StorageClient;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using WebAPI.Data;
 
 namespace WebAPI
 {
@@ -27,6 +28,8 @@ namespace WebAPI
                     builder.SetIsOriginAllowed(_ => true);
                 });
             });
+
+            builder.Services.AddSingleton<IMeetingDataProvider, MeetingDataProvider>();
 
             builder.Services.AddScoped<IStorageApiClient, StorageApiClient>();
             builder.Services.AddScoped<IStorageConnection, StorageConnection>();

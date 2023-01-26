@@ -5,17 +5,10 @@ import AgendaItem from './AgendaItem'
 import Login from './Login';
 import Header from './Header';
 import SyncBar from './SyncBar';
-
-const containerStyle = {
-    maxWidth: "800px",
-    WebkitTransition: "all 2s ease",
-    MozTransition: "all 2s ease",
-    OTransition: "all 2s ease",
-    transition: "all 2s ease"
-}
-const agendaStyle = {
-    paddingTop: "35px"
-}
+import {
+    containerStyle,
+    agendaStyle,
+} from './styles';
 
 const agendaTitleStyle = {
     backgroundColor: "inherit",
