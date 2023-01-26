@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AgendaItem from './AgendaItem';
 import Login from './Login';
 import Header from './Header';
@@ -9,7 +10,17 @@ import {
     agendaStyle,
 } from './styles';
 
+const agendaTitleStyle = {
+    backgroundColor: "inherit",
+    border: "none",
+    fontWeight: "bold",
+    textAlign: "start",
+    padding: "8px 8px 6px 8px",
+    color: "black"
+}
+
 export default function Meeting() {
+    const [accordionOpen, setAccordionOpen] = useState(true);
     const [agenda, setAgenda] = useState([]);
     const [decisions, setDecisions] = useState([]);
     const [meetingId, setMeetingId] = useState("");
@@ -18,6 +29,8 @@ export default function Meeting() {
     const [showLogin, setShowLogin] = useState(false)
     const [showSyncBar, setShowSyncBar] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -89,7 +102,12 @@ export default function Meeting() {
         <div style={containerStyle}>
             {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
-            <div style={agendaStyle}>
+            <div style={agendaTitleStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                {accordionOpen && <span className='glyphicon glyphicon-chevron-down'></span>}
+                {t('Agenda and Proceeding').toUpperCase()}
+            </div>
+            {accordionOpen &&
+                <div style={agendaStyle}>
                     {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
                         return <AgendaItem
                             editable={loggedIn}
@@ -100,7 +118,8 @@ export default function Meeting() {
                             meetingId={meetingId}
                         />
                     })}
-            </div>
+                </div>
+            }
             {showSyncBar && agenda &&
                 <SyncBar
                     meetingId={meetingId}
