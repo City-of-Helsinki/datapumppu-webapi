@@ -1,7 +1,7 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import AgendaItem from './AgendaItem'
+import AgendaItem from './AgendaItem';
 import Login from './Login';
 import Header from './Header';
 import SyncBar from './SyncBar';
