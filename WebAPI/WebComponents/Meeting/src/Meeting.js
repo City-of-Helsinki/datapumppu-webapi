@@ -33,6 +33,24 @@ export default function Meeting() {
     const { t } = useTranslation();
 
     useEffect(() => {
+        const connection = new signalR.HubConnectionBuilder()
+          .withUrl("#--API_URL--#/live")
+          .withAutomaticReconnect()
+          .configureLogging(signalR.LogLevel.Information)
+          .build();
+    
+        connection.start().then(result => {
+    
+          console.log("Connected");
+          connection.on("ReceiveMessage", message => {
+            console.log("Message received; ", message)
+          })
+    
+    
+        }).catch(err => console.log(err))
+      },  [])
+
+    useEffect(() => {
         const fetchData = async () => {
             await fetch('#--API_URL--#/meetings/meeting?year=#--MEETING_YEAR--#&sequenceNumber=#--MEETING_SEQUENCE_NUM--#&lang=#--LANGUAGE--#')
                 .then(async (res) => {
