@@ -4,7 +4,7 @@ import Meeting from "./Meeting"
 import i18n from './i18n';
 import { I18nextProvider} from 'react-i18next'
 
-import './theme.css'
+// import './theme.css'
 
 const root = ReactDom.createRoot(document.getElementById('meeting'))
 root.render(

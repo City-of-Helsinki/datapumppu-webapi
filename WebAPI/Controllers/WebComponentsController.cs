@@ -1,36 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using WebAPI.Controllers.Filters;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("components")]
+    [TypeFilter(typeof(WebAPIExceptionFilter))]
     public class WebComponentsController : ControllerBase
     {
 
         private readonly IConfiguration _configuration;
+        private ILogger<WebComponentsController> _logger;
 
-        public WebComponentsController(IConfiguration configuration)
+        public WebComponentsController(IConfiguration configuration,
+            ILogger<WebComponentsController> logger)
         {
             _configuration = configuration;
-        }
-
-        [HttpGet]
-        [Route("example.js")]
-        public async Task<IActionResult> GetExample()
-        {
-            var text = await System.IO.File
-                .ReadAllTextAsync("./ScriptFiles/components/example.js");
-            var apiUrl = _configuration["API_URL"];
-            
-            if (apiUrl == null) 
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            text = text.Replace("#--API_URL--#", apiUrl);
-
-            return File(Encoding.UTF8.GetBytes(text), "application/javascript");
+            _logger = logger;
         }
 
         [HttpGet]
@@ -53,8 +40,10 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("meeting.js")]
-        public async Task<IActionResult> GetMeeting()
+        public async Task<IActionResult> GetMeeting(string year, string sequenceNumber, string lang)
         {
+            _logger.LogInformation("GET meeting.js");
+
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/meeting.js");
             var apiUrl = _configuration["API_URL"];
@@ -65,14 +54,64 @@ namespace WebAPI.Controllers
             }
 
             text = text.Replace("#--API_URL--#", apiUrl);
-
+            text = text.Replace("#--MEETING_YEAR--#", year);
+            text = text.Replace("#--MEETING_SEQUENCE_NUM--#", sequenceNumber);
+            text = text.Replace("#--LANGUAGE--#", lang);
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
 
         [HttpGet]
-        [Route("decision.js")]
-        public async Task<IActionResult> GetDecision()
+        [Route("pages/motion.html")]
+        public async Task<IActionResult> GetMotionPage(string caseIdLabel, string lang)
         {
+            _logger.LogInformation("GET GetMotionPage");
+
+            var text = await System.IO.File
+                .ReadAllTextAsync("./Pages//decision-page.html");
+            var apiUrl = _configuration["API_URL"];
+
+            if (apiUrl == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            text = text.Replace("#--API_URL--#", apiUrl);
+            text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
+            text = text.Replace("#--LANG--#", lang);
+            text = text.Replace("#--SHOW_MOTION--#", "true");
+
+            return Content(text, "text/html");
+        }
+
+        [HttpGet]
+        [Route("pages/decision.html")]
+        public async Task<IActionResult> GetDecisionPage(string caseIdLabel, string lang)
+        {
+            _logger.LogInformation("GET GetDecisionPage");
+
+            var text = await System.IO.File
+                .ReadAllTextAsync("./Pages//decision-page.html");
+            var apiUrl = _configuration["API_URL"];
+
+            if (apiUrl == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            text = text.Replace("#--API_URL--#", apiUrl);
+            text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
+            text = text.Replace("#--LANG--#", lang);
+            text = text.Replace("#--SHOW_MOTION--#", "false");
+
+            return Content(text, "text/html");
+        }
+
+        [HttpGet]
+        [Route("decision.js")]
+        public async Task<IActionResult> GetDecision(string caseIdLabel, string lang, bool showMotion)
+        {
+            _logger.LogInformation("GET decision.js");
+
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/decision.js");
             var apiUrl = _configuration["API_URL"];
@@ -83,7 +122,10 @@ namespace WebAPI.Controllers
             }
 
             text = text.Replace("#--API_URL--#", apiUrl);
-            
+            text = text.Replace("#--CASE_ID_LABEL--#", caseIdLabel);
+            text = text.Replace("#--LANG--#", lang);
+            text = text.Replace("#--SHOW_CONTENT--#", showMotion ? "motion" : "decision");
+
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
     }
