@@ -19,7 +19,7 @@ export default function SyncBar(props) {
         "VideoPosition": videoposition
       })
     }
-    fetch('http://localhost:5212/editor/videosync', request)
+    fetch('#--API_URL--#/editor/videosync', request)
     props.closeSyncBar()
   }
 
