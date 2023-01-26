@@ -51,8 +51,15 @@ export default function AgendaItem(props) {
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
-    const motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
-    const decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
+
+    var motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
+    var decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
+    
+    if (parseInt("#--MEETING_YEAR--#") > 2018 ||(parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
+        motionPath = "https://dev.hel.fi/paatokset/asia/" + agenda?.caseIDLabel?.replace(" ", "-") + "/kvsto-#--MEETING_YEAR--#-#--MEETING_SEQUENCE_NUM--#"
+        decisionPath = "https://dev.hel.fi/paatokset/asia/" + decision?.caseID
+    }
+
     return (
         <div style={accordionOpen ? itemOpenStyle : itemStyle}>
             <div style={agendaTitleStyle}>
@@ -68,12 +75,9 @@ export default function AgendaItem(props) {
                         {agenda.title}</div>
                 </button>
                 {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>}
-
             </div>
             {accordionOpen &&
-
                 <div style={contentStyle}>
-
                     <div style={attachmentTable.table}>
                         {
                             agenda.caseIDLabel &&
@@ -92,14 +96,12 @@ export default function AgendaItem(props) {
                                     {decisionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
-
                                     <a style={linkStyle} href={decisionPath}>{openText}</a>
                                 </div>
                             </div>
                         }
                         {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
                             return (
-
                                 <div className='attachment' key={'attach' + index} style={attachmentTable.row}>
                                     <div style={attachmentTable.cell}>
                                         {t("Attachment")} {attachment.attachmentNumber} {''}
@@ -121,7 +123,6 @@ export default function AgendaItem(props) {
                             agendaItem={agenda}
                             meetingId={meetingId}
                             language={"#--LANGUAGE--#"} /> : <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
-
                     {statements && <Statements statements={statements}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
 
