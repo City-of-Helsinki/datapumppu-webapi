@@ -32,24 +32,43 @@ export default function Meeting() {
 
     const { t } = useTranslation();
 
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
             await fetch('#--API_URL--#/meetings/meeting?year=#--MEETING_YEAR--#&sequenceNumber=#--MEETING_SEQUENCE_NUM--#&lang=#--LANGUAGE--#')
-                .then(async (res) => {
-                    if (res.status !== 204) {
-                        return await res.json()
-                    }
-                })
-                .then((json) => {
-                    if (json && Object.keys(json).length > 0) {
-                        setAgenda(json.agendas)
-                        setDecisions(json.decisions)
-                        setMeetingId(json.meetingID)
-                    }
-                })
-        }
+            .then(async (res) => {
+                if (res.status !== 204) {
+                    return await res.json()
+                }
+            })
+            .then((json) => {
+                if (json && Object.keys(json).length > 0) {
+                    console.log(json.meetingID)
+                    setAgenda(json.agendas)
+                    setDecisions(json.decisions)
+                    setMeetingId(json.meetingID)
+                }
+            })
+    }
+
+    useEffect(() => {
         fetchData()
     }, [setAgenda])
+
+    useEffect(() => {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("#--API_URL--#/live")
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().then(() => {
+            console.log("Connected");
+            connection.on("receiveMessage", message => {
+                if (message == meetingId) {
+                    fetchData()
+                }
+            })
+        }).catch(err => console.log(err))
+    }, [meetingId])
 
     window.onkeydown = event => {
         switch (event.keyCode) {
