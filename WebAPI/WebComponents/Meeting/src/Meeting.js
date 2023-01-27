@@ -33,7 +33,6 @@ export default function Meeting() {
     const { t } = useTranslation();
 
     const fetchData = async () => {
-        console.log("FETCHING")
             await fetch('#--API_URL--#/meetings/meeting?year=#--MEETING_YEAR--#&sequenceNumber=#--MEETING_SEQUENCE_NUM--#&lang=#--LANGUAGE--#')
             .then(async (res) => {
                 if (res.status !== 204) {
@@ -64,8 +63,6 @@ export default function Meeting() {
         connection.start().then(() => {
             console.log("Connected");
             connection.on("receiveMessage", message => {
-                console.log(message)
-                console.log(meetingId)
                 if (message == meetingId) {
                     fetchData()
                 }
