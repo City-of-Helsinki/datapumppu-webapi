@@ -56,7 +56,7 @@ export default function Meeting() {
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://localhost:5212/live")
+            .withUrl("#--API_URL--#/live")
             .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Information)
             .build();
