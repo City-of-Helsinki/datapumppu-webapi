@@ -34,7 +34,6 @@ namespace WebAPI.LiveMeetings
 
             consumer.Subscribe(topic);
             
-            int clickCount = 0;
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
@@ -43,7 +42,7 @@ namespace WebAPI.LiveMeetings
                     var message = cr.Message.Value;
                     _logger.LogInformation(message);
 
-                    await _hub.Clients.All.SendAsync("clickCount", clickCount++);
+                    await _hub.Clients.All.SendAsync("receiveMessage", message);
 
                     consumer.Commit(cr);
                     _logger.LogInformation("Live Meeting Consumer event successfully received.");
