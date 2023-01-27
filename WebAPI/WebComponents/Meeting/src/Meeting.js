@@ -9,6 +9,10 @@ import {
     containerStyle,
     agendaStyle,
 } from './styles';
+import {
+    HubConnectionBuilder,
+    LogLevel
+  } from '@microsoft/signalr';
 
 const agendaTitleStyle = {
     backgroundColor: "inherit",
@@ -54,10 +58,10 @@ export default function Meeting() {
     }, [setAgenda])
 
     useEffect(() => {
-        const connection = new signalR.HubConnectionBuilder()
+        const connection = new HubConnectionBuilder()
             .withUrl("#--API_URL--#/live")
             .withAutomaticReconnect()
-            .configureLogging(signalR.LogLevel.Information)
+            .configureLogging(LogLevel.Information)
             .build();
 
         connection.start().then(() => {

@@ -15,7 +15,6 @@ export default function EditableItem(props) {
 
     useEffect(() => {
         const wrapUnwrapped = () => {
-            console.log(agendaItem.html)
             var div = document.createElement('div')
             div.innerHTML = agendaItem.html
             var nodes = div.childNodes
@@ -29,8 +28,6 @@ export default function EditableItem(props) {
                     div.replaceChild(p, nodes[i])
                 }
             }
-            console.log(nodes)
-
             setEditorState(EditorState.createWithContent(stateFromHTML(div.innerHTML)))
         }
         wrapUnwrapped()
