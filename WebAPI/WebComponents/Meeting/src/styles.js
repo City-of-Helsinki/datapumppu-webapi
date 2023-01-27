@@ -34,15 +34,18 @@ const contentStyle = {
 const agendaButtonStyle = {
     ...textStyles,
     backgroundColor: "inherit",
+    background: "inherit",
     border: "none",
     fontWeight: "bold",
     textAlign: "start",
     display: "flex",
     maxWidth: "70%",
     cursor: "pointer",
-    textDecoration: "none"
+    textDecoration: "none",
+    textTransform: "none"
 }
 const agendaTitleStyle = {
+    ...textStyles,
     display: "flex",
     flexDirection: "row",
     margin: "8px 8px 6px 8px",
