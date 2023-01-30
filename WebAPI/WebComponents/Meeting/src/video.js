@@ -1,6 +1,10 @@
 
 export default function GetVideoPosition () {
-    const playerApi = window._icareus["playerObject"]
+
+    console.log("window._icareus", window._icareus)
+    console.log("window._icareus", window._icareus.playerObject)
+    console.log("window._icareus", window._icareus["playerObject"])
+    const playerApi = window._icareus.playerObject
 
     if (!playerApi) {
         return 0
@@ -12,8 +16,6 @@ export default function GetVideoPosition () {
     console.log("getPlayerVersion", playerApi.getPlayerVersion())
     console.log("getStreamType", playerApi.getStreamType())
     console.log("getControls", playerApi.getControls())
-    console.log("_icareus", _icareus)
-    console.log("window", window)
     
-    return videoPosition;
+    return videoPosition / 1000;
 }
