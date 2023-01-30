@@ -1,4 +1,3 @@
-import flowplayer from '@flowplayer/player'
 
 export default function GetVideoPosition () {
     const playerApi = new window.RadiantMP("#odPlayer")
