@@ -1,6 +1,6 @@
 
 export default function GetVideoPosition () {
-    const playerApi = new window.RadiantMP("odPlayer")
+    const playerApi = window._icareus["playerObject"]
 
     if (!playerApi) {
         return 0
