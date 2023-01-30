@@ -42,8 +42,8 @@ export default function SyncBar(props) {
   }
 
   const convertToMMSS = (seconds) => {
-    const mm = Math.floor(seconds / 60)
-    const ss = Math.floor(seconds % 60)
+    const mm = Math.floor(seconds / 60).toString()
+    const ss = Math.floor(seconds % 60).toString()
     return mm + ":" + (ss.length < 2 ? "0" + ss : ss)
   }
 
