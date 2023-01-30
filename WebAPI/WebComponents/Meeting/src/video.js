@@ -1,9 +1,9 @@
 import flowplayer from '@flowplayer/player'
 
 export default function GetVideoPosition () {
-    const playerApi = flowplayer("#odPlayer")
+    const playerApi = new window.RadiantMP("#odPlayer")
     if (playerApi) {
-        console.log("playerApi.video.time", playerApi.video.time)
-        videoPosition = playerApi.video.time
+        console.log("playerApi.video.time", playerApi.getCurrentTime())
+        videoPosition = playerApi.getCurrentTime()
     }
 }
