@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { syncBarStyle } from './styles';
 import GetVideoPosition from './video'
-import video from './flowplayer.min.js'
 
 export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
