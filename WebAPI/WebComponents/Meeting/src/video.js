@@ -13,6 +13,7 @@ export default function GetVideoPosition () {
     console.log("getStreamType", playerApi.getStreamType())
     console.log("getControls", playerApi.getControls())
     console.log("_icareus", _icareus)
+    console.log("window", window)
     
     return videoPosition;
 }
