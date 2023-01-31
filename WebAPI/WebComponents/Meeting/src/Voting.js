@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
 import { jsPDF } from "jspdf"
-import { html2canvas } from "html2canvas";
-import { agendaButtonStyle, itemOpenStyle, itemStyle, linkStyle } from './styles';
+import { agendaButtonStyle, linkStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const champerStyle = {
@@ -68,13 +67,12 @@ export default function Voting(props) {
                 }
             }
         })
-
-        setSeatMap(tempSeatMap)        
+        setSeatMap(tempSeatMap)
     }, [seats])
 
     const createVoterElement = (vote) => {
         return (
-            <div>{ vote.name}</div>
+            <div>{vote.name}</div>
         )
     }
 
@@ -83,14 +81,14 @@ export default function Voting(props) {
         let doc = new jsPDF("portrait", 'pt', 'A4');
         doc.setFontSize(8)
         doc.html(document.getElementById('print-area'), {
-          html2canvas: {
-            scale: 0.7
-          },
-          callback: () => {
-            doc.save('vote.pdf');
-          },
-          margin: [40, 200, 60, 40]
-        })    
+            html2canvas: {
+                scale: 0.7
+            },
+            callback: () => {
+                doc.save('vote.pdf');
+            },
+            margin: [40, 200, 60, 40]
+        })
     }
 
     const toggleColors = () => {
@@ -105,48 +103,50 @@ export default function Voting(props) {
             <div>{t("Empty")}: {voting.emptyCount}</div>
             <div>{t("Absent")}: {voting.absentCount}</div>
             <div>
-            <button style={agendaButtonStyle} onClick={() => setShowVotes(!showVotes)} data-html2canvas-ignore={"true"}>
-            <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                <button style={agendaButtonStyle} onClick={() => setShowVotes(!showVotes)} data-html2canvas-ignore={"true"}>
+                    <div style={{ paddingRight: "10px", marginTop: "4px" }}>
                         {showVotes
                             ? <FaCaretUp />
                             : <FaCaretDown />}
                     </div>
-                {t("Show vote details")}
-            </button>
-            {showVotes &&
-                <div>
-                    <div style={champerStyle}>
-                        <SeatRow showColors={showColors} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
-                        <SeatRow showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                    {t("Show vote details")}
+                </button>
+                {showVotes &&
+                    <div>
+                        <div style={champerStyle}>
+                            <SeatRow showColors={showColors} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
+                            <SeatRow showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                        </div>
+                        <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
+                            {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
+                        </a>
+                        <a href="javascript:void(0)" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
+                            {t("Download voting map pdf")}
+                        </a>
+                        <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
+                            <div>{t("FOR")}</div>
+                            {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
+
+                            <div>{t("AGAINST")}</div>
+                            {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
+
+                            <div>{t("EMPTY")}</div>
+                            {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
+
+                            <div>{t("ABSENT")}</div>
+                            {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
+
+                        </div>
                     </div>
-                    <button onClick={toggleColors} data-html2canvas-ignore={"true"} style={agendaButtonStyle}>
-                        {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
-                    </button>
-                    <button onClick={downloadPDF} data-html2canvas-ignore={"true"} style={agendaButtonStyle}>{t("Download voting map pdf")}</button>
-                    <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
-                        <div>{t("FOR")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote)) }
-
-                        <div>{t("AGAINST")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote)) }
-
-                        <div>{t("EMPTY")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote)) }
-
-                        <div>{t("ABSENT")}</div>
-                        { voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote)) }
-
-                    </div>
-                </div>
-            }
+                }
             </div>
         </div>
     )
