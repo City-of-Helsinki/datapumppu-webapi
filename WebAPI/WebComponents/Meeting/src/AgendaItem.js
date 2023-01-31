@@ -7,7 +7,7 @@ import {
     itemStyle,
     itemOpenStyle,
     agendaButtonStyle,
-    agendaTitleStyle,
+    titleStyle,
     contentStyle,
     attachmentTable,
     linkStyle
@@ -62,7 +62,7 @@ export default function AgendaItem(props) {
 
     return (
         <div style={accordionOpen ? itemOpenStyle : itemStyle}>
-            <div style={agendaTitleStyle}>
+            <div style={titleStyle}>
                 <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
                     <div style={{ paddingRight: "10px", marginTop: "4px" }}>
                         {accordionOpen
@@ -115,17 +115,17 @@ export default function AgendaItem(props) {
                                 </div>
                             )
                         })
-
                         }
                     </div>
                     {agenda.html && (editable ?
                         <EditableItem
                             agendaItem={agenda}
                             meetingId={meetingId}
-                            language={"#--LANGUAGE--#"} /> : <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
+                            language={"#--LANGUAGE--#"} /> 
+                            : 
+                            <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
                     {statements && <Statements statements={statements}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
-
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
                             <div style={{ paddingRight: "10px", marginTop: "4px" }}>
                                 {showSeatMap

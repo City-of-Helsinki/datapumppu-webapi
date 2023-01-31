@@ -7,21 +7,14 @@ import Header from './Header';
 import SyncBar from './SyncBar';
 import {
     containerStyle,
-    agendaStyle,
+    agendaButtonStyle
 } from './styles';
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import {
     HubConnectionBuilder,
     LogLevel
-  } from '@microsoft/signalr';
+} from '@microsoft/signalr';
 
-const agendaTitleStyle = {
-    backgroundColor: "inherit",
-    border: "none",
-    fontWeight: "bold",
-    textAlign: "start",
-    padding: "8px 8px 6px 8px",
-    color: "black"
-}
 
 export default function Meeting() {
     const [accordionOpen, setAccordionOpen] = useState(true);
@@ -45,7 +38,6 @@ export default function Meeting() {
             })
             .then((json) => {
                 if (json && Object.keys(json).length > 0) {
-                    console.log(json.meetingID)
                     setAgenda(json.agendas)
                     setDecisions(json.decisions)
                     setMeetingId(json.meetingID)
@@ -125,23 +117,23 @@ export default function Meeting() {
         <div style={containerStyle}>
             {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
-            <div style={agendaTitleStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
-                {accordionOpen && <span className='glyphicon glyphicon-chevron-down'></span>}
-                {t('Agenda and Proceeding').toUpperCase()}
-            </div>
-            {accordionOpen &&
-                <div style={agendaStyle}>
-                    {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                        return <AgendaItem
-                            editable={loggedIn}
-                            key={index}
-                            index={index + 1}
-                            agenda={agendaItem}
-                            decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
-                            meetingId={meetingId}
-                        />
-                    })}
+            <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                    {accordionOpen ? <FaCaretUp /> : <FaCaretDown />}
                 </div>
+                {t('Agenda and Proceeding').toUpperCase()}
+            </button>
+            {accordionOpen &&
+                agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                    return <AgendaItem
+                        editable={loggedIn}
+                        key={index}
+                        index={index + 1}
+                        agenda={agendaItem}
+                        decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                        meetingId={meetingId}
+                    />
+                })
             }
             {showSyncBar && agenda &&
                 <SyncBar

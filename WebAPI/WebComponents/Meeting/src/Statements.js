@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useTranslation } from 'react-i18next';
+import { linkStyle } from "./styles";
 
 const speechesContainerStyle = {
     columnCount: 2,
@@ -19,7 +19,7 @@ export default function  Statements(props) {
     const getStatement = (statement) => {
         return (
             <div>
-                <a href={`#T${statement.videoPosition}`}>
+                <a href={`#T${statement.videoPosition}`} style={linkStyle}>
                     { statement.person }: { getTimespan(statement.durationSeconds) }
                 </a>
             </div>
