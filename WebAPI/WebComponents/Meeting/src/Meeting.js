@@ -10,6 +10,10 @@ import {
     agendaButtonStyle
 } from './styles';
 import { FaCaretDown } from "react-icons/fa";
+import {
+    HubConnectionBuilder,
+    LogLevel
+  } from '@microsoft/signalr';
 
 
 export default function Meeting() {
@@ -47,10 +51,10 @@ export default function Meeting() {
     }, [setAgenda])
 
     useEffect(() => {
-        const connection = new signalR.HubConnectionBuilder()
+        const connection = new HubConnectionBuilder()
             .withUrl("#--API_URL--#/live")
             .withAutomaticReconnect()
-            .configureLogging(signalR.LogLevel.Information)
+            .configureLogging(LogLevel.Information)
             .build();
 
         connection.start().then(() => {

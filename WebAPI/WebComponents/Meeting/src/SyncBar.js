@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { syncBarStyle } from './styles';
 import GetVideoPosition from './video'
 
 export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
   const { meetingId, agendaPointTimestamp } = props
+
+  // useEffect(() => {
+  //   const playerApi = video.flowplayer("#odPlayer")
+  //   if (playerApi) {
+  //       console.log("playerApi.video.time", playerApi.video.time)
+  //       videoPosition = playerApi.video.time
+  //   }
+  // }, [])
 
   const submitSync = (videoposition) => {
     const request = {
@@ -34,8 +42,8 @@ export default function SyncBar(props) {
   }
 
   const convertToMMSS = (seconds) => {
-    const mm = Math.floor(seconds / 60)
-    const ss = Math.floor(seconds % 60)
+    const mm = Math.floor(seconds / 60).toString()
+    const ss = Math.floor(seconds % 60).toString()
     return mm + ":" + (ss.length < 2 ? "0" + ss : ss)
   }
 
