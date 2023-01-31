@@ -21,8 +21,7 @@ export default function EditableItem(props) {
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].nodeName == "H4") {
                     div.removeChild(nodes[i])
-                }
-                if (nodes[i].nodeType == 3) {
+                } else if (nodes[i].nodeType == 3) {
                     var p = document.createElement('p');
                     p.textContent = nodes[i].textContent;
                     div.replaceChild(p, nodes[i])
