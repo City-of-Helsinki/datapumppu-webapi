@@ -55,7 +55,7 @@ export default function AgendaItem(props) {
     var motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
     var decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
     
-    if (parseInt("#--MEETING_YEAR--#") > 2018 ||(parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
+    if (parseInt("#--MEETING_YEAR--#") < 2018 ||(parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
         motionPath = "https://dev.hel.fi/paatokset/asia/" + agenda?.caseIDLabel?.replace(" ", "-") + "/kvsto-#--MEETING_YEAR--#-#--MEETING_SEQUENCE_NUM--#"
         decisionPath = "https://dev.hel.fi/paatokset/asia/" + decision?.caseID
     }
