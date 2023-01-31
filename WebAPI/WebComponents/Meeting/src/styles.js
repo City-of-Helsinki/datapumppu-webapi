@@ -57,9 +57,7 @@ const containerStyle = {
     width: "100%",
     display: "flex",
     maxWidth: "1140px",
-}
-const agendaStyle = {
-    paddingTop: "35px"
+    flexDirection: "column"
 }
 
 const attachmentTable = {
@@ -188,7 +186,6 @@ export {
     contentStyle,
     agendaButtonStyle,
     containerStyle,
-    agendaStyle,
     agendaTitleStyle,
     attachmentTable,
     loginStyle,

@@ -7,17 +7,10 @@ import Header from './Header';
 import SyncBar from './SyncBar';
 import {
     containerStyle,
-    agendaStyle,
+    agendaButtonStyle
 } from './styles';
+import { FaCaretDown } from "react-icons/fa";
 
-const agendaTitleStyle = {
-    backgroundColor: "inherit",
-    border: "none",
-    fontWeight: "bold",
-    textAlign: "start",
-    padding: "8px 8px 6px 8px",
-    color: "black"
-}
 
 export default function Meeting() {
     const [accordionOpen, setAccordionOpen] = useState(true);
@@ -121,13 +114,12 @@ export default function Meeting() {
         <div style={containerStyle}>
             {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
-            <div style={agendaTitleStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
-                {accordionOpen && <span className='glyphicon glyphicon-chevron-down'></span>}
+            <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+            {accordionOpen && <div style={{ paddingRight: "10px", marginTop: "4px" }}><FaCaretDown /></div>}
                 {t('Agenda and Proceeding').toUpperCase()}
-            </div>
+            </button>
             {accordionOpen &&
-                <div style={agendaStyle}>
-                    {agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                    agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
                         return <AgendaItem
                             editable={loggedIn}
                             key={index}
@@ -136,8 +128,7 @@ export default function Meeting() {
                             decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
                             meetingId={meetingId}
                         />
-                    })}
-                </div>
+                    })
             }
             {showSyncBar && agenda &&
                 <SyncBar
