@@ -9,11 +9,11 @@ import {
     containerStyle,
     agendaButtonStyle
 } from './styles';
-import { FaCaretDown } from "react-icons/fa";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import {
     HubConnectionBuilder,
     LogLevel
-  } from '@microsoft/signalr';
+} from '@microsoft/signalr';
 
 
 export default function Meeting() {
@@ -38,7 +38,6 @@ export default function Meeting() {
             })
             .then((json) => {
                 if (json && Object.keys(json).length > 0) {
-                    console.log(json.meetingID)
                     setAgenda(json.agendas)
                     setDecisions(json.decisions)
                     setMeetingId(json.meetingID)
@@ -119,20 +118,22 @@ export default function Meeting() {
             {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
             {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
             <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
-            {accordionOpen && <div style={{ paddingRight: "10px", marginTop: "4px" }}><FaCaretDown /></div>}
+                <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                    {accordionOpen ? <FaCaretUp /> : <FaCaretDown />}
+                </div>
                 {t('Agenda and Proceeding').toUpperCase()}
             </button>
             {accordionOpen &&
-                    agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                        return <AgendaItem
-                            editable={loggedIn}
-                            key={index}
-                            index={index + 1}
-                            agenda={agendaItem}
-                            decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
-                            meetingId={meetingId}
-                        />
-                    })
+                agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                    return <AgendaItem
+                        editable={loggedIn}
+                        key={index}
+                        index={index + 1}
+                        agenda={agendaItem}
+                        decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                        meetingId={meetingId}
+                    />
+                })
             }
             {showSyncBar && agenda &&
                 <SyncBar

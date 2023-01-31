@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
 import { jsPDF } from "jspdf"
-import { agendaButtonStyle, linkStyle } from './styles';
+import { agendaButtonStyle, titleStyle, linkStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const champerStyle = {
@@ -19,7 +19,7 @@ const voteListContainerStyle = {
     columnCount: 3,
     columnGap: "10px",
     boxSizing: "border-box",
-    fontSize: "1em"
+    fontSize: "90%"
 }
 
 
@@ -44,12 +44,9 @@ export default function Voting(props) {
     }, [setSeats])
 
     useEffect(() => {
-
         const tempSeatMap = []
         seats.forEach(seat => {
-
             if (!isNaN(seat.seatId)) {
-
                 let voteType = 0;
                 const vote = voting.votes.find(vote => vote.name === seat.person)
                 if (vote !== undefined) {
@@ -97,22 +94,24 @@ export default function Voting(props) {
 
     return (
         <div id="print-area">
-            <div><h3>{t("Voting")}</h3></div>
+            <h4>{t("Voting")}</h4>
             <div>{voting.forTitleFI}: {voting.forCount}</div>
             <div>{voting.againstTitleFI}: {voting.againstCount}</div>
             <div>{t("Empty")}: {voting.emptyCount}</div>
             <div>{t("Absent")}: {voting.absentCount}</div>
             <div>
-                <button style={agendaButtonStyle} onClick={() => setShowVotes(!showVotes)} data-html2canvas-ignore={"true"}>
-                    <div style={{ paddingRight: "10px", marginTop: "4px" }}>
-                        {showVotes
-                            ? <FaCaretUp />
-                            : <FaCaretDown />}
-                    </div>
-                    {t("Show vote details")}
-                </button>
+                <div style={{ padding: "30px 10px 0 0" }}>
+                    <button style={agendaButtonStyle} onClick={() => setShowVotes(!showVotes)} data-html2canvas-ignore={"true"}>
+                        <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                            {showVotes
+                                ? <FaCaretUp />
+                                : <FaCaretDown />}
+                        </div>
+                        {t("Show vote details")}
+                    </button>
+                </div>
                 {showVotes &&
-                    <div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <div style={champerStyle}>
                             <SeatRow showColors={showColors} seats={seatMap}></SeatRow>
                             <SeatRow showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
@@ -132,18 +131,30 @@ export default function Voting(props) {
                             {t("Download voting map pdf")}
                         </a>
                         <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
-                            <div>{t("FOR")}</div>
-                            {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
-
-                            <div>{t("AGAINST")}</div>
-                            {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
-
-                            <div>{t("EMPTY")}</div>
-                            {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
-
-                            <div>{t("ABSENT")}</div>
-                            {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
-
+                            <p>
+                                <div>{t("FOR")}</div>
+                            </p>
+                            <p>
+                                {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
+                            </p>
+                            <p>
+                                <div>{t("AGAINST")}</div>
+                            </p>
+                            <p>
+                                {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
+                            </p>
+                            <p>
+                                <div>{t("EMPTY")}</div>
+                            </p>
+                            <p>
+                                {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
+                            </p>
+                            <p>
+                                <div>{t("ABSENT")}</div>
+                            </p>
+                            <p>
+                                {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
+                            </p>
                         </div>
                     </div>
                 }

@@ -5,11 +5,6 @@ const textStyles = {
     lineHeight: "1.4"
 }
 
-const iconStyle = {
-    fontSize: "16px",
-    paddingRight: "10px",
-}
-
 const itemStyle = {
     ...textStyles,
     backgroundColor: "white",
@@ -42,15 +37,15 @@ const agendaButtonStyle = {
     maxWidth: "70%",
     cursor: "pointer",
     textDecoration: "none",
-    textTransform: "none"
+    textTransform: "none",
+    padding: '0px'
 }
-const agendaTitleStyle = {
+const titleStyle = {
     ...textStyles,
     display: "flex",
     flexDirection: "row",
     margin: "8px 8px 6px 8px",
     justifyContent: "space-between",
-
 }
 
 const containerStyle = {
@@ -67,11 +62,10 @@ const attachmentTable = {
     },
     row: {
         display: "table-row",
-
     },
     cell: {
         display: "table-cell",
-        padding: "0 10px 0 0",
+        padding: "6px 20px 4px 0px",
     }
 }
 
@@ -180,13 +174,12 @@ const linkStyle = {
 }
 
 export {
-    iconStyle,
     itemStyle,
     itemOpenStyle,
     contentStyle,
     agendaButtonStyle,
     containerStyle,
-    agendaTitleStyle,
+    titleStyle,
     attachmentTable,
     loginStyle,
     headerStyle,
