@@ -172,6 +172,11 @@ const linkStyle = {
     ...textStyles,
     color: "#0072c6"
 }
+const headingStyle = {
+    ...textStyles,
+    fontWeight: 'bold',
+    marginBottom: '20px'
+}
 
 export {
     itemStyle,
@@ -185,5 +190,6 @@ export {
     headerStyle,
     editorStyle,
     linkStyle,
-    syncBarStyle
+    syncBarStyle,
+    headingStyle
 }

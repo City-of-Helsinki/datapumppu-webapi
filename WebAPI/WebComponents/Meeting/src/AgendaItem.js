@@ -48,6 +48,46 @@ export default function AgendaItem(props) {
         }
     }, [accordionOpen])
 
+    const displayableHtml = (item) => {
+        var div = document.createElement('div')
+        var newDiv = document.createElement('div')
+        div.innerHTML = item
+        var newItem = div.querySelectorAll(".SisaltoSektio")[0]
+        if (newItem) {
+            const nodes = newItem.childNodes
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
+                    var b = document.createElement('b')
+                    b.textContent = nodes[i].textContent
+                    newDiv.appendChild(b)
+                } else {
+                    newDiv.appendChild(nodes[i])
+                }
+            }
+            return newDiv.innerHTML
+        } else {
+            const nodes = div.childNodes
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
+                    var b = document.createElement('b')
+                    b.textContent = nodes[i].textContent
+                    var p = document.createElement('p')
+                    p.appendChild(b)
+                    newDiv.appendChild(p)
+                }
+                else if (nodes[i].nodeType == 3) {
+                    var p = document.createElement('p')
+                    p.textContent = nodes[i].textContent
+                    newDiv.appendChild(p)
+                }
+                else {
+                    newDiv.appendChild(nodes[i])
+                }
+            }
+            return newDiv.innerHTML
+        }
+    }
+
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
@@ -117,13 +157,17 @@ export default function AgendaItem(props) {
                         })
                         }
                     </div>
-                    {agenda.html && (editable ?
-                        <EditableItem
-                            agendaItem={agenda}
-                            meetingId={meetingId}
-                            language={"#--LANGUAGE--#"} /> 
-                            : 
-                            <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
+                    <div style={{ padding: "20px 0px 20px 0px" }}>
+                        {agenda.html && (editable ?
+                            <EditableItem
+                                agendaItem={agenda}
+                                itemHTML={displayableHtml(agenda.html)}
+                                meetingId={meetingId}
+                                language={"#--LANGUAGE--#"} />
+                            :
+                            <div dangerouslySetInnerHTML={{ __html: displayableHtml(agenda.html) }} />
+                        )}
+                    </div>
                     {statements && <Statements statements={statements}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
@@ -132,7 +176,7 @@ export default function AgendaItem(props) {
                                     ? <FaCaretUp />
                                     : <FaCaretDown />}
                             </div>
-                            <b>{t("Show seat map")}</b>
+                            {t("Show seat map")}
                         </button>
                     </div>
 

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { linkStyle } from "./styles";
+import { headingStyle, linkStyle } from "./styles";
 
 const speechesContainerStyle = {
     columnCount: 2,
@@ -28,7 +28,7 @@ export default function  Statements(props) {
 
     return (
         <div>
-            <h4>{t("Speeches")}</h4>
+            <div style={headingStyle}>{t("Speeches")}</div>
             <div style={speechesContainerStyle}>
                 { statements && statements.map(statement => getStatement(statement)) }
             </div>

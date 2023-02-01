@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
 import { jsPDF } from "jspdf"
-import { agendaButtonStyle, titleStyle, linkStyle } from './styles';
+import { agendaButtonStyle, linkStyle, headingStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const champerStyle = {
@@ -94,7 +94,7 @@ export default function Voting(props) {
 
     return (
         <div id="print-area">
-            <h4>{t("Voting")}</h4>
+            <div style={headingStyle}>{t("Voting")}</div>
             <div>{voting.forTitleFI}: {voting.forCount}</div>
             <div>{voting.againstTitleFI}: {voting.againstCount}</div>
             <div>{t("Empty")}: {voting.emptyCount}</div>
@@ -131,34 +131,25 @@ export default function Voting(props) {
                             {t("Download voting map pdf")}
                         </a>
                         <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
-                            <p>
-                                <div>{t("FOR")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
-                            </p>
-                            <p>
-                                <div>{t("AGAINST")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
-                            </p>
-                            <p>
-                                <div>{t("EMPTY")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
-                            </p>
-                            <p>
-                                <div>{t("ABSENT")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
-                            </p>
+                            <div>{t("FOR")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
+                            <br />
+                            <div>{t("AGAINST")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
+                            <br />
+                            <div>{t("EMPTY")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
+                            <br />
+                            <div>{t("ABSENT")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
                         </div>
                     </div>
                 }
             </div>
-        </div>
+        </div >
     )
 }
