@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
 import { jsPDF } from "jspdf"
+import html2canvas from "html2canvas" // DO NOT REMOVE THIS
 import { agendaButtonStyle, titleStyle, linkStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
