@@ -76,7 +76,7 @@ export default function Voting(props) {
 
     const downloadPDF = (e) => {
         e.preventDefault()
-        let doc = new jsPDF("portrait", 'pt', 'A4');
+        let doc = new jsPDF("landscape", 'pt', 'A4');
         doc.setFontSize(8)
         doc.html(document.getElementById('print-area'), {
             html2canvas: {
