@@ -31,7 +31,7 @@ export default function Voting(props) {
     const [showVotes, setShowVotes] = useState(false)
     const { t } = useTranslation();
 
-    const { meetingId, caseNumber, voting } = props
+    const { meetingId, caseNumber, voting, index } = props
 
     useEffect(() => {
         const fetchData = async () => {
@@ -78,7 +78,7 @@ export default function Voting(props) {
         e.preventDefault()
         let doc = new jsPDF("landscape", 'pt', 'A4');
         doc.setFontSize(8)
-        doc.html(document.getElementById('print-area'), {
+        doc.html(document.getElementById(`print-area-${index}`), {
             html2canvas: {
                 scale: 0.7
             },
@@ -93,11 +93,45 @@ export default function Voting(props) {
         setShowColors(!showColors)
     }
 
+    const getForTitle = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${t('FOR')}: ${voting.forTitleFI}`
+        } else {
+            return `${t('FOR')}: ${voting.forTitleSV}`
+        }
+    }
+
+    const getForText = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${voting.forTextFI}`
+        } else {
+            return `${voting.forTextSV}`
+        }
+    }
+
+    const getAgainstTitle = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${t('AGAINST')}: ${voting.againstTitleFI}`
+        } else {
+            return `${t('AGAINST')}: ${voting.againstTitleSV}`
+        }
+    }
+
+    const getAgainstText = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${voting.againstTextFI}`
+        } else {
+            return `${voting.againstTextSV}`
+        }
+    }
+
     return (
-        <div id="print-area">
+        <div id={`print-area-${index}`}>
             <h4>{t("Voting")}</h4>
-            <div>{voting.forTitleFI}: {voting.forCount}</div>
-            <div>{voting.againstTitleFI}: {voting.againstCount}</div>
+            <div>{getForTitle(voting)}: {voting.forCount}</div>
+            {getForText(voting).length > 0 && <div style={{marginLeft: "1rem", fontStyle: "italic"}}>{getForText(voting)}</div>}
+            <div>{getAgainstTitle(voting)}: {voting.againstCount}</div>
+            {getAgainstText(voting).length > 0 && <div style={{marginLeft: "1rem", fontStyle: "italic"}}>{getAgainstText(voting)}</div>}
             <div>{t("Empty")}: {voting.emptyCount}</div>
             <div>{t("Absent")}: {voting.absentCount}</div>
             <div>

@@ -11,7 +11,7 @@ namespace WebAPI.StorageClient
 
         Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
 
-        Task<StorageVotingDTO?> RequestVote(string meetingId, string caseNumber);
+        Task<List<StorageVotingDTO>?> RequestVote(string meetingId, string caseNumber);
 
         Task<List<StatementDTO>> GetStatements(string meetingId, string caseNumber);
 
@@ -105,17 +105,17 @@ namespace WebAPI.StorageClient
             return seats?.ToList() ?? new List<SeatDTO>();
         }
 
-        public async Task<StorageVotingDTO?> RequestVote(string meetingId, string caseNumber)
+        public async Task<List<StorageVotingDTO>?> RequestVote(string meetingId, string caseNumber)
         {
             _logger.LogInformation("Executing RequestVote()");
             using var connection = _storageConnection.CreateConnection();
             var response = await connection.GetAsync($"api/voting/{meetingId}/{caseNumber}");
             if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
-                return null;
+                return new List<StorageVotingDTO>();
             }
 
-            return await response.Content.ReadFromJsonAsync<StorageVotingDTO>();
+            return await response.Content.ReadFromJsonAsync<List<StorageVotingDTO>>();
         }
 
         public async Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO)

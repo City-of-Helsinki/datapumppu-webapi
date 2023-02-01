@@ -1,4 +1,5 @@
-﻿using WebAPI.Controllers.DTOs;
+﻿using System.Collections.Concurrent;
+using WebAPI.Controllers.DTOs;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Data
@@ -19,7 +20,7 @@ namespace WebAPI.Data
     public class MeetingDataProvider : IMeetingDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly Dictionary<string, MeetingDataCache> _dataCache = new Dictionary<string, MeetingDataCache>();
+        private readonly ConcurrentDictionary<string, MeetingDataCache> _dataCache = new ConcurrentDictionary<string, MeetingDataCache>();
 
         public MeetingDataProvider(IServiceProvider serviceProvider)
         {
