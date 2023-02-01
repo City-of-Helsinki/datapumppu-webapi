@@ -140,7 +140,13 @@ export default function AgendaItem(props) {
 
                     {voting && 
                         voting.map((vote, index) => (
-                            <Voting voting={vote} meetingId={meetingId} caseNumber={agenda.agendaPoint} index={index}></Voting>
+                            <Voting
+                                voting={vote}
+                                meetingId={meetingId}
+                                caseNumber={agenda.agendaPoint}
+                                index={index}
+                                title={agenda.title}>
+                            </Voting>
                         ))
                     }
                 </div>
