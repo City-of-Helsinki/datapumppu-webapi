@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
 import { jsPDF } from "jspdf"
-import { agendaButtonStyle, linkStyle, headingStyle } from './styles';
+import html2canvas from "html2canvas" // DO NOT REMOVE THIS
+import { agendaButtonStyle, headingStyle, linkStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const champerStyle = {
@@ -75,7 +76,7 @@ export default function Voting(props) {
 
     const downloadPDF = (e) => {
         e.preventDefault()
-        let doc = new jsPDF("portrait", 'pt', 'A4');
+        let doc = new jsPDF("landscape", 'pt', 'A4');
         doc.setFontSize(8)
         doc.html(document.getElementById('print-area'), {
             html2canvas: {
