@@ -86,7 +86,7 @@ export default function AgendaItem(props) {
                                     {decisionResolutionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
-                                    <a style={linkStyle} href={motionPath}>{openText}</a>
+                                    <a style={linkStyle} href={motionPath} target="_blank">{openText}</a>
                                 </div>
                             </div>
                         }
@@ -96,7 +96,7 @@ export default function AgendaItem(props) {
                                     {decisionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
-                                    <a style={linkStyle} href={decisionPath}>{openText}</a>
+                                    <a style={linkStyle} href={decisionPath} target="_blank">{openText}</a>
                                 </div>
                             </div>
                         }
