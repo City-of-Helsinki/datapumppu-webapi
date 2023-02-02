@@ -23,7 +23,7 @@ const voteListContainerStyle = {
     fontSize: "90%"
 }
 const miniChamberStyle = {
-    height: "100px",
+    height: "200px",
     width: "25%",
     pageBreakInside: "avoid",
     backgroundColor: "#dedfe1",
@@ -98,6 +98,10 @@ const seatColorStyles = {
         ...voteLegend,
         backgroundColor: "#fff",
         color: "#000"
+    },
+    absentStyle: {
+        ...voteLegend,
+        border: "1px solid black"
     }
 }
 
@@ -209,7 +213,7 @@ export default function Voting(props) {
     }
 
     return (
-        <div id="print-area" style={{ boxSixing: 'inherit' }}>
+        <div id={`print-area-${index}`}>
             {showHeader && (<div style={headingStyle}>{caseNumber}. {title}</div>)}
             <div style={headingStyle}>{t("Voting")}</div>
             <div style={votingInfo}>
@@ -245,7 +249,7 @@ export default function Voting(props) {
                             <div style={voteCount}>{t("Absent")}: {voting.absentCount}</div>
                         </div>
                         <div style={tableCell}>
-                            <div style={voteLegend}>{voting.absentCount}</div>
+                            <div style={seatColorStyles.absentStyle}>{voting.absentCount}</div>
                         </div>
                     </div>
 
@@ -289,12 +293,14 @@ export default function Voting(props) {
                             <SeatRow showName={true} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
                             <SeatRow showName={true} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
                         </div>
-                        <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
-                            {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
-                        </a>
-                        <a href="javascript:void(0)" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
-                            {t("Download voting map pdf")}
-                        </a>
+                        <p>
+                            <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
+                                {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
+                            </a><br /> 
+                            <a href="javascript:void(0)" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
+                                {t("Download voting map pdf")}
+                            </a>
+                        </p>
                         <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
                             <div>{t("FOR")}</div>
                             <br />

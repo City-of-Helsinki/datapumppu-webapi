@@ -9,8 +9,8 @@ const seatRowStyle = {
     height: "7%",
     marginLeft: 0,
     marginRight: 0,
-    marginTop: "0.2%",
-    marginBottom: "0.2%",
+    marginTop: "2px",
+    marginBottom: "2px",
 };
 
 const firstSeatStyle = {
@@ -28,7 +28,6 @@ const seatStyle = {
     position: "relative",
     backgroundColor: "#eeeeee",
     color: "#414143",
-    paddingLeft: "2px"
 }
 
 const aisleLeftStyle = {
@@ -84,6 +83,11 @@ const blueDeskStyleBW = {
     color: "#000"
 }
 
+const absentDeskStyle = {
+    ...deskStyle,
+    border: "1px solid black",
+}
+
 const guestBoxStyle = {
     border: "1px dotted #444444",
     marginTop: "2%",
@@ -114,6 +118,7 @@ export default function SeatRow(props) {
             case 0: return showColors ? greenDeskStyle : greenDeskStyleBW
             case 1: return showColors ? redDeskStyle : redDeskStyleBW
             case 2: return showColors ? blueDeskStyle : blueDeskStyleBW
+            case 3: return absentDeskStyle
             default: return deskStyle
         }
     }
