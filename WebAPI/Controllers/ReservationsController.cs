@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         [Route("{meetingId}/{caseNumber}")]
         public async Task<IActionResult> GetReservations(string meetingId, string caseNumber)
         {
-            _logger.LogInformation("Executing GetStatements()");
+            _logger.LogInformation("Executing GetReservations()");
             var reservations = await _storageApiClient.GetReservations(meetingId, caseNumber);
             
             return new OkObjectResult(reservations);
