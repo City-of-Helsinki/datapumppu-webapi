@@ -24,11 +24,12 @@ const voteListContainerStyle = {
 }
 const miniChamberStyle = {
     height: "100px",
-    width: "240px",
+    width: "25%",
     pageBreakInside: "avoid",
     backgroundColor: "#dedfe1",
     margin: 0,
-    padding: 0
+    padding: 0,
+    alignSelf: "center"
 }
 
 const votingInfo = {
@@ -54,6 +55,17 @@ const voteCount = {
     paddingBottom: "2px",
     marginBottom: '4px',
     boxSizing: 'border-box',
+}
+
+const tableMain = {
+    display: "table",
+    width: "70%"
+}
+const tableRow = {
+    display: "table-row"
+}
+const tableCell = {
+    display: "table-cell"
 }
 
 const seatColorStyles = {
@@ -198,24 +210,45 @@ export default function Voting(props) {
 
     return (
         <div id="print-area" style={{ boxSixing: 'inherit' }}>
-            {showHeader && (<b>{caseNumber}. {title}</b>)}
+            {showHeader && (<div style={headingStyle}>{caseNumber}. {title}</div>)}
             <div style={headingStyle}>{t("Voting")}</div>
             <div style={votingInfo}>
-                <div>
-                    <div style={voteCount}>{getForTitle(voting)}: {voting.forCount}</div>
-                    {getForText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getForText(voting)}</div>}
+                <div style={tableMain}>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{getForTitle(voting)}: {voting.forCount}</div>
+                            {getForText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getForText(voting)}</div>}
+                        </div>
+                        <div style={tableCell}>
+                            <div style={showColors ? seatColorStyles.greenDeskStyle : seatColorStyles.greenDeskStyleBW}>{voting.forCount}</div>
+                        </div>
+                    </div>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{getAgainstTitle(voting)}: {voting.againstCount}</div>
+                            {getAgainstText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getAgainstText(voting)}</div>}
+                        </div>
+                        <div style={tableCell}>
+                            <div style={showColors ? seatColorStyles.redDeskStyle : seatColorStyles.redDeskStyleBW}>{voting.againstCount}</div>
+                        </div>
+                    </div>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{t("Empty")}: {voting.emptyCount}</div>
+                        </div>
+                        <div style={tableCell}>
+                            <div style={showColors ? seatColorStyles.blueDeskStyle : seatColorStyles.blueDeskStyleBW}>{voting.emptyCount}</div>
+                        </div>
+                    </div>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{t("Absent")}: {voting.absentCount}</div>
+                        </div>
+                        <div style={tableCell}>
+                            <div style={voteLegend}>{voting.absentCount}</div>
+                        </div>
+                    </div>
 
-                    <div style={voteCount}>{getAgainstTitle(voting)}: {voting.againstCount}</div>
-                    {getAgainstText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getAgainstText(voting)}</div>}
-
-                    <div style={voteCount}>{t("Empty")}: {voting.emptyCount}</div>
-                    <div style={voteCount}>{t("Absent")}: {voting.absentCount}</div>
-                </div>
-                <div>
-                    <div style={showColors ? seatColorStyles.greenDeskStyle : seatColorStyles.greenDeskStyleBW}>{voting.forCount}</div>
-                    <div style={showColors ? seatColorStyles.redDeskStyle : seatColorStyles.redDeskStyleBW}>{voting.againstCount}</div>
-                    <div style={showColors ? seatColorStyles.blueDeskStyle : seatColorStyles.blueDeskStyleBW}>{voting.emptyCount}</div>
-                    <div style={voteLegend}>{voting.absentCount}</div>
                 </div>
                 <div style={miniChamberStyle}>
                     <SeatRow showName={false} showColors={showColors} seats={seatMap}></SeatRow>
