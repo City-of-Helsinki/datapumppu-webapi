@@ -41,7 +41,7 @@ const votingInfo = {
 const voteLegend = {
     fontWeight: '600',
     width: '2em',
-    padding:' 2px 2px 2px 2px',
+    padding: ' 2px 2px 2px 2px',
     marginBottom: '4px',
     textAlign: 'center',
     boxSizing: 'border-box',
@@ -94,9 +94,10 @@ export default function Voting(props) {
     const [showColors, setShowColors] = useState(true);
     const [seatMap, setSeatMap] = useState([]);
     const [showVotes, setShowVotes] = useState(false)
+    const [showHeader, setShowHeader] = useState(false)
     const { t } = useTranslation();
 
-    const { meetingId, caseNumber, voting } = props
+    const { meetingId, caseNumber, voting, index, title } = props
 
     useEffect(() => {
         const fetchData = async () => {
@@ -140,17 +141,22 @@ export default function Voting(props) {
     }
 
     const downloadPDF = (e) => {
-        e.preventDefault()
-        let doc = new jsPDF("landscape", 'pt', 'A4');
-        doc.setFontSize(8)
-        doc.html(document.getElementById('print-area'), {
-            html2canvas: {
-                scale: 0.7
-            },
-            callback: () => {
-                doc.save('vote.pdf');
-            },
-            margin: [40, 200, 60, 40]
+
+        setShowHeader(true)
+        setTimeout(() => {
+            e.preventDefault()
+            let doc = new jsPDF("landscape", 'pt', 'A4');
+            doc.setFontSize(8)
+            doc.html(document.getElementById(`print-area-${index}`), {
+                html2canvas: {
+                    scale: 0.7
+                },
+                callback: () => {
+                    doc.save('vote.pdf');
+                },
+                margin: [10, 10, 10, 10]
+            })
+            setShowHeader(false)
         })
     }
 
@@ -158,13 +164,50 @@ export default function Voting(props) {
         setShowColors(!showColors)
     }
 
+    const getForTitle = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${t('FOR')}: ${voting.forTitleFI}`
+        } else {
+            return `${t('FOR')}: ${voting.forTitleSV}`
+        }
+    }
+
+    const getForText = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${voting.forTextFI}`
+        } else {
+            return `${voting.forTextSV}`
+        }
+    }
+
+    const getAgainstTitle = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${t('AGAINST')}: ${voting.againstTitleFI}`
+        } else {
+            return `${t('AGAINST')}: ${voting.againstTitleSV}`
+        }
+    }
+
+    const getAgainstText = (voting) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return `${voting.againstTextFI}`
+        } else {
+            return `${voting.againstTextSV}`
+        }
+    }
+
     return (
         <div id="print-area" style={{ boxSixing: 'inherit' }}>
+            {showHeader && (<b>{caseNumber}. {title}</b>)}
             <div style={headingStyle}>{t("Voting")}</div>
             <div style={votingInfo}>
                 <div>
-                    <div style={voteCount}>{voting.forTitleFI}: {voting.forCount}</div>
-                    <div style={voteCount}>{voting.againstTitleFI}: {voting.againstCount}</div>
+                    <div style={voteCount}>{getForTitle(voting)}: {voting.forCount}</div>
+                    {getForText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getForText(voting)}</div>}
+
+                    <div style={voteCount}>{getAgainstTitle(voting)}: {voting.againstCount}</div>
+                    {getAgainstText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getAgainstText(voting)}</div>}
+
                     <div style={voteCount}>{t("Empty")}: {voting.emptyCount}</div>
                     <div style={voteCount}>{t("Absent")}: {voting.absentCount}</div>
                 </div>
@@ -187,6 +230,7 @@ export default function Voting(props) {
                     <SeatRow showName={false} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
                 </div>
             </div>
+
             <div>
                 <div style={{ padding: "30px 10px 0 0" }}>
                     <button style={agendaButtonStyle} onClick={() => setShowVotes(!showVotes)} data-html2canvas-ignore={"true"}>

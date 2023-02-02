@@ -182,7 +182,17 @@ export default function AgendaItem(props) {
 
                     {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}
 
-                    {voting !== undefined && <Voting voting={voting} meetingId={meetingId} caseNumber={agenda.agendaPoint}></Voting>}
+                    {voting && 
+                        voting.map((vote, index) => (
+                            <Voting
+                                voting={vote}
+                                meetingId={meetingId}
+                                caseNumber={agenda.agendaPoint}
+                                index={index}
+                                title={agenda.title}>
+                            </Voting>
+                        ))
+                    }
                 </div>
             }
         </div>

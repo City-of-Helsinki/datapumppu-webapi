@@ -30,6 +30,7 @@ namespace WebAPI
             });
 
             builder.Services.AddSingleton<IMeetingDataProvider, MeetingDataProvider>();
+            builder.Services.AddSingleton<IVotingDataProvider, VotingDataProvider>();
 
             builder.Services.AddScoped<IStorageApiClient, StorageApiClient>();
             builder.Services.AddScoped<IStorageConnection, StorageConnection>();
