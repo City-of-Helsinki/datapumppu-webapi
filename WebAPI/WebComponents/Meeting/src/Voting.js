@@ -221,7 +221,7 @@ export default function Voting(props) {
                     <div style={tableRow}>
                         <div style={tableCell}>
                             <div style={voteCount}>{getForTitle(voting)}: {voting.forCount}</div>
-                            {getForText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getForText(voting)}</div>}
+                            {getForText(voting).length > 0 && <div style={{ marginLeft: "1rem" }}>{t('Proposal')}: <span style={{fontStyle: "italic" }}>{getForText(voting)}</span></div>}
                         </div>
                         <div style={tableCell}>
                             <div style={showColors ? seatColorStyles.greenDeskStyle : seatColorStyles.greenDeskStyleBW}>{voting.forCount}</div>
@@ -230,7 +230,7 @@ export default function Voting(props) {
                     <div style={tableRow}>
                         <div style={tableCell}>
                             <div style={voteCount}>{getAgainstTitle(voting)}: {voting.againstCount}</div>
-                            {getAgainstText(voting).length > 0 && <div style={{ marginLeft: "1rem", fontStyle: "italic" }}>{getAgainstText(voting)}</div>}
+                            {getAgainstText(voting).length > 0 && <div style={{ marginLeft: "1rem"}}>{t('Proposal')}: <span style={{fontStyle: "italic" }}>{getAgainstText(voting)}</span></div>}
                         </div>
                         <div style={tableCell}>
                             <div style={showColors ? seatColorStyles.redDeskStyle : seatColorStyles.redDeskStyleBW}>{voting.againstCount}</div>
