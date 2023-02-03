@@ -58,7 +58,7 @@ const containerStyle = {
 const attachmentTable = {
     table: {
         display: "table",
-        maxWidth: "70%"
+        maxWidth: "80%"
     },
     row: {
         display: "table-row",
@@ -66,6 +66,11 @@ const attachmentTable = {
     cell: {
         display: "table-cell",
         padding: "6px 20px 4px 0px",
+    },
+    label: {
+        display: "table-cell",
+        padding: "6px 20px 4px 0px",
+        whiteSpace: "nowrap"
     }
 }
 

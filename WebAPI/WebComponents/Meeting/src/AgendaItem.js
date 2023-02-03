@@ -136,10 +136,9 @@ export default function AgendaItem(props) {
             {accordionOpen &&
                 <div style={contentStyle}>
                     <div style={attachmentTable.table}>
-                        {
-                            agenda.caseIDLabel &&
+                        {agenda.caseIDLabel &&
                             <div style={attachmentTable.row}>
-                                <div style={attachmentTable.cell}>
+                                <div style={attachmentTable.label}>
                                     {decisionResolutionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
@@ -149,29 +148,13 @@ export default function AgendaItem(props) {
                         }
                         {decision?.caseID &&
                             <div style={attachmentTable.row}>
-                                <div style={attachmentTable.cell}>
+                                <div style={attachmentTable.label}>
                                     {decisionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
                                     <a style={linkStyle} href={decisionPath} target="_blank">{openText}</a>
                                 </div>
                             </div>
-                        }
-                        {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
-                            return (
-                                <div className='attachment' key={'attach' + index} style={attachmentTable.row}>
-                                    <div style={attachmentTable.cell}>
-                                        {t("Attachment")} {attachment.attachmentNumber} {''}
-                                    </div>
-                                    <div style={attachmentTable.cell}>
-
-                                        {attachment.fileURI ?
-                                            <a style={linkStyle} href={attachment.fileURI}>{attachment.title}</a>
-                                            : t("Non-public")}
-                                    </div>
-                                </div>
-                            )
-                        })
                         }
                     </div>
                     <div style={{ padding: "20px 0px 20px 0px" }}>
@@ -185,6 +168,23 @@ export default function AgendaItem(props) {
                             <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
                         )}
                         {readOnlyProposalHTML && <div dangerouslySetInnerHTML={{ __html: readOnlyProposalHTML }} />}
+                    </div>
+                    <div style={attachmentTable.table}>
+                        {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
+                            return (
+                                <div className='attachment' key={'attach' + index} style={attachmentTable.row}>
+                                    <div style={attachmentTable.label}>
+                                        {t("Attachment")} {attachment.attachmentNumber} {''}
+                                    </div>
+                                    <div style={attachmentTable.cell}>
+                                        {attachment.fileURI ?
+                                            <a style={linkStyle} href={attachment.fileURI}>{attachment.title}</a>
+                                            : t("Non-public")}
+                                    </div>
+                                </div>
+                            )
+                        })
+                        }
                     </div>
                     {statements && <Statements statements={statements}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
