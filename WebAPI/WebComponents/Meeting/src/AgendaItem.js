@@ -48,23 +48,15 @@ export default function AgendaItem(props) {
         }
     }, [accordionOpen])
 
-    const displayableHtml = (item) => {
+    const editableDecision = () => {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
-        div.innerHTML = item
-        var newItem = div.querySelectorAll(".SisaltoSektio")[0]
+        div.innerHTML = agenda.html
+        const newItem = div.querySelectorAll(".SisaltoSektio")[0]
         if (newItem) {
-            const nodes = newItem.childNodes
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
-                    var b = document.createElement('b')
-                    b.textContent = nodes[i].textContent
-                    newDiv.appendChild(b)
-                } else {
-                    newDiv.appendChild(nodes[i])
-                }
-            }
-            return newDiv.innerHTML
+            var editableDiv = document.createElement('div')
+            editableDiv.innerHTML = div.querySelectorAll(".SisaltoPaatos")[0] || ""
+            return editableDiv.innerHTML
         } else {
             const nodes = div.childNodes
             for (var i = 0; i < nodes.length; i++) {
@@ -88,14 +80,39 @@ export default function AgendaItem(props) {
         }
     }
 
+    const decisionProposal = () => {
+        var div = document.createElement('div')
+        var newDiv = document.createElement('div')
+        div.innerHTML = agenda.html
+        const newItem = div.querySelectorAll(".SisaltoSektio")[0]
+        if (newItem) {
+            const nodes = newItem.childNodes
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
+                    var b = document.createElement('b')
+                    b.textContent = nodes[i].textContent
+                    newDiv.appendChild(b)
+                } else {
+                    newDiv.appendChild(nodes[i])
+                }
+            }
+            return newDiv.innerHTML
+        } else {
+            return null
+        }
+    }
+
+    const readOnlyProposalHTML = decisionProposal()
+    const editableHTML = editableDecision()
+
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
 
     var motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
     var decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
-    
-    if (parseInt("#--MEETING_YEAR--#") < 2018 ||(parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
+
+    if (parseInt("#--MEETING_YEAR--#") < 2018 || (parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
         motionPath = "https://dev.hel.fi/paatokset/asia/" + agenda?.caseIDLabel?.replace(" ", "-").toLowerCase() + "/kvsto-#--MEETING_YEAR--#-#--MEETING_SEQUENCE_NUM--#"
         decisionPath = "https://dev.hel.fi/paatokset/asia/" + decision?.caseID
     }
@@ -161,12 +178,13 @@ export default function AgendaItem(props) {
                         {agenda.html && (editable ?
                             <EditableItem
                                 agendaItem={agenda}
-                                itemHTML={displayableHtml(agenda.html)}
+                                editableHTML={editableHTML}
                                 meetingId={meetingId}
                                 language={"#--LANGUAGE--#"} />
                             :
-                            <div dangerouslySetInnerHTML={{ __html: displayableHtml(agenda.html) }} />
+                            <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
                         )}
+                        {readOnlyProposalHTML && <div dangerouslySetInnerHTML={{ __html: readOnlyProposalHTML }} />}
                     </div>
                     {statements && <Statements statements={statements}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
@@ -182,7 +200,7 @@ export default function AgendaItem(props) {
 
                     {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}
 
-                    {voting && 
+                    {voting &&
                         voting.map((vote, index) => (
                             <Voting
                                 voting={vote}

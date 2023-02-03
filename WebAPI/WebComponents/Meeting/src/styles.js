@@ -8,7 +8,7 @@ const textStyles = {
 const itemStyle = {
     ...textStyles,
     backgroundColor: "white",
-    padding: "15px",
+    padding: "15px 20px 15px 24px",
     margin: "4px",
     WebkitTransition: "all 0.2s ease",
     MozTransition: "all 0.2s ease",
@@ -165,7 +165,11 @@ const editorStyle = {
     border: "1px solid #414143",
     background: "white",
     padding: "10px",
-    marginTop: "2px"
+    marginTop: "2px",
+    marginBottom: '20px',
+}
+const editableStyle = {
+    background: "#eee",
 }
 
 const linkStyle = {
@@ -190,6 +194,7 @@ export {
     loginStyle,
     headerStyle,
     editorStyle,
+    editableStyle,
     linkStyle,
     syncBarStyle,
     headingStyle

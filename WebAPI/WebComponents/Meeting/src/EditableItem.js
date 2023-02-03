@@ -7,9 +7,13 @@ import { stateToHTML } from 'draft-js-export-html'
 import { editorStyle } from './styles'
 
 export default function EditableItem(props) {
-    const { agendaItem, itemHTML, meetingId, language } = props
+    const { agendaItem, editableHTML, meetingId, language } = props
     const [userInput, setUserInput] = React.useState(false)
-    const [editorState, setEditorState] = useState(EditorState.createWithContent(stateFromHTML(itemHTML)))
+    const [editorState, setEditorState] = useState(EditorState.createEmpty())
+
+    useEffect(() => {
+        setEditorState(EditorState.createWithContent(stateFromHTML(editableHTML)))
+    }, [])
 
     const onChange = editorState => {
         setEditorState(editorState)
@@ -32,8 +36,15 @@ export default function EditableItem(props) {
         div.innerHTML = agendaItem.html
         var newItem = div.querySelectorAll(".SisaltoSektio")[0]
         if (newItem) {
-            newItem.innerHTML = item
-
+            var decisionDiv = div.querySelectorAll(".SisaltoPaatos")[0]
+            if (!decisionDiv) {
+                decisionDiv = document.createElement('div')
+                decisionDiv.className = "SisaltoPaatos"
+                decisionDiv.innerHTML = item
+                div.appendChild(decisionDiv)
+            } else {
+                decisionDiv.innerHTML = item
+            }
         } else {
             div.innerHTML = item
         }
@@ -59,6 +70,8 @@ export default function EditableItem(props) {
         fetch('#--API_URL--#/editor/edit', request)
         setUserInput(false)
     }
+
+
     return (
         <div>
             <div tabIndex="0" onFocus={() => setUserInput(true)} >
