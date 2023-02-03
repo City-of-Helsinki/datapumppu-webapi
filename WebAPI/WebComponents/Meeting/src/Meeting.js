@@ -26,6 +26,7 @@ export default function Meeting() {
     const [showLogin, setShowLogin] = useState(false)
     const [showSyncBar, setShowSyncBar] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
+    const [isLiveMeeting, setIsLiveMeeting] = useState(false)
 
     const { t } = useTranslation();
 
@@ -41,6 +42,7 @@ export default function Meeting() {
                     setAgenda(json.agendas)
                     setDecisions(json.decisions)
                     setMeetingId(json.meetingID)
+                    setIsLiveMeeting(json.meetingEnded === null)
                 }
             })
     }
@@ -132,6 +134,7 @@ export default function Meeting() {
                         agenda={agendaItem}
                         decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
                         meetingId={meetingId}
+                        isLiveMeeting={isLiveMeeting}
                     />
                 })
             }

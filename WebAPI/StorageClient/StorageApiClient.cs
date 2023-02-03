@@ -17,9 +17,12 @@ namespace WebAPI.StorageClient
 
         Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang);
 
+        Task<List<ReservationDTO>> GetReservations(string meetingId, string caseNumber);
+
         Task<bool> CheckLogin(string username, string password);
 
         Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto);
+
         Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO);
     }
 
@@ -70,6 +73,16 @@ namespace WebAPI.StorageClient
             var statements = await response.Content.ReadFromJsonAsync<StatementDTO[]>();
 
             return statements?.ToList() ?? new List<StatementDTO>();
+        }
+
+        public async Task<List<ReservationDTO>> GetReservations(string meetingId, string caseNumber)
+        {
+            _logger.LogInformation("GetReservations()");
+            var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/reservations/{meetingId}/{caseNumber}");
+            var reservations = await response.Content.ReadFromJsonAsync<ReservationDTO[]>();
+
+            return reservations?.ToList() ?? new List<ReservationDTO>();
         }
 
         public async Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language)

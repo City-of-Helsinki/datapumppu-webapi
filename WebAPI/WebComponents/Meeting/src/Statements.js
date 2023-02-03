@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { linkStyle } from "./styles";
+import { FaMicrophone } from "react-icons/fa";
 
 const speechesContainerStyle = {
     columnCount: 2,
@@ -8,8 +9,14 @@ const speechesContainerStyle = {
     fontSize: "1em"
 }
 
+const reservationsRowStyle = {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+}
+
 export default function  Statements(props) {
-    const { statements } = props
+    const { statements, reservations } = props
     const { t } = useTranslation();
 
     const getTimespan = (seconds) => {
@@ -32,9 +39,16 @@ export default function  Statements(props) {
             <div style={speechesContainerStyle}>
                 { statements && statements.map(statement => getStatement(statement)) }
             </div>
+            <div style={speechesContainerStyle}>
+                { reservations && reservations.map(reservation =>
+                    <div style={reservationsRowStyle}>
+                        <div style={reservation.active ? linkStyle : null}>
+                            {reservation.person}
+                        </div>
+                        {reservation.active && <FaMicrophone />}
+                    </div>)
+                }
+            </div>
         </div>
     );
 }
-
-
-
