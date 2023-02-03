@@ -20,7 +20,8 @@ export default function AgendaItem(props) {
     const [showSeatMap, setShowSeatMap] = useState(false)
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
-    const { agenda, index, meetingId, decision, editable } = props
+    const [reservations, setReservations] = useState(undefined)
+    const { agenda, index, meetingId, decision, editable, isLiveMeeting } = props
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -40,8 +41,19 @@ export default function AgendaItem(props) {
             }
         }
 
+        const fetchReservationsData = async () => {
+            const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
+            if (response.status === 200) {
+                const data = await response.json()
+                setReservations(data)
+            }
+        }
+
         if (accordionOpen === true && voting === undefined) {
             fetchStatementsData()
+            if (isLiveMeeting) {
+                fetchReservationsData()
+            }
             if (voting === undefined) {
                 fetchVotingData()
             }
@@ -186,7 +198,8 @@ export default function AgendaItem(props) {
                         })
                         }
                     </div>
-                    {statements && <Statements statements={statements}></Statements>}
+
+                    {(statements || reservations) && <Statements statements={statements} reservations={reservations}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
                             <div style={{ paddingRight: "10px", marginTop: "4px" }}>
