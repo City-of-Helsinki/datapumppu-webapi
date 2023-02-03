@@ -42,7 +42,6 @@ export default function AgendaItem(props) {
         }
 
         const fetchReservationsData = async () => {
-            console.log("fetchReservatíons")
             const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
             if (response.status === 200) {
                 const data = await response.json()
