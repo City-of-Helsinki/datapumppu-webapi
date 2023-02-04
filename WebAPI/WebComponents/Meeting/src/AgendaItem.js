@@ -21,44 +21,48 @@ export default function AgendaItem(props) {
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
     const [reservations, setReservations] = useState(undefined)
-    const { agenda, index, meetingId, decision, editable, isLiveMeeting } = props
+    const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
     const { t } = useTranslation();
 
     useEffect(() => {
-        const fetchVotingData = async () => {
-            const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
-            if (response.status === 200) {
-                const data = await response.json()
-                setVoting(data)
-            }
-        }
-
-        const fetchStatementsData = async () => {
-            const response = await fetch(`#--API_URL--#/statement/${meetingId}/${agenda.agendaPoint}`)
-            if (response.status === 200) {
-                const data = await response.json()
-                setStatements(data)
-            }
-        }
-
-        const fetchReservationsData = async () => {
-            const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
-            if (response.status === 200) {
-                const data = await response.json()
-                setReservations(data)
-            }
-        }
-
-        if (accordionOpen === true && voting === undefined) {
+        if (agenda.agendaPoint == updatedCaseNumber && accordionOpen) {
             fetchStatementsData()
-            if (isLiveMeeting) {
-                fetchReservationsData()
-            }
-            if (voting === undefined) {
-                fetchVotingData()
-            }
+            fetchVotingData()
+            fetchReservationsData()
+        }
+    }, [updated, updatedCaseNumber])
+
+    useEffect(() => {
+        if (accordionOpen === true) {
+            fetchStatementsData()
+            fetchVotingData()
+            fetchReservationsData()
         }
     }, [accordionOpen])
+
+    const fetchReservationsData = async () => {
+        const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
+        if (response.status === 200) {
+            const data = await response.json()
+            setReservations(data)
+        }
+    }
+
+    const fetchVotingData = async () => {
+        const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
+        if (response.status === 200) {            
+            const data = await response.json()
+            setVoting(data)
+        }
+    }
+
+    const fetchStatementsData = async () => {
+        const response = await fetch(`#--API_URL--#/statement/${meetingId}/${agenda.agendaPoint}`)
+        if (response.status === 200) {
+            const data = await response.json()
+            setStatements(data)
+        }
+    }
 
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
@@ -148,7 +152,14 @@ export default function AgendaItem(props) {
                         </button>
                     </div>
 
-                    {showSeatMap && <SeatMap meetingId={meetingId} caseNumber={agenda.agendaPoint}></SeatMap>}
+                    {showSeatMap && <SeatMap
+                                        meetingId={meetingId}
+                                        caseNumber={agenda.agendaPoint}
+                                        updated={updated}
+                                        updatedCaseNumber={updatedCaseNumber}
+                                    >
+                                    </SeatMap>
+                    }
 
                     {voting && 
                         voting.map((vote, index) => (
@@ -157,6 +168,8 @@ export default function AgendaItem(props) {
                                 meetingId={meetingId}
                                 caseNumber={agenda.agendaPoint}
                                 index={index}
+                                updated={updated}
+                                updatedCaseNumber={updatedCaseNumber}
                                 title={agenda.title}>
                             </Voting>
                         ))

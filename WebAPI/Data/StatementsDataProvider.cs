@@ -4,27 +4,27 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
-    public interface IVotingDataProvider
+    public interface IStatementsDataProvider
     {
-        Task<List<StorageVotingDTO>?> GetVoting(string meetingId, string caseNumber);
+        Task<List<StatementDTO>?> GetStatements(string meetingId, string caseNumber);
 
         void ResetCache();
     }
 
-    public class VoteDataCache
+    public class StatementsDataCache
     {
         public DateTime Timestamp { get; set; }
 
-        public List<StorageVotingDTO>? Voting { get; set; }
+        public List<StatementDTO>? Statements { get; set; }
     }
 
 
-    public class VotingDataProvider : IVotingDataProvider
+    public class StatementsDataProvider : IStatementsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ConcurrentDictionary<string, VoteDataCache> _dataCache = new ConcurrentDictionary<string, VoteDataCache>();
+        private readonly ConcurrentDictionary<string, StatementsDataCache> _dataCache = new ConcurrentDictionary<string, StatementsDataCache>();
 
-        public VotingDataProvider(IServiceProvider serviceProvider)
+        public StatementsDataProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -34,15 +34,15 @@ namespace WebAPI.Data
             _dataCache.Clear();
         }
 
-        public async Task<List<StorageVotingDTO>?> GetVoting(string meetingId, string caseNumber)
+        public async Task<List<StatementDTO>?> GetStatements(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
 
-            if (_dataCache.TryGetValue(dataKey, out VoteDataCache? dataCache))
+            if (_dataCache.TryGetValue(dataKey, out StatementsDataCache? dataCache))
             {
                 if (dataCache?.Timestamp > DateTime.UtcNow.AddMinutes(-5))
                 {
-                    return dataCache.Voting;
+                    return dataCache.Statements;
                 }
             }
 
@@ -53,14 +53,14 @@ namespace WebAPI.Data
                 throw new InvalidOperationException();
             }
 
-            var voting = await apiClient.RequestVote(meetingId, caseNumber);
-            _dataCache[dataKey] = new VoteDataCache
+            var statements = await apiClient.GetStatements(meetingId, caseNumber);
+            _dataCache[dataKey] = new StatementsDataCache
             {
-                Voting = voting,
+                Statements = statements,
                 Timestamp = DateTime.UtcNow,
             };
 
-            return voting;
+            return statements;
         }
     }
 }

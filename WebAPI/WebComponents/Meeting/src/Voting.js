@@ -32,18 +32,17 @@ export default function Voting(props) {
     const [showHeader, setShowHeader] = useState(false)
     const { t } = useTranslation();
 
-    const { meetingId, caseNumber, voting, index, title } = props
+    const { meetingId, caseNumber, voting, index, title, updated, updatedCaseNumber } = props
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
-            if (response.status === 200) {
-                const data = await response.json();
-                setSeats(data)
-            }
+        if (updatedCaseNumber == caseNumber) {
+            fetchData()
         }
+    }, [updated, updatedCaseNumber])
+
+    useEffect(() => {
         fetchData()
-    }, [setSeats])
+    }, [])
 
     useEffect(() => {
         const tempSeatMap = []
@@ -69,6 +68,14 @@ export default function Voting(props) {
         setSeatMap(tempSeatMap)
     }, [seats])
 
+    const fetchData = async () => {
+        const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
+        if (response.status === 200) {
+            const data = await response.json();
+            setSeats(data)
+        }
+    }
+
     const createVoterElement = (vote) => {
         return (
             <div>{vote.name}</div>
@@ -79,7 +86,7 @@ export default function Voting(props) {
 
         setShowHeader(true)
         setTimeout(() => {
-            e.preventDefault()        
+            e.preventDefault()
             let doc = new jsPDF("landscape", 'pt', 'A4');
             doc.setFontSize(8)
             doc.html(document.getElementById(`print-area-${index}`), {

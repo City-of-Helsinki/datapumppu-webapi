@@ -39,6 +39,7 @@ export default function  Statements(props) {
             <div style={speechesContainerStyle}>
                 { statements && statements.map(statement => getStatement(statement)) }
             </div>
+            <br></br>
             <div style={speechesContainerStyle}>
                 { reservations && reservations.map(reservation =>
                     <div style={reservationsRowStyle}>

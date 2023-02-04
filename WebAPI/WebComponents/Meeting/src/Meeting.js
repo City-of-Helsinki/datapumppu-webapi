@@ -20,6 +20,8 @@ export default function Meeting() {
     const [accordionOpen, setAccordionOpen] = useState(true);
     const [agenda, setAgenda] = useState([]);
     const [decisions, setDecisions] = useState([]);
+    const [updated, setUpdated] = useState(0);
+    const [updatedCaseNumber, setUpdatedCaseNumber] = useState("");
     const [meetingId, setMeetingId] = useState("");
 
     const [showHeader, setShowHeader] = useState(false)
@@ -49,23 +51,28 @@ export default function Meeting() {
 
     useEffect(() => {
         fetchData()
-    }, [setAgenda])
+    }, [])
 
     useEffect(() => {
-        const connection = new HubConnectionBuilder()
-            .withUrl("#--API_URL--#/live")
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Information)
-            .build();
 
-        connection.start().then(() => {
-            console.log("Connected");
-            connection.on("receiveMessage", message => {
-                if (message == meetingId) {
-                    fetchData()
+        if (meetingId?.length > 0) {
+            const connection = new HubConnectionBuilder()
+                .withUrl("#--API_URL--#/live")
+                .withAutomaticReconnect()
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            connection.on("receiveMessage", (message) => {
+                if (message.meetingId == meetingId) {
+                    setUpdatedCaseNumber(message.caseNumber)
+                    setUpdated((prevVal) => prevVal + 1)
                 }
             })
-        }).catch(err => console.log(err))
+
+            connection.start()
+                .then(() => console.log("Connected"))
+                .catch(err => console.log(err))
+        }
     }, [meetingId])
 
     window.onkeydown = event => {
@@ -128,6 +135,8 @@ export default function Meeting() {
             {accordionOpen &&
                 agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
                     return <AgendaItem
+                        updated={updated}
+                        updatedCaseNumber={updatedCaseNumber}
                         editable={loggedIn}
                         key={index}
                         index={index + 1}

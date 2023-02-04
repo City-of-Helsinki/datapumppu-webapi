@@ -1,5 +1,7 @@
 using Confluent.Kafka;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using WebAPI.Data;
 
 namespace WebAPI.LiveMeetings
 {
@@ -9,16 +11,21 @@ namespace WebAPI.LiveMeetings
         private readonly IConfiguration _configuration;
         private readonly ILogger<KafkaLiveMeetingObserver> _logger;
         private IHostEnvironment _hostEnvironment;
+        private readonly ICache _cache;
+
+        private readonly Dictionary<string, DateTime> _latestSignals = new Dictionary<string, DateTime>();
 
         public KafkaLiveMeetingObserver(
             IHubContext<LiveMeetingsHub> hub,
             IConfiguration configuration,
             ILogger<KafkaLiveMeetingObserver> logger,
+            ICache cache,
             IHostEnvironment hostEnvironment)
         {
             _hub = hub;
             _configuration = configuration;
             _logger = logger;
+            _cache = cache;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -39,10 +46,21 @@ namespace WebAPI.LiveMeetings
                 try
                 {
                     var cr = consumer.Consume(stoppingToken);
-                    var message = cr.Message.Value;
-                    _logger.LogInformation(message);
+                    var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
+                    _logger.LogInformation(cr.Message.Value);
 
-                    await _hub.Clients.All.SendAsync("receiveMessage", message);
+                    var key = message.MeetingId + "---" + message.CaseNumber;
+                    if (!_latestSignals.ContainsKey(key))
+                    {
+                        _latestSignals[key] = DateTime.MinValue;
+                    }
+
+                    if (_latestSignals[key] < DateTime.UtcNow.AddSeconds(-5))
+                    {
+                        _cache.ResetCache();
+                        await _hub.Clients.All.SendAsync("receiveMessage", message);
+                        _latestSignals[key] = DateTime.UtcNow;
+                    }
 
                     consumer.Commit(cr);
                     _logger.LogInformation("Live Meeting Consumer event successfully received.");

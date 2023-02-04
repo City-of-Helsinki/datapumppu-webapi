@@ -15,22 +15,23 @@ export default function SeatMap(props) {
     const [seats, setSeats] = useState([]);
     const [seatMap, setSeatMap] = useState([]);
 
-    const { meetingId, caseNumber } = props
+    const { meetingId, caseNumber, updated, updatedCaseNumber } = props
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
             if (response.status === 200) {
                 const data = await response.json();
-
                 setSeats(data)
             }
         }
-        fetchData()
-    }, [setSeats])
+
+        if (updatedCaseNumber == caseNumber) {
+            fetchData()
+        }
+    }, [updated, updatedCaseNumber])
 
     useEffect(() => {
-
         const tempSeatMap = []
         seats.forEach(seat => {
             if (!isNaN(seat.seatId)) {
