@@ -17,14 +17,19 @@ export default function SeatMap(props) {
 
     const { meetingId, caseNumber, updated, updatedCaseNumber } = props
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
-            if (response.status === 200) {
-                const data = await response.json();
-                setSeats(data)
-            }
+    const fetchData = async () => {
+        const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
+        if (response.status === 200) {
+            const data = await response.json();
+            setSeats(data)
         }
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    useEffect(() => {
 
         if (updatedCaseNumber == caseNumber) {
             fetchData()

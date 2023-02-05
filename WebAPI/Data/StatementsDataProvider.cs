@@ -8,7 +8,7 @@ namespace WebAPI.Data
     {
         Task<List<StatementDTO>?> GetStatements(string meetingId, string caseNumber);
 
-        void ResetCache();
+        Task ResetCache();
     }
 
     public class StatementsDataCache
@@ -23,44 +23,55 @@ namespace WebAPI.Data
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, StatementsDataCache> _dataCache = new ConcurrentDictionary<string, StatementsDataCache>();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public StatementsDataProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public void ResetCache()
+        public async Task ResetCache()
         {
+            await _semaphore.WaitAsync();
             _dataCache.Clear();
+            _semaphore.Release();
         }
 
         public async Task<List<StatementDTO>?> GetStatements(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
+            await _semaphore.WaitAsync();
 
-            if (_dataCache.TryGetValue(dataKey, out StatementsDataCache? dataCache))
+            try
             {
-                if (dataCache?.Timestamp > DateTime.UtcNow.AddMinutes(-5))
+                if (_dataCache.TryGetValue(dataKey, out StatementsDataCache? dataCache))
                 {
-                    return dataCache.Statements;
+                    if (dataCache?.Timestamp > DateTime.UtcNow.AddMinutes(-5))
+                    {
+                        return dataCache.Statements;
+                    }
                 }
+
+                var scope = _serviceProvider.CreateScope();
+                var apiClient = scope.ServiceProvider.GetService<IStorageApiClient>();
+                if (apiClient == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                var statements = await apiClient.GetStatements(meetingId, caseNumber);
+                _dataCache[dataKey] = new StatementsDataCache
+                {
+                    Statements = statements,
+                    Timestamp = DateTime.UtcNow,
+                };
+
+                return statements;
             }
-
-            var scope = _serviceProvider.CreateScope();
-            var apiClient = scope.ServiceProvider.GetService<IStorageApiClient>();
-            if (apiClient== null)
+            finally
             {
-                throw new InvalidOperationException();
+                _semaphore.Release();
             }
-
-            var statements = await apiClient.GetStatements(meetingId, caseNumber);
-            _dataCache[dataKey] = new StatementsDataCache
-            {
-                Statements = statements,
-                Timestamp = DateTime.UtcNow,
-            };
-
-            return statements;
         }
     }
 }

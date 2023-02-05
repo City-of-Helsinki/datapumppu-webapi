@@ -57,7 +57,7 @@ namespace WebAPI.LiveMeetings
 
                     if (_latestSignals[key] < DateTime.UtcNow.AddSeconds(-5))
                     {
-                        _cache.ResetCache();
+                        await _cache.ResetCache();
                         await _hub.Clients.All.SendAsync("receiveMessage", message);
                         _latestSignals[key] = DateTime.UtcNow;
                     }
