@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
+using WebAPI.Data;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
@@ -11,16 +12,16 @@ namespace WebAPI.Controllers
     public class SeatsController: ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IStorageApiClient _storageApiClient;
+        private readonly ISeatsDataProvider _seatsProvider;
         private readonly ILogger<SeatsController> _logger;
 
         public SeatsController(
             IConfiguration configuration,
-            IStorageApiClient storageApiClient,
+            ISeatsDataProvider seatsProvider,
             ILogger<SeatsController> logger)
         {
             _configuration = configuration;
-            _storageApiClient = storageApiClient;
+            _seatsProvider = seatsProvider;
             _logger = logger;
         }
 
@@ -29,7 +30,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetSeats(string meetingId, string caseNumber)
         {
             _logger.LogInformation("Executing GetSeats()");
-            var seats = await _storageApiClient.RequestSeats(meetingId, caseNumber);
+            var seats = await _seatsProvider.GetSeats(meetingId, caseNumber);
             
             return new OkObjectResult(seats);
         }
