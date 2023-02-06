@@ -64,14 +64,71 @@ export default function AgendaItem(props) {
         }
     }
 
+    const editableDecision = () => {
+        var div = document.createElement('div')
+        var newDiv = document.createElement('div')
+        div.innerHTML = agenda.html
+        const newItem = div.querySelectorAll(".SisaltoSektio")[0]
+        if (newItem) {
+            var editableDiv = document.createElement('div')
+            editableDiv.innerHTML = div.querySelectorAll(".SisaltoPaatos")[0] || ""
+            return editableDiv.innerHTML
+        } else {
+            const nodes = div.childNodes
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
+                    var b = document.createElement('b')
+                    b.textContent = nodes[i].textContent
+                    var p = document.createElement('p')
+                    p.appendChild(b)
+                    newDiv.appendChild(p)
+                }
+                else if (nodes[i].nodeType == 3) {
+                    var p = document.createElement('p')
+                    p.textContent = nodes[i].textContent
+                    newDiv.appendChild(p)
+                }
+                else {
+                    newDiv.appendChild(nodes[i])
+                }
+            }
+            return newDiv.innerHTML
+        }
+    }
+
+    const decisionProposal = () => {
+        var div = document.createElement('div')
+        var newDiv = document.createElement('div')
+        div.innerHTML = agenda.html
+        const newItem = div.querySelectorAll(".SisaltoSektio")[0]
+        if (newItem) {
+            const nodes = newItem.childNodes
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
+                    var b = document.createElement('b')
+                    b.textContent = nodes[i].textContent
+                    newDiv.appendChild(b)
+                } else {
+                    newDiv.appendChild(nodes[i])
+                }
+            }
+            return newDiv.innerHTML
+        } else {
+            return null
+        }
+    }
+
+    const readOnlyProposalHTML = decisionProposal()
+    const editableHTML = editableDecision()
+
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
     const openText = t('Open')
 
     var motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
     var decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
-    
-    if (parseInt("#--MEETING_YEAR--#") < 2018 ||(parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
+
+    if (parseInt("#--MEETING_YEAR--#") < 2018 || (parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
         motionPath = "https://dev.hel.fi/paatokset/asia/" + agenda?.caseIDLabel?.replace(" ", "-").toLowerCase() + "/kvsto-#--MEETING_YEAR--#-#--MEETING_SEQUENCE_NUM--#"
         decisionPath = "https://dev.hel.fi/paatokset/asia/" + decision?.caseID
     }
@@ -95,10 +152,9 @@ export default function AgendaItem(props) {
             {accordionOpen &&
                 <div style={contentStyle}>
                     <div style={attachmentTable.table}>
-                        {
-                            agenda.caseIDLabel &&
+                        {agenda.caseIDLabel &&
                             <div style={attachmentTable.row}>
-                                <div style={attachmentTable.cell}>
+                                <div style={attachmentTable.label}>
                                     {decisionResolutionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
@@ -108,7 +164,7 @@ export default function AgendaItem(props) {
                         }
                         {decision?.caseID &&
                             <div style={attachmentTable.row}>
-                                <div style={attachmentTable.cell}>
+                                <div style={attachmentTable.label}>
                                     {decisionText}
                                 </div>
                                 <div style={attachmentTable.cell}>
@@ -116,14 +172,27 @@ export default function AgendaItem(props) {
                                 </div>
                             </div>
                         }
+                    </div>
+                    <div style={{ padding: "20px 0px 20px 0px" }}>
+                        {agenda.html && (editable ?
+                            <EditableItem
+                                agendaItem={agenda}
+                                editableHTML={editableHTML}
+                                meetingId={meetingId}
+                                language={"#--LANGUAGE--#"} />
+                            :
+                            <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
+                        )}
+                        {readOnlyProposalHTML && <div dangerouslySetInnerHTML={{ __html: readOnlyProposalHTML }} />}
+                    </div>
+                    <div style={attachmentTable.table}>
                         {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
                             return (
                                 <div className='attachment' key={'attach' + index} style={attachmentTable.row}>
-                                    <div style={attachmentTable.cell}>
+                                    <div style={attachmentTable.label}>
                                         {t("Attachment")} {attachment.attachmentNumber} {''}
                                     </div>
                                     <div style={attachmentTable.cell}>
-
                                         {attachment.fileURI ?
                                             <a style={linkStyle} href={attachment.fileURI}>{attachment.title}</a>
                                             : t("Non-public")}
@@ -133,13 +202,7 @@ export default function AgendaItem(props) {
                         })
                         }
                     </div>
-                    {agenda.html && (editable ?
-                        <EditableItem
-                            agendaItem={agenda}
-                            meetingId={meetingId}
-                            language={"#--LANGUAGE--#"} /> 
-                            : 
-                        <div dangerouslySetInnerHTML={{ __html: agenda.html }} />)}
+
                     {(statements || reservations) && <Statements statements={statements} reservations={reservations}></Statements>}
                     <div style={{ padding: "30px 10px 0 0" }}>
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
@@ -148,7 +211,7 @@ export default function AgendaItem(props) {
                                     ? <FaCaretUp />
                                     : <FaCaretDown />}
                             </div>
-                            <b>{t("Show seat map")}</b>
+                            {t("Show seat map")}
                         </button>
                     </div>
 
@@ -161,7 +224,7 @@ export default function AgendaItem(props) {
                                     </SeatMap>
                     }
 
-                    {voting && 
+                    {voting &&
                         voting.map((vote, index) => (
                             <Voting
                                 voting={vote}

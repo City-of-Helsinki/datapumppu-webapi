@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import SeatRow from './SeatRow'
 import { jsPDF } from "jspdf"
 import html2canvas from "html2canvas" // DO NOT REMOVE THIS
-import { agendaButtonStyle, titleStyle, linkStyle } from './styles';
+import { agendaButtonStyle, headingStyle, linkStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
-const champerStyle = {
+const chamberStyle = {
     fontSize: "65%",
     height: "50em",
     pageBreakInside: "avoid",
@@ -22,7 +22,88 @@ const voteListContainerStyle = {
     boxSizing: "border-box",
     fontSize: "90%"
 }
+const miniChamberStyle = {
+    height: "200px",
+    width: "25%",
+    pageBreakInside: "avoid",
+    backgroundColor: "#dedfe1",
+    margin: 0,
+    padding: 0,
+    alignSelf: "center"
+}
 
+const votingInfo = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "90%"
+}
+
+const voteLegend = {
+    fontWeight: '600',
+    width: '2em',
+    padding: ' 2px 2px 2px 2px',
+    marginBottom: '4px',
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    backgroundColor: "#eeeeee",
+    boxSizing: "border-box",
+}
+
+const voteCount = {
+    paddingTop: "2px",
+    paddingBottom: "2px",
+    marginBottom: '4px',
+    boxSizing: 'border-box',
+}
+
+const tableMain = {
+    display: "table",
+    width: "70%"
+}
+const tableRow = {
+    display: "table-row"
+}
+const tableCell = {
+    display: "table-cell"
+}
+
+const seatColorStyles = {
+    redDeskStyle: {
+        ...voteLegend,
+        backgroundColor: "#e62224",
+        color: "#ffffff"
+    },
+    redDeskStyleBW: {
+        ...voteLegend,
+        backgroundColor: "#aaa",
+        color: "#000"
+    },
+    greenDeskStyle: {
+        ...voteLegend,
+        backgroundColor: "#64bb46",
+        color: "#ffffff"
+    },
+    greenDeskStyleBW: {
+        ...voteLegend,
+        backgroundColor: "#000",
+        color: "#fff"
+    },
+    blueDeskStyle: {
+        ...voteLegend,
+        backgroundColor: "#98d8e1",
+        color: "#ffffff"
+    },
+    blueDeskStyleBW: {
+        ...voteLegend,
+        backgroundColor: "#fff",
+        color: "#000"
+    },
+    absentStyle: {
+        ...voteLegend,
+        border: "1px solid black"
+    }
+}
 
 export default function Voting(props) {
     const [seats, setSeats] = useState([]);
@@ -140,14 +221,60 @@ export default function Voting(props) {
 
     return (
         <div id={`print-area-${index}`}>
-            {showHeader && (<h3>{caseNumber}. {title}</h3>)}
-            <h4>{t("Voting")}</h4>
-            <div>{getForTitle(voting)}: {voting.forCount}</div>
-            {getForText(voting).length > 0 && <div style={{marginLeft: "1rem", fontStyle: "italic"}}>{getForText(voting)}</div>}
-            <div>{getAgainstTitle(voting)}: {voting.againstCount}</div>
-            {getAgainstText(voting).length > 0 && <div style={{marginLeft: "1rem", fontStyle: "italic"}}>{getAgainstText(voting)}</div>}
-            <div>{t("Empty")}: {voting.emptyCount}</div>
-            <div>{t("Absent")}: {voting.absentCount}</div>
+            {showHeader && (<div style={headingStyle}>{caseNumber}. {title}</div>)}
+            <div style={headingStyle}>{t("Voting")}</div>
+            <div style={votingInfo}>
+                <div style={tableMain}>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{getForTitle(voting)}: {voting.forCount}</div>
+                            {getForText(voting).length > 0 && <div style={{ marginLeft: "1rem" }}>{t('Proposal')}: <span style={{fontStyle: "italic" }}>{getForText(voting)}</span></div>}
+                        </div>
+                        <div style={tableCell}>
+                            <div style={showColors ? seatColorStyles.greenDeskStyle : seatColorStyles.greenDeskStyleBW}>{voting.forCount}</div>
+                        </div>
+                    </div>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{getAgainstTitle(voting)}: {voting.againstCount}</div>
+                            {getAgainstText(voting).length > 0 && <div style={{ marginLeft: "1rem"}}>{t('Proposal')}: <span style={{fontStyle: "italic" }}>{getAgainstText(voting)}</span></div>}
+                        </div>
+                        <div style={tableCell}>
+                            <div style={showColors ? seatColorStyles.redDeskStyle : seatColorStyles.redDeskStyleBW}>{voting.againstCount}</div>
+                        </div>
+                    </div>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{t("Empty")}: {voting.emptyCount}</div>
+                        </div>
+                        <div style={tableCell}>
+                            <div style={showColors ? seatColorStyles.blueDeskStyle : seatColorStyles.blueDeskStyleBW}>{voting.emptyCount}</div>
+                        </div>
+                    </div>
+                    <div style={tableRow}>
+                        <div style={tableCell}>
+                            <div style={voteCount}>{t("Absent")}: {voting.absentCount}</div>
+                        </div>
+                        <div style={tableCell}>
+                            <div style={seatColorStyles.absentStyle}>{voting.absentCount}</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div style={miniChamberStyle}>
+                    <SeatRow showName={false} showColors={showColors} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
+                    <SeatRow showName={false} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                </div>
+            </div>
+
             <div>
                 <div style={{ padding: "30px 10px 0 0" }}>
                     <button style={agendaButtonStyle} onClick={() => setShowVotes(!showVotes)} data-html2canvas-ignore={"true"}>
@@ -161,53 +288,46 @@ export default function Voting(props) {
                 </div>
                 {showVotes &&
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div style={champerStyle}>
-                            <SeatRow showColors={showColors} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
-                            <SeatRow showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                        <div style={chamberStyle}>
+                            <SeatRow showName={true} showColors={showColors} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
+                            <SeatRow showName={true} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
                         </div>
-                        <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
-                            {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
-                        </a>
-                        <a href="javascript:void(0)" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
-                            {t("Download voting map pdf")}
-                        </a>
+                        <p>
+                            <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
+                                {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
+                            </a><br /> 
+                            <a href="javascript:void(0)" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
+                                {t("Download voting map pdf")}
+                            </a>
+                        </p>
                         <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
-                            <p>
-                                <div>{t("FOR")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
-                            </p>
-                            <p>
-                                <div>{t("AGAINST")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
-                            </p>
-                            <p>
-                                <div>{t("EMPTY")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
-                            </p>
-                            <p>
-                                <div>{t("ABSENT")}</div>
-                            </p>
-                            <p>
-                                {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
-                            </p>
+                            <div>{t("FOR")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
+                            <br />
+                            <div>{t("AGAINST")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
+                            <br />
+                            <div>{t("EMPTY")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
+                            <br />
+                            <div>{t("ABSENT")}</div>
+                            <br />
+                            {voting && seatMap.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
                         </div>
                     </div>
                 }
             </div>
-        </div>
+        </div >
     )
 }

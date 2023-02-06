@@ -5,31 +5,14 @@ import parse from 'html-react-parser';
 import { stateFromHTML } from 'draft-js-import-html'
 import { stateToHTML } from 'draft-js-export-html'
 import { editorStyle } from './styles'
-import { useTranslation } from 'react-i18next';
 
 export default function EditableItem(props) {
-    const { agendaItem, meetingId, language } = props
+    const { agendaItem, editableHTML, meetingId, language } = props
     const [userInput, setUserInput] = React.useState(false)
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const { t } = useTranslation();
+    const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
     useEffect(() => {
-        const wrapUnwrapped = () => {
-            var div = document.createElement('div')
-            div.innerHTML = agendaItem.html
-            var nodes = div.childNodes
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].nodeName == "H4") {
-                    div.removeChild(nodes[i])
-                } else if (nodes[i].nodeType == 3) {
-                    var p = document.createElement('p');
-                    p.textContent = nodes[i].textContent;
-                    div.replaceChild(p, nodes[i])
-                }
-            }
-            setEditorState(EditorState.createWithContent(stateFromHTML(div.innerHTML)))
-        }
-        wrapUnwrapped()
+        setEditorState(EditorState.createWithContent(stateFromHTML(editableHTML)))
     }, [])
 
     const onChange = editorState => {
@@ -48,10 +31,28 @@ export default function EditableItem(props) {
         return "not-handled";
     };
 
-    const submitChanges = () => {
-        const editedHtml = stateToHTML(editorState.getCurrentContent());
-        const wrappedWithHeader = "<html><body><h4>" + t("Decision") + "</h4>" + editedHtml + "</body></html>"
+    const repackHtml = (item) => {
+        var div = document.createElement('div')
+        div.innerHTML = agendaItem.html
+        var newItem = div.querySelectorAll(".SisaltoSektio")[0]
+        if (newItem) {
+            var decisionDiv = div.querySelectorAll(".SisaltoPaatos")[0]
+            if (!decisionDiv) {
+                decisionDiv = document.createElement('div')
+                decisionDiv.className = "SisaltoPaatos"
+                decisionDiv.innerHTML = item
+                div.appendChild(decisionDiv)
+            } else {
+                decisionDiv.innerHTML = item
+            }
+        } else {
+            div.innerHTML = item
+        }
+        return div
+    }
 
+    const submitChanges = () => {
+        const editedHtml = repackHtml(stateToHTML(editorState.getCurrentContent()));
         const agendaPoint = agendaItem.agendaPoint
         const request = {
             method: 'POST',
@@ -60,7 +61,7 @@ export default function EditableItem(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem("userToken")
             },
             body: JSON.stringify({
-                html: wrappedWithHeader,
+                html: editedHtml,
                 meetingId,
                 agendaPoint,
                 language
@@ -69,9 +70,10 @@ export default function EditableItem(props) {
         fetch('#--API_URL--#/editor/edit', request)
         setUserInput(false)
     }
+
+
     return (
         <div>
-            <h4>{t("Decision")}</h4>
             <div tabIndex="0" onFocus={() => setUserInput(true)} >
                 {
                     userInput ?

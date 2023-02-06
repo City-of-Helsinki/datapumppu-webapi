@@ -9,8 +9,8 @@ const seatRowStyle = {
     height: "7%",
     marginLeft: 0,
     marginRight: 0,
-    marginTop: "0.2%",
-    marginBottom: "0.2%",
+    marginTop: "2px",
+    marginBottom: "2px",
 };
 
 const firstSeatStyle = {
@@ -28,7 +28,6 @@ const seatStyle = {
     position: "relative",
     backgroundColor: "#eeeeee",
     color: "#414143",
-    paddingLeft: "2px"
 }
 
 const aisleLeftStyle = {
@@ -84,10 +83,15 @@ const blueDeskStyleBW = {
     color: "#000"
 }
 
+const absentDeskStyle = {
+    ...deskStyle,
+    border: "1px solid black",
+}
+
 const guestBoxStyle = {
     border: "1px dotted #444444",
     marginTop: "2%",
-    marginLeft: "50%"
+    marginLeft: "50%",
 }
 
 const guestRowStyle = {
@@ -95,26 +99,26 @@ const guestRowStyle = {
     marginTop: 0,
     marginBotton: "2px",
     marginLeft: "5px",
-    marginRight: "5px"
+    marginRight: "5px",
 }
 
 const guestSeatStyle = {
     ...seatStyle,
     ...aisleLeftStyle,
-    width: "18%"
+    width: "18%",
 }
 
 export default function SeatRow(props) {
 
-    const { seats, rowNr, showColors } = props
+    const { seats, rowNr, showColors, showName } = props
     const isQuest = !!props.isQuest;
 
     const getSeatStyle = (voteType) => {
-
         switch (voteType) {
             case 0: return showColors ? greenDeskStyle : greenDeskStyleBW
             case 1: return showColors ? redDeskStyle : redDeskStyleBW
             case 2: return showColors ? blueDeskStyle : blueDeskStyleBW
+            case 3: return absentDeskStyle
             default: return deskStyle
         }
     }
@@ -122,7 +126,7 @@ export default function SeatRow(props) {
     const createSeat = (seat) => {
         return (
             <div style={ getSeatStyle(seat?.voteType) }>
-                { seat?.name }
+                {showName && seat?.name }
             </div>
         )
     }

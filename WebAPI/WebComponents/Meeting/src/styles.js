@@ -8,7 +8,7 @@ const textStyles = {
 const itemStyle = {
     ...textStyles,
     backgroundColor: "white",
-    padding: "15px",
+    padding: "15px 20px 15px 24px",
     margin: "4px",
     WebkitTransition: "all 0.2s ease",
     MozTransition: "all 0.2s ease",
@@ -58,7 +58,7 @@ const containerStyle = {
 const attachmentTable = {
     table: {
         display: "table",
-        maxWidth: "70%"
+        maxWidth: "80%"
     },
     row: {
         display: "table-row",
@@ -66,6 +66,11 @@ const attachmentTable = {
     cell: {
         display: "table-cell",
         padding: "6px 20px 4px 0px",
+    },
+    label: {
+        display: "table-cell",
+        padding: "6px 20px 4px 0px",
+        whiteSpace: "nowrap"
     }
 }
 
@@ -165,12 +170,22 @@ const editorStyle = {
     border: "1px solid #414143",
     background: "white",
     padding: "10px",
-    marginTop: "2px"
+    marginTop: "2px",
+    marginBottom: '20px',
+}
+const editableStyle = {
+    background: "#eee",
 }
 
 const linkStyle = {
     ...textStyles,
     color: "#0072c6"
+}
+const headingStyle = {
+    ...textStyles,
+    fontWeight: 'bold',
+    marginBottom: '20px',
+    marginTop: '20px'
 }
 
 export {
@@ -184,6 +199,8 @@ export {
     loginStyle,
     headerStyle,
     editorStyle,
+    editableStyle,
     linkStyle,
-    syncBarStyle
+    syncBarStyle,
+    headingStyle
 }
