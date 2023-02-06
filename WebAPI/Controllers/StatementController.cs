@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
+using WebAPI.Data;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
@@ -11,16 +12,16 @@ namespace WebAPI.Controllers
     public class StatementController: ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IStorageApiClient _storageApiClient;
+        private readonly IStatementsDataProvider _statementsDataProvider;
         private readonly ILogger<StatementController> _logger;
 
         public StatementController(
             IConfiguration configuration,
-            IStorageApiClient storageApiClient,
+            IStatementsDataProvider statementsDataProvider,
             ILogger<StatementController> logger)
         {
             _configuration = configuration;
-            _storageApiClient = storageApiClient;
+            _statementsDataProvider = statementsDataProvider;
             _logger = logger;
         }
 
@@ -29,7 +30,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetStatements(string meetingId, string caseNumber)
         {
             _logger.LogInformation("Executing GetStatements()");
-            var turns = await _storageApiClient.GetStatements(meetingId, caseNumber);
+            var turns = await _statementsDataProvider.GetStatements(meetingId, caseNumber);
             
             return new OkObjectResult(turns);
         }

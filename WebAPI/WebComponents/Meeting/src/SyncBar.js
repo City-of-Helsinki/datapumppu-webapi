@@ -6,14 +6,6 @@ export default function SyncBar(props) {
   const [inputValue, setInputValue] = useState('');
   const { meetingId, agendaPointTimestamp } = props
 
-  // useEffect(() => {
-  //   const playerApi = video.flowplayer("#odPlayer")
-  //   if (playerApi) {
-  //       console.log("playerApi.video.time", playerApi.video.time)
-  //       videoPosition = playerApi.video.time
-  //   }
-  // }, [])
-
   const submitSync = (videoposition) => {
     const request = {
       method: 'POST',
