@@ -51,22 +51,22 @@ export default function SeatMap(props) {
             }
         })
 
-        setSeatMap(tempSeatMap)        
+        setSeatMap(tempSeatMap)
     }, [seats])
 
     return (
         <div style={chamberStyle}>
-            <SeatRow seats={seatMap}></SeatRow>
-            <SeatRow rowNr={0} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={1} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={2} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={3} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={4} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={5} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={6} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={7} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={8} seats={seatMap}></SeatRow>
-            <SeatRow rowNr={10} seats={seatMap} isQuest={true}></SeatRow>
+            <SeatRow showName={true} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={0} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={1} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={2} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={3} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={4} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={5} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={6} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={7} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={8} seats={seatMap}></SeatRow>
+            <SeatRow showName={true} rowNr={10} seats={seatMap} isQuest={true}></SeatRow>
         </div>
     )
 }
