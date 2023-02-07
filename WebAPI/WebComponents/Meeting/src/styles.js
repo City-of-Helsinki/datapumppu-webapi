@@ -75,9 +75,14 @@ const attachmentTable = {
 }
 
 const loginStyle = {
-    loginPopup: {
+    loginUnStick: {
         position: "fixed",
         top: "125px",
+        right: "0"    
+    },
+    loginStick: {
+        position: "fixed",
+        top: "0",
         right: "0"
     },
     loginForm: {

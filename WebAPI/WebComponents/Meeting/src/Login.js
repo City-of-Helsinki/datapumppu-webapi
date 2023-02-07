@@ -1,13 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   loginStyle as style
 } from './styles';
 export default function Header(props) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [popupStyle, setPopupStyle] = useState()
+
+  useEffect(() => {
+    window.addEventListener("scroll", isSticky)
+    isSticky()
+    return () => {
+      window.removeEventListener("scroll", isSticky)
+    }
+  }, [])
+
+  const isSticky = (e) => {
+    const scrollTop = window.scrollY;
+    scrollTop >= 125
+      ? setPopupStyle(style.loginStick)
+      : setPopupStyle(style.loginUnStick)
+  }
 
   return (
-    <div style={style.loginPopup}>
+    <div style={popupStyle}>
       <div style={style.loginForm}>
         <div style={style.label}>
           <label>USERNAME:</label>
