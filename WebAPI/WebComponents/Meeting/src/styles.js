@@ -77,8 +77,8 @@ const attachmentTable = {
 const loginStyle = {
     loginPopup: {
         position: "fixed",
-        top: "0%",
-        right: "0%"
+        top: "125px",
+        right: "0"
     },
     loginForm: {
         ...textStyles,
