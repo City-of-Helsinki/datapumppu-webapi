@@ -76,7 +76,7 @@ const attachmentTable = {
 
 const loginStyle = {
     loginUnStick: {
-        position: "absolute",
+        position: "fixed",
         top: "125px",
         right: "0"    
     },
@@ -135,6 +135,7 @@ const headerStyle = {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        zIndex: 99
 
     },
     syncBtn: {
