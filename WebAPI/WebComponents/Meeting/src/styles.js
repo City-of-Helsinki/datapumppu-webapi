@@ -76,7 +76,7 @@ const attachmentTable = {
 
 const loginStyle = {
     loginUnStick: {
-        position: "fixed",
+        position: "absolute",
         top: "125px",
         right: "0"    
     },
