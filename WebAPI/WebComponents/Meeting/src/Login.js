@@ -5,25 +5,29 @@ import {
 export default function Header(props) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [popupStyle, setPopupStyle] = useState()
+  const [top, setTop] = useState(0)
 
   useEffect(() => {
-    window.addEventListener("scroll", isSticky)
-    isSticky()
+    window.addEventListener("scroll", calculateTop)
+    calculateTop()
     return () => {
-      window.removeEventListener("scroll", isSticky)
+      window.removeEventListener("scroll", calculateTop)
     }
   }, [])
 
-  const isSticky = (e) => {
-    const scrollTop = window.scrollY;
-    scrollTop >= 125
-      ? setPopupStyle(style.loginStick)
-      : setPopupStyle(style.loginUnStick)
+  const calculateTop = (e) => {
+    const scrollTop = window.scrollY
+    const top = scrollTop <= 125 ? 125 - scrollTop : 0
+    console.log(top)
+    setTop(top)
   }
 
   return (
-    <div style={popupStyle}>
+    <div style={{
+        position: "fixed",
+        top: top,
+        right: "0"
+    }}>
       <div style={style.loginForm}>
         <div style={style.label}>
           <label>USERNAME:</label>
