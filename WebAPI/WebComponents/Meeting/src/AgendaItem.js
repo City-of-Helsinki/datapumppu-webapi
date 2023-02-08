@@ -10,7 +10,8 @@ import {
     titleStyle,
     contentStyle,
     attachmentTable,
-    linkStyle
+    linkStyle,
+    headingStyle
 } from './styles';
 import EditableItem from './EditableItem';
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
@@ -21,6 +22,7 @@ export default function AgendaItem(props) {
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
     const [reservations, setReservations] = useState(undefined)
+    const [decisionHTML, setDecisionHTML] = useState("")
     const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
     const { t } = useTranslation();
 
@@ -40,6 +42,10 @@ export default function AgendaItem(props) {
         }
     }, [accordionOpen])
 
+    useEffect(() => {
+        manageContent()
+    }, [])
+
     const fetchReservationsData = async () => {
         const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
         if (response.status === 200) {
@@ -50,7 +56,7 @@ export default function AgendaItem(props) {
 
     const fetchVotingData = async () => {
         const response = await fetch(`#--API_URL--#/voting/${meetingId}/${agenda.agendaPoint}`)
-        if (response.status === 200) {            
+        if (response.status === 200) {
             const data = await response.json()
             setVoting(data)
         }
@@ -64,62 +70,29 @@ export default function AgendaItem(props) {
         }
     }
 
-    const editableDecision = () => {
+    const manageContent = () => {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
         div.innerHTML = agenda.html
-        const newItem = div.querySelectorAll(".SisaltoSektio")[0]
-        if (newItem) {
-            var editableDiv = document.createElement('div')
-            editableDiv.innerHTML = div.querySelectorAll(".SisaltoPaatos")[0] || ""
-            return editableDiv.innerHTML
-        } else {
-            const nodes = div.childNodes
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
-                    var b = document.createElement('b')
-                    b.textContent = nodes[i].textContent
+        var section = div.querySelector(".SisaltoSektio") || div
+        var nodes = section.childNodes
+        for (var i = 0; i < nodes.length; i++) {
+            var element = nodes[i].cloneNode(true)
+            if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4') {
+                if (element.nodeType == 3) {
                     var p = document.createElement('p')
-                    p.appendChild(b)
-                    newDiv.appendChild(p)
+                    p.textContent = element.textContent
+                    element = p
                 }
-                else if (nodes[i].nodeType == 3) {
-                    var p = document.createElement('p')
-                    p.textContent = nodes[i].textContent
-                    newDiv.appendChild(p)
-                }
-                else {
-                    newDiv.appendChild(nodes[i])
-                }
+                element.style.fontSize = "16px"
+                element.style.fontFamily = "Verdana, Arial, sans-serif"
+                element.style.color = "#414143"
+                element.style.lineHeight = "1.4"
+                newDiv.appendChild(element)
             }
-            return newDiv.innerHTML
         }
+        setDecisionHTML(newDiv.innerHTML)
     }
-
-    const decisionProposal = () => {
-        var div = document.createElement('div')
-        var newDiv = document.createElement('div')
-        div.innerHTML = agenda.html
-        const newItem = div.querySelectorAll(".SisaltoSektio")[0]
-        if (newItem) {
-            const nodes = newItem.childNodes
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].nodeName == 'H1' || nodes[i].nodeName == 'H2' || nodes[i].nodeName == 'H3' || nodes[i].nodeName == 'H4') {
-                    var b = document.createElement('b')
-                    b.textContent = nodes[i].textContent
-                    newDiv.appendChild(b)
-                } else {
-                    newDiv.appendChild(nodes[i])
-                }
-            }
-            return newDiv.innerHTML
-        } else {
-            return null
-        }
-    }
-
-    const readOnlyProposalHTML = decisionProposal()
-    const editableHTML = editableDecision()
 
     const decisionResolutionText = t('Decision resolution')
     const decisionText = t('Decision')
@@ -174,16 +147,16 @@ export default function AgendaItem(props) {
                         }
                     </div>
                     <div style={{ padding: "20px 0px 20px 0px" }}>
+                        <div style={headingStyle}>{decisionText}</div>
                         {agenda.html && (editable ?
                             <EditableItem
                                 agendaItem={agenda}
-                                editableHTML={editableHTML}
+                                editableHTML={decisionHTML}
                                 meetingId={meetingId}
                                 language={"#--LANGUAGE--#"} />
                             :
-                            <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
+                            <div dangerouslySetInnerHTML={{ __html: decisionHTML }} />
                         )}
-                        {readOnlyProposalHTML && <div dangerouslySetInnerHTML={{ __html: readOnlyProposalHTML }} />}
                     </div>
                     <div style={attachmentTable.table}>
                         {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
@@ -216,12 +189,12 @@ export default function AgendaItem(props) {
                     </div>
 
                     {showSeatMap && <SeatMap
-                                        meetingId={meetingId}
-                                        caseNumber={agenda.agendaPoint}
-                                        updated={updated}
-                                        updatedCaseNumber={updatedCaseNumber}
-                                    >
-                                    </SeatMap>
+                        meetingId={meetingId}
+                        caseNumber={agenda.agendaPoint}
+                        updated={updated}
+                        updatedCaseNumber={updatedCaseNumber}
+                    >
+                    </SeatMap>
                     }
 
                     {voting &&
