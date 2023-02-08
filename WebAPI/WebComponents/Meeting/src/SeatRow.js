@@ -90,8 +90,9 @@ const absentDeskStyle = {
 
 const guestBoxStyle = {
     border: "1px dotted #444444",
+    height: "6.5rem",
     marginTop: "2%",
-    marginLeft: "50%",
+    marginLeft: "40%",
 }
 
 const guestRowStyle = {
@@ -100,6 +101,7 @@ const guestRowStyle = {
     marginBotton: "2px",
     marginLeft: "5px",
     marginRight: "5px",
+    height: "3rem"
 }
 
 const guestSeatStyle = {
