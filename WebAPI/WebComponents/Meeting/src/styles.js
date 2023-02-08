@@ -75,16 +75,6 @@ const attachmentTable = {
 }
 
 const loginStyle = {
-    loginUnStick: {
-        position: "fixed",
-        top: "125px",
-        right: "0"    
-    },
-    loginStick: {
-        position: "fixed",
-        top: "0",
-        right: "0"
-    },
     loginForm: {
         ...textStyles,
         position: "absolute",
@@ -135,7 +125,7 @@ const headerStyle = {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        zIndex: 99
+        zIndex: 90
 
     },
     syncBtn: {
@@ -143,6 +133,8 @@ const headerStyle = {
         color: "white",
         backgroundColor: "inherit",
         border: "none",
+        cursor: "pointer",
+
     },
     logoutBtn: {
         marginRight: "20px",
@@ -150,6 +142,8 @@ const headerStyle = {
         color: "white",
         backgroundColor: "inherit",
         border: "none",
+        cursor: "pointer",
+
     },
 }
 const syncBarStyle = {
