@@ -1,10 +1,10 @@
-
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import AgendaItem from './AgendaItem';
-import Login from './Login';
-import Header from './Header';
-import SyncBar from './SyncBar';
+import { useEffect, useState } from 'react'
+import { useTranslation, I18nextProvider } from 'react-i18next'
+import i18n from './i18n';
+import AgendaItem from './AgendaItem'
+import Login from './Login'
+import Header from './Header'
+import SyncBar from './SyncBar'
 import {
     containerStyle,
     agendaButtonStyle
@@ -13,16 +13,15 @@ import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import {
     HubConnectionBuilder,
     LogLevel
-} from '@microsoft/signalr';
-
+} from '@microsoft/signalr'
 
 export default function Meeting() {
-    const [accordionOpen, setAccordionOpen] = useState(true);
-    const [agenda, setAgenda] = useState([]);
-    const [decisions, setDecisions] = useState([]);
-    const [updated, setUpdated] = useState(0);
-    const [updatedCaseNumber, setUpdatedCaseNumber] = useState("");
-    const [meetingId, setMeetingId] = useState("");
+    const [accordionOpen, setAccordionOpen] = useState(true)
+    const [agenda, setAgenda] = useState([])
+    const [decisions, setDecisions] = useState([])
+    const [updated, setUpdated] = useState(0)
+    const [updatedCaseNumber, setUpdatedCaseNumber] = useState("")
+    const [meetingId, setMeetingId] = useState("")
 
     const [showHeader, setShowHeader] = useState(false)
     const [showLogin, setShowLogin] = useState(false)
@@ -30,8 +29,7 @@ export default function Meeting() {
     const [loggedIn, setLoggedIn] = useState(false)
     const [isLiveMeeting, setIsLiveMeeting] = useState(false)
 
-    const { t } = useTranslation();
-
+    const { t } = useTranslation()
     const fetchData = async () => {
             await fetch('#--API_URL--#/meetings/meeting?year=#--MEETING_YEAR--#&sequenceNumber=#--MEETING_SEQUENCE_NUM--#&lang=#--LANGUAGE--#')
             .then(async (res) => {
@@ -54,7 +52,6 @@ export default function Meeting() {
     }, [])
 
     useEffect(() => {
-
         if (meetingId?.length > 0) {
             const connection = new HubConnectionBuilder()
                 .withUrl("#--API_URL--#/live")
@@ -123,37 +120,39 @@ export default function Meeting() {
     }
 
     return (
-        <div style={containerStyle}>
-            {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
-            {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
-            <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
-                <div style={{ paddingRight: "10px", marginTop: "4px" }}>
-                    {accordionOpen ? <FaCaretUp /> : <FaCaretDown />}
-                </div>
-                {t('Agenda and Proceeding').toUpperCase()}
-            </button>
-            {accordionOpen &&
-                agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
-                    return <AgendaItem
-                        updated={updated}
-                        updatedCaseNumber={updatedCaseNumber}
-                        editable={loggedIn}
-                        key={index}
-                        index={index + 1}
-                        agenda={agendaItem}
-                        decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+        <I18nextProvider i18n={i18n}>
+            <div style={containerStyle}>
+                {showHeader && <Header submitLogout={submitLogout} toggleSyncBar={() => setShowSyncBar(!showSyncBar)} />}
+                {showLogin && <Login submitLogin={submitLogin} closeLogin={() => setShowLogin(false)} />}
+                <button style={agendaButtonStyle} onClick={() => setAccordionOpen(!accordionOpen)}>
+                    <div style={{ paddingRight: "10px", marginTop: "4px" }}>
+                        {accordionOpen ? <FaCaretUp /> : <FaCaretDown />}
+                    </div>
+                    {t('Agenda and Proceeding').toUpperCase()}
+                </button>
+                {accordionOpen &&
+                    agenda?.sort((a, b) => (a.agendaPoint - b.agendaPoint)).map((agendaItem, index) => {
+                        return <AgendaItem
+                            updated={updated}
+                            updatedCaseNumber={updatedCaseNumber}
+                            editable={loggedIn}
+                            key={index}
+                            index={index + 1}
+                            agenda={agendaItem}
+                            decision={decisions?.find(d => d.caseIDLabel === agendaItem.caseIDLabel)}
+                            meetingId={meetingId}
+                            isLiveMeeting={isLiveMeeting}
+                        />
+                    })
+                }
+                {showSyncBar && agenda &&
+                    <SyncBar
                         meetingId={meetingId}
-                        isLiveMeeting={isLiveMeeting}
+                        agendaPointTimestamp={agenda.find(item => item.agendaPoint === 2)?.timestamp}
+                        closeSyncBar={() => setShowSyncBar(false)}
                     />
-                })
-            }
-            {showSyncBar && agenda &&
-                <SyncBar
-                    meetingId={meetingId}
-                    agendaPointTimestamp={agenda.find(item => item.agendaPoint === 2)?.timestamp}
-                    closeSyncBar={() => setShowSyncBar(false)}
-                />
-            }
-        </div>
+                }
+            </div>
+        </I18nextProvider>
     )
 }
