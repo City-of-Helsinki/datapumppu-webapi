@@ -125,8 +125,7 @@ const headerStyle = {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        zIndex: 90
-
+        zIndex: 110
     },
     syncBtn: {
         fontSize: "20px",
@@ -143,7 +142,6 @@ const headerStyle = {
         backgroundColor: "inherit",
         border: "none",
         cursor: "pointer",
-
     },
 }
 const syncBarStyle = {
