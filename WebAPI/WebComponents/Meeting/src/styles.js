@@ -133,7 +133,6 @@ const headerStyle = {
         backgroundColor: "inherit",
         border: "none",
         cursor: "pointer",
-
     },
     logoutBtn: {
         marginRight: "20px",
@@ -158,7 +157,6 @@ const syncBarStyle = {
     button: {
         padding: "5px",
         marginLeft: "2px",
-
     },
     input: { margin: '5px', padding: '5px', width: "50px" }
 

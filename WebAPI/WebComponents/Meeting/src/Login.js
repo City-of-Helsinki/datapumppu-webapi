@@ -27,7 +27,6 @@ export default function Header(props) {
         position: "fixed",
         top: top,
         right: "0"
-      
     }}>
       <div style={style.loginForm}>
         <div style={style.label}>
