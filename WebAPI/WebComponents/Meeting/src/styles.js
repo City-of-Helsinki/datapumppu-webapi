@@ -171,6 +171,9 @@ const editorStyle = {
 }
 const editableStyle = {
     background: "#eee",
+    padding: "10px",
+    marginTop: "2px",
+    marginBottom: '20px',
 }
 
 const linkStyle = {

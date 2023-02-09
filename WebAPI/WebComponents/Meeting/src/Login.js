@@ -18,7 +18,6 @@ export default function Header(props) {
   const calculateTop = (e) => {
     const scrollTop = window.scrollY
     const top = scrollTop <= 125 ? 125 - scrollTop : 0
-    console.log(top)
     setTop(top)
   }
 

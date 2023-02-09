@@ -4,7 +4,7 @@ import 'draft-js/dist/Draft.css';
 import parse from 'html-react-parser';
 import { stateFromHTML } from 'draft-js-import-html'
 import { stateToHTML } from 'draft-js-export-html'
-import { editorStyle } from './styles'
+import { editorStyle, editableStyle } from './styles'
 
 export default function EditableItem(props) {
     const { agendaItem, editableHTML, meetingId, language } = props
@@ -33,22 +33,18 @@ export default function EditableItem(props) {
 
     const repackHtml = (item) => {
         var div = document.createElement('div')
+        var newDiv = document.createElement('div')
         div.innerHTML = agendaItem.html
-        var newItem = div.querySelectorAll(".SisaltoSektio")[0]
-        if (newItem) {
-            var decisionDiv = div.querySelectorAll(".SisaltoPaatos")[0]
-            if (!decisionDiv) {
-                decisionDiv = document.createElement('div')
-                decisionDiv.className = "SisaltoPaatos"
-                decisionDiv.innerHTML = item
-                div.appendChild(decisionDiv)
-            } else {
-                decisionDiv.innerHTML = item
-            }
+        var content = div.querySelectorAll(".SisaltoSektio")[0]
+        if (content) {
+            const header = content.querySelectorAll(".SisaltoOtsikko")[0]
+            console.log(header)
+            newDiv.appendChild(header)
+            newDiv.innerHTML += item
         } else {
-            div.innerHTML = item
+            newDiv.innerHTML = item
         }
-        return div.innerHTML
+        return newDiv.innerHTML
     }
 
     const submitChanges = () => {
@@ -71,16 +67,15 @@ export default function EditableItem(props) {
         setUserInput(false)
     }
 
-
     return (
         <div>
-            <div tabIndex="0" onFocus={() => setUserInput(true)} >
+            <div  tabIndex="0" onFocus={() => setUserInput(true)} >
                 {
                     userInput ?
                         <div style={editorStyle} onBlur={() => submitChanges()}>
                             <Editor editorState={editorState} onChange={onChange} handleKeyCommand={handleKeyCommand} />
                         </div> :
-                        <div>
+                        <div style={editableStyle}>
                             {parse(stateToHTML(editorState.getCurrentContent()))}
                         </div>
                 }
