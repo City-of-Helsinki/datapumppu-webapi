@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
+
 import SeatMap from './SeatMap'
 import Voting from './Voting'
 import Statements from './Statements'
@@ -22,7 +23,7 @@ export default function AgendaItem(props) {
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
     const [reservations, setReservations] = useState(undefined)
-    const [decisionHTML, setDecisionHTML] = useState("")
+    const [editableHTML, setEditableHTML] = useState(null)
     const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
     const { t } = useTranslation();
 
@@ -43,7 +44,7 @@ export default function AgendaItem(props) {
     }, [accordionOpen])
 
     useEffect(() => {
-        manageContent()
+        setEditableHTML(manageContent(agenda.html))
     }, [])
 
     const fetchReservationsData = async () => {
@@ -70,10 +71,10 @@ export default function AgendaItem(props) {
         }
     }
 
-    const manageContent = () => {
+    const manageContent = (html) => {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
-        div.innerHTML = agenda.html
+        div.innerHTML = html
         var section = div.querySelector(".SisaltoSektio") || div
         var nodes = section.childNodes
         for (var i = 0; i < nodes.length; i++) {
@@ -91,7 +92,7 @@ export default function AgendaItem(props) {
                 newDiv.appendChild(element)
             }
         }
-        setDecisionHTML(newDiv.innerHTML)
+        return newDiv.innerHTML
     }
 
     const decisionResolutionText = t('Decision resolution')
@@ -120,7 +121,7 @@ export default function AgendaItem(props) {
                     <div style={{ paddingRight: "10px" }}>
                         {agenda.title}</div>
                 </button>
-                {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>}
+                {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{i18next.t('Go to video position')}</a>}
             </div>
             {accordionOpen &&
                 <div style={contentStyle}>
@@ -151,12 +152,12 @@ export default function AgendaItem(props) {
                         {agenda.html && (editable ?
                             <EditableItem
                                 agendaItem={agenda}
-                                editableHTML={decisionHTML}
+                                editableHTML={editableHTML}
                                 meetingId={meetingId}
                                 language={"#--LANGUAGE--#"} />
                             :
-                            <div dangerouslySetInnerHTML={{ __html: decisionHTML }} />
-                        )}
+                            <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
+                        )}             
                     </div>
                     <div style={attachmentTable.table}>
                         {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
