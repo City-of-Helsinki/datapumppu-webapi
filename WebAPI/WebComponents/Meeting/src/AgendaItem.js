@@ -121,7 +121,7 @@ export default function AgendaItem(props) {
                     <div style={{ paddingRight: "10px" }}>
                         {agenda.title}</div>
                 </button>
-                {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{i18next.t('Go to video position')}</a>}
+                {accordionOpen && <a style={agendaButtonStyle} href={`#T${agenda.videoPosition}`}>{t('Go to video position')}</a>}
             </div>
             {accordionOpen &&
                 <div style={contentStyle}>
