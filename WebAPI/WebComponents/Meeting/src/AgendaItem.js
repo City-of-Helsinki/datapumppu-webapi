@@ -75,8 +75,8 @@ export default function AgendaItem(props) {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
         div.innerHTML = html
-        var section = div.querySelector(".SisaltoSektio") || div
-        var nodes = section.childNodes
+        const section = div.querySelector(".SisaltoSektio") || div
+        const nodes = section.childNodes
         for (var i = 0; i < nodes.length; i++) {
             var element = nodes[i].cloneNode(true)
             if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4') {
