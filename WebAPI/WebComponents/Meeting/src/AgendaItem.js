@@ -79,7 +79,8 @@ export default function AgendaItem(props) {
         const nodes = section.childNodes
         for (var i = 0; i < nodes.length; i++) {
             var element = nodes[i].cloneNode(true)
-            if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4') {
+            if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4'
+                || element.textContent === t('Decision resolution')) {
                 if (element.nodeType == 3) {
                     var p = document.createElement('p')
                     p.textContent = element.textContent
