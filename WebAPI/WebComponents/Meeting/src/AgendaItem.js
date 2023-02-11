@@ -154,7 +154,7 @@ export default function AgendaItem(props) {
                         }
                     </div>
                     <div style={{ padding: "20px 0px 20px 0px" }}>
-                        <div style={headingStyle}>{decisionText}</div>
+                        <div><h3 style={headingStyle}>{decisionText}</h3></div>
                         {agenda.html && (editable ?
                             <EditableItem
                                 agendaItem={agenda}
