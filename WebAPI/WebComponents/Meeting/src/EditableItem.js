@@ -7,7 +7,7 @@ import { stateToHTML } from 'draft-js-export-html'
 import { editorStyle, editableStyle } from './styles'
 
 export default function EditableItem(props) {
-    const { agendaItem, editableHTML, meetingId, language } = props
+    const { agendaItem, editableHTML, meetingId, language, onUpdated } = props
     const [userInput, setUserInput] = React.useState(false)
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
@@ -48,7 +48,7 @@ export default function EditableItem(props) {
     }
 
     const submitChanges = () => {
-        const editedHtml = repackHtml(stateToHTML(editorState.getCurrentContent()))
+        const editedHtml = stateToHTML(editorState.getCurrentContent())
         const agendaPoint = agendaItem.agendaPoint
         const request = {
             method: 'POST',
@@ -64,6 +64,7 @@ export default function EditableItem(props) {
             })
         }
         fetch('#--API_URL--#/editor/edit', request)
+        onUpdated(editedHtml)
         setUserInput(false)
     }
 

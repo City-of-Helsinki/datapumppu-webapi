@@ -81,6 +81,11 @@ export default function AgendaItem(props) {
             var element = nodes[i].cloneNode(true)
             if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4'
                 || element.textContent === t('Decision resolution')) {
+
+                if (element.textContent === t('Decision resolution')) {
+                    newDiv.appendChild(document.createElement('br'))
+                }
+                
                 if (element.nodeType == 3) {
                     var p = document.createElement('p')
                     p.textContent = element.textContent
@@ -155,6 +160,7 @@ export default function AgendaItem(props) {
                                 agendaItem={agenda}
                                 editableHTML={editableHTML}
                                 meetingId={meetingId}
+                                onUpdated={setEditableHTML}
                                 language={"#--LANGUAGE--#"} />
                             :
                             <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
