@@ -24,6 +24,7 @@ export default function AgendaItem(props) {
     const [statements, setStatements] = useState(undefined)
     const [reservations, setReservations] = useState(undefined)
     const [editableHTML, setEditableHTML] = useState(null)
+    const [readonlyHTML, setReadonlyHTML] = useState(null)
     const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
     const { t } = useTranslation();
 
@@ -45,6 +46,7 @@ export default function AgendaItem(props) {
 
     useEffect(() => {
         setEditableHTML(manageContent(agenda.html))
+        setReadonlyHTML(getReadonlyContent(agenda.html))
     }, [])
 
     const fetchReservationsData = async () => {
@@ -71,12 +73,20 @@ export default function AgendaItem(props) {
         }
     }
 
+    const onHtmlUpdated = (html) => {
+        setEditableHTML(manageContent(html))
+        setReadonlyHTML(getReadonlyContent(html))
+    } 
+
     const manageContent = (html) => {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
         div.innerHTML = html
-        const section = div.querySelector(".SisaltoSektio") || div
-        const nodes = section.childNodes
+        const section = div.querySelector(".SisaltoSektio")
+        if (section) {
+            return section.previousElementSibling?.innerHTML ?? document.createElement('div')
+        }
+        const nodes = div.childNodes
         for (var i = 0; i < nodes.length; i++) {
             var element = nodes[i].cloneNode(true)
             if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4'
@@ -99,6 +109,34 @@ export default function AgendaItem(props) {
             }
         }
         return newDiv.innerHTML
+    }
+
+    const getReadonlyContent = (html) => {
+        var div = document.createElement('div')
+        var newDiv = document.createElement('div')
+        div.innerHTML = html
+        const section = div.querySelector(".SisaltoSektio")
+        if (!section) {
+            return undefined
+        }
+
+        var newDiv = document.createElement('div')
+        const nodes = section.childNodes
+        for (var i = 0; i < nodes.length; i++) {
+            var element = nodes[i].cloneNode(true)
+                
+            if (element.nodeType == 3) {
+                var p = document.createElement('p')
+                p.textContent = element.textContent
+                element = p
+            }
+            element.style.fontSize = "16px"
+            element.style.fontFamily = "Verdana, Arial, sans-serif"
+            element.style.color = "#414143"
+            element.style.lineHeight = "1.4"
+            newDiv.appendChild(element)
+        }
+        return section?.innerHTML
     }
 
     const decisionResolutionText = t('Decision resolution')
@@ -154,16 +192,22 @@ export default function AgendaItem(props) {
                         }
                     </div>
                     <div style={{ padding: "20px 0px 20px 0px" }}>
-                        <div><h3 style={headingStyle}>{decisionText}</h3></div>
+                        <h3>{decisionText}</h3>
                         {agenda.html && (editable ?
-                            <EditableItem
-                                agendaItem={agenda}
-                                editableHTML={editableHTML}
-                                meetingId={meetingId}
-                                onUpdated={setEditableHTML}
-                                language={"#--LANGUAGE--#"} />
+                            <>
+                                <EditableItem
+                                    agendaItem={agenda}
+                                    editableHTML={editableHTML}
+                                    meetingId={meetingId}
+                                    onUpdated={onHtmlUpdated}
+                                    language={"#--LANGUAGE--#"} />
+                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
+                            </>
                             :
-                            <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
+                            <>
+                                <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
+                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
+                            </>
                         )}             
                     </div>
                     <div style={attachmentTable.table}>

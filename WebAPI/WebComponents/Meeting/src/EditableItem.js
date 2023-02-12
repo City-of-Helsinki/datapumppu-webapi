@@ -37,10 +37,10 @@ export default function EditableItem(props) {
         div.innerHTML = agendaItem.html
         var content = div.querySelectorAll(".SisaltoSektio")[0]
         if (content) {
-            const header = content.querySelectorAll(".SisaltoOtsikko")[0]
-            console.log(header)
-            newDiv.appendChild(header)
-            newDiv.innerHTML += item
+            const editableDiv = document.createElement('div')
+            editableDiv.innerHTML = item
+            newDiv.appendChild(editableDiv)
+            newDiv.appendChild(content)
         } else {
             newDiv.innerHTML = item
         }
@@ -48,7 +48,7 @@ export default function EditableItem(props) {
     }
 
     const submitChanges = () => {
-        const editedHtml = stateToHTML(editorState.getCurrentContent())
+        const editedHtml = repackHtml(stateToHTML(editorState.getCurrentContent()))
         const agendaPoint = agendaItem.agendaPoint
         const request = {
             method: 'POST',
