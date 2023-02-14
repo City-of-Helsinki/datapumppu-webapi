@@ -13,6 +13,11 @@ const seatRowStyle = {
     marginBottom: "2px",
 };
 
+const seatRowPdfStyle = {
+    ...seatRowStyle,
+    backgroundColor: "white"
+};
+
 const firstSeatStyle = {
     marginLeft: "1.5%"
 }
@@ -111,7 +116,7 @@ const guestSeatStyle = {
 
 export default function SeatRow(props) {
 
-    const { seats, rowNr, showColors, showName } = props
+    const { seats, rowNr, showColors, showName, pdfStyle } = props
     const isQuest = !!props.isQuest;
 
     const getSeatStyle = (voteType) => {
@@ -135,12 +140,12 @@ export default function SeatRow(props) {
     return (
         <>
         {rowNr === undefined && !!isQuest === false &&
-            <div style={seatRowStyle}>
+            <div style={pdfStyle ? seatRowPdfStyle : seatRowStyle}>
                 <div style={{...seatStyle, marginLeft:"45.5%"}}>{ createSeat(seats[91]) }</div>
             </div>
         }
         {rowNr !== undefined && isQuest === false &&
-            <div style={seatRowStyle}>
+            <div style={pdfStyle ? seatRowPdfStyle : seatRowStyle}>
                 <div style={{...seatStyle, ...firstSeatStyle}}>{ createSeat(seats[(rowNr * 10) + 1]) }</div>
                 <div style={{...seatStyle, ...aisleLeftStyle}}>{ createSeat(seats[(rowNr * 10) + 2]) }</div>
                 <div style={{...seatStyle, ...aisleRightStyle}}>{ createSeat(seats[(rowNr * 10) + 3]) }</div>

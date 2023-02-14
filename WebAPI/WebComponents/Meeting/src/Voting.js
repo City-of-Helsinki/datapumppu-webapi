@@ -16,12 +16,18 @@ const chamberStyle = {
     padding: 0
 }
 
+const chamberPdfStyle = {
+    ...chamberStyle,
+    backgroundColor: "white",
+}
+
 const voteListContainerStyle = {
     columnCount: 3,
     columnGap: "10px",
     boxSizing: "border-box",
     fontSize: "90%"
 }
+
 const miniChamberStyle = {
     height: "200px",
     width: "25%",
@@ -30,6 +36,11 @@ const miniChamberStyle = {
     margin: 0,
     padding: 0,
     alignSelf: "center"
+}
+
+const miniChamberPdfStyle = {
+    ...miniChamberStyle,
+    backgroundColor: "white",
 }
 
 const votingInfo = {
@@ -110,7 +121,7 @@ export default function Voting(props) {
     const [showColors, setShowColors] = useState(true);
     const [seatMap, setSeatMap] = useState([]);
     const [showVotes, setShowVotes] = useState(false)
-    const [showHeader, setShowHeader] = useState(false)
+    const [pdfStyle, setPdfStyle] = useState(false)
     const { t } = useTranslation();
 
     const { meetingId, caseNumber, voting, index, title, updated, updatedCaseNumber } = props
@@ -165,7 +176,7 @@ export default function Voting(props) {
 
     const downloadPDF = (e) => {
 
-        setShowHeader(true)
+        setPdfStyle(true)
         setTimeout(() => {
             e.preventDefault()
             let doc = new jsPDF("landscape", 'pt', 'A4');
@@ -179,7 +190,7 @@ export default function Voting(props) {
                 },
                 margin: [10, 10, 10, 10]
             })
-            setShowHeader(false)
+            setPdfStyle(false)
         })
     }
 
@@ -221,7 +232,7 @@ export default function Voting(props) {
 
     return (
         <div id={`print-area-${index}`}>
-            {showHeader && (<div style={headingStyle}>{caseNumber}. {title}</div>)}
+            {pdfStyle && (<div style={headingStyle}>{caseNumber}. {title}</div>)}
             <div style={headingStyle}>{t("Voting")}</div>
             <div style={votingInfo}>
                 <div style={tableMain}>
@@ -261,17 +272,17 @@ export default function Voting(props) {
                     </div>
 
                 </div>
-                <div style={miniChamberStyle}>
-                    <SeatRow showName={false} showColors={showColors} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
-                    <SeatRow showName={false} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                <div style={pdfStyle ? miniChamberPdfStyle : miniChamberStyle}>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
+                    <SeatRow pdfStyle={pdfStyle} showName={false} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
                 </div>
             </div>
 
@@ -288,17 +299,17 @@ export default function Voting(props) {
                 </div>
                 {showVotes &&
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div style={chamberStyle}>
-                            <SeatRow showName={true} showColors={showColors} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
-                            <SeatRow showName={true} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                        <div style={pdfStyle ? chamberPdfStyle : chamberStyle}>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={1} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={2} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={3} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={4} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={5} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
+                            <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
                         </div>
                         <p>
                             <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
