@@ -20,16 +20,6 @@ RUN dotnet publish "./WebAPI/WebAPI.csproj" -c Release -o /app/publish /p:UseApp
 
 FROM node:16 AS node-builder
 
-WORKDIR /components/
-COPY ./WebAPI/WebComponents/Decision /components/
-RUN npm install
-RUN npm run build
-
-WORKDIR /components/decision
-COPY ./WebAPI/WebComponents/Decision /components/decision
-RUN npm install
-RUN npm run build
-
 WORKDIR /components/meeting
 COPY ./WebAPI/WebComponents/Meeting /components/meeting
 RUN npm install
@@ -39,6 +29,5 @@ FROM base AS final
 RUN mkdir -p /app/ScriptFiles/components
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY --from=node-builder /components/decision/dist/bundle.js ./ScriptFiles/components/decision.js
 COPY --from=node-builder /components/meeting/dist/bundle.js ./ScriptFiles/components/meeting.js
 ENTRYPOINT ["dotnet", "WebAPI.dll"]
