@@ -53,10 +53,26 @@ namespace WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
+            if (!Int32.TryParse(year, out int yearInt))
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            if (!Int32.TryParse(sequenceNumber, out int sequenceNumberInt))
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            string lowerLang = lang.ToLower();
+            if (lowerLang != "en" && lowerLang != "fi" && lowerLang == "sv")
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
             text = text.Replace("#--API_URL--#", apiUrl);
-            text = text.Replace("#--MEETING_YEAR--#", year);
-            text = text.Replace("#--MEETING_SEQUENCE_NUM--#", sequenceNumber);
-            text = text.Replace("#--LANGUAGE--#", lang);
+            text = text.Replace("#--MEETING_YEAR--#", yearInt.ToString());
+            text = text.Replace("#--MEETING_SEQUENCE_NUM--#", sequenceNumberInt.ToString());
+            text = text.Replace("#--LANGUAGE--#", lowerLang);
             return File(Encoding.UTF8.GetBytes(text), "application/javascript");
         }
     }
