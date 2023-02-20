@@ -36,13 +36,18 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserDTO userLogin)
         {
-            _logger.LogInformation("Executing Login()");
+            _logger.LogInformation($"Executing Login() {userLogin.Username}");
 
             if (await _storageApiClient.CheckLogin(userLogin.Username, userLogin.Password))
             {
+                _logger.LogInformation($"Login success {userLogin.Username}");
+
                 var token = GenerateToken();
                 return Ok(new { token });
             }
+
+            _logger.LogInformation($"Login failed {userLogin.Username}");
+
             return Forbid();
         }
 
@@ -50,6 +55,7 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaPointDTO editItem)
         {
+            _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint}");
             await _storageApiClient.UpdateAgendaPoint(editItem);
             await _cache.ResetCache();
             return Ok();
@@ -59,6 +65,7 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateVideoSync([FromBody] VideoSyncDTO videoSync)
         {
+            _logger.LogInformation($"UpdateVideoSync {videoSync.MeetingID}/{videoSync.VideoPosition}");
             await _storageApiClient.UpdateVideoSync(videoSync);
             return Ok();
         }
