@@ -84,7 +84,7 @@ namespace WebAPI.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(_configuration["JWT_ISSUER"],
                 _configuration["JWT_AUDIENCE"],
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddHours(12),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
