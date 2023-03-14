@@ -110,13 +110,12 @@ export default function Meeting() {
             }
         }
         var response = await fetch('#--API_URL--#/editor/logout', request)
-        if (response.ok) {
-            localStorage.clear()
-            setLoggedIn(false)
-            setShowHeader(false)
-        } else {
+        if (!response.ok) {
             console.log("logout failed")
         }
+        localStorage.clear()
+        setLoggedIn(false)
+        setShowHeader(false)
     }
 
     return (
