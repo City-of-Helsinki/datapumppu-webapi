@@ -228,7 +228,15 @@ export default function AgendaItem(props) {
                         }
                     </div>
 
-                    {(statements || reservations) && <Statements statements={statements} reservations={reservations}></Statements>}
+                    {agenda.subItems.length > 0 && agenda.subItems.map((subItem) => {
+                        const subItemStatements = statements?.filter(s => s.itemNumber === subItem.itemNumber);
+                        const subItemReservations = reservations?.filter(s => s.itemNumber === subItem.itemNumber);
+                        {(subItemStatements?.length > 0 || subItemReservations?.length > 0) && <Statements statements={subItemStatements} reservations={subItemReservations}></Statements>}
+                    })}
+
+
+                    {(agenda.subItems.length === 0 && (statements || reservations)) && <Statements statements={statements} reservations={reservations}></Statements>}
+
                     <div style={{ padding: "30px 10px 0 0" }}>
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
                             <div style={{ paddingRight: "10px", marginTop: "4px" }}>
