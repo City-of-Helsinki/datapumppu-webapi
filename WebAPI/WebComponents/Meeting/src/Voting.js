@@ -140,7 +140,7 @@ export default function Voting(props) {
         const tempSeatMap = []
         seats.forEach(seat => {
             if (!isNaN(seat.seatId)) {
-                let voteType = 0;
+                let voteType = 3;
                 const vote = voting.votes.find(vote => vote.name === seat.person)
                 if (vote !== undefined) {
                     voteType = vote.voteType
