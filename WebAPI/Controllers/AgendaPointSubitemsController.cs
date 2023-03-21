@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("subitems")]
+        [Route("{meetingId}/{agendaPoint}")]
         public async Task<IActionResult> GetSubItems(string meetingId, int agendaPoint)
         {
             _logger.LogInformation("Executing GetMeeting()");
