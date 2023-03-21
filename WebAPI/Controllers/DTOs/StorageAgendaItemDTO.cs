@@ -19,5 +19,9 @@
         public DateTime? Timestamp { get; set; }
 
         public int? VideoPosition { get; set; }
+
+        public string ItemNumber { get; set; } = "0";
+
+        public List<StorageAgendaSubItemDTO> SubItems { get; set; } = new List<StorageAgendaSubItemDTO>();
     }
 }
