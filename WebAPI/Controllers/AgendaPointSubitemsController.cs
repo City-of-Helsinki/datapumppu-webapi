@@ -11,11 +11,11 @@ namespace WebAPI.Controllers
     public class AgendaPointSubItemsControllerController: ControllerBase
     {
         private readonly IAgendaSubItemsProvider _agendaSubItemsProvider;
-        private readonly ILogger<MeetingController> _logger;
+        private readonly ILogger<AgendaPointSubItemsControllerController> _logger;
 
         public AgendaPointSubItemsControllerController(
             IAgendaSubItemsProvider agendaSubItemsProvider,
-            ILogger<MeetingController> logger)
+            ILogger<AgendaPointSubItemsControllerController> logger)
         {
             _agendaSubItemsProvider = agendaSubItemsProvider;
             _logger = logger;
@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         [Route("{meetingId}/{agendaPoint}")]
         public async Task<IActionResult> GetSubItems(string meetingId, int agendaPoint)
         {
-            _logger.LogInformation("Executing GetMeeting()");
+            _logger.LogInformation("Executing GetSubItems()");
 
             var items = await _agendaSubItemsProvider.GetAgendaPointSubItems(meetingId, agendaPoint);
             if (items == null)

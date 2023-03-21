@@ -23,6 +23,7 @@ export default function AgendaItem(props) {
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
     const [reservations, setReservations] = useState(undefined)
+    const [subItems, setSubItems] = useState(undefined)
     const [editableHTML, setEditableHTML] = useState(null)
     const [readonlyHTML, setReadonlyHTML] = useState(null)
     const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
@@ -30,6 +31,7 @@ export default function AgendaItem(props) {
 
     useEffect(() => {
         if (agenda.agendaPoint == updatedCaseNumber && accordionOpen) {
+            fetchSubItems();
             fetchStatementsData()
             fetchVotingData()
             fetchReservationsData()
@@ -38,6 +40,7 @@ export default function AgendaItem(props) {
 
     useEffect(() => {
         if (accordionOpen === true) {
+            fetchSubItems();
             fetchStatementsData()
             fetchVotingData()
             fetchReservationsData()
@@ -48,6 +51,14 @@ export default function AgendaItem(props) {
         setEditableHTML(manageContent(agenda.html))
         setReadonlyHTML(getReadonlyContent(agenda.html))
     }, [])
+
+    const fetchSubItems = async () => {
+        const response = await fetch(`#--API_URL--#/agendapoint/${meetingId}/${agenda.agendaPoint}`)
+        if (response.status === 200) {
+            const data = await response.json()
+            setSubItems(data)
+        }
+    }
 
     const fetchReservationsData = async () => {
         const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
@@ -228,11 +239,11 @@ export default function AgendaItem(props) {
                         }
                     </div>
 
-                    {agenda.subItems.length > 0 && agenda.subItems.map(item => 
+                    {subItems?.length > 0 && subItems.map(item => 
                         <Statements itemNumber={item.itemNumber} itemTextFi={item.itemTextFi} statements={statements?.filter(s => s.itemNumber === item.itemNumber)} reservations={reservations?.filter(s => s.itemNumber === item.itemNumber)}></Statements>
                     )}
 
-                    {(agenda.subItems.length === 0 && (statements || reservations)) && <Statements statements={statements} reservations={reservations}></Statements>}
+                    {((!subItems || subItems.length === 0) && (statements || reservations)) && <Statements statements={statements} reservations={reservations}></Statements>}
 
                     <div style={{ padding: "30px 10px 0 0" }}>
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
