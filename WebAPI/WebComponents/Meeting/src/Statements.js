@@ -12,11 +12,18 @@ const speechesContainerStyle = {
 const reservationsRowStyle = {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center"    
+}
+
+const subItemHeaderStyle = {
+    marginTop: "1rem",
+    backgroundColor: "#666666",
+    color: "#ffffff",
+    padding: "8px",
 }
 
 export default function  Statements(props) {
-    const { statements, reservations } = props
+    const { statements, reservations, itemNumber, itemTextFi } = props
     const { t } = useTranslation();
 
     const getStatementArray = () => {
@@ -64,6 +71,7 @@ export default function  Statements(props) {
 
     return (
         <div>
+            {itemNumber && <div style={subItemHeaderStyle}>{`${itemNumber} ${itemTextFi}`}</div>}
             <div style={headingStyle}>{t("Speeches")}</div>
             <div style={speechesContainerStyle}>
                 { statementList && statementList.map(statement => getStatement(statement)) }
