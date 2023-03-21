@@ -54,9 +54,19 @@ namespace WebAPI
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT_KEY"]))
                 };
             });
-            // Removed for now, until we know what to do about it
-            //builder.Services.AddHostedService<LiveMeetingObserver>();
+
             builder.Services.AddHostedService<KafkaLiveMeetingObserver>();
+
+            builder.Services.AddLogging(options =>
+            {
+                options.AddSimpleConsole(c =>
+                {
+                    c.IncludeScopes = true;
+                    c.SingleLine = true;
+                    c.TimestampFormat = "dd.MM.yyyy HH:mm:ss ";
+                });
+            });
+
 
             var app = builder.Build();
 

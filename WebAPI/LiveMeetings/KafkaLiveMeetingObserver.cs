@@ -55,12 +55,9 @@ namespace WebAPI.LiveMeetings
                         _latestSignals[key] = DateTime.MinValue;
                     }
 
-                    if (_latestSignals[key] < DateTime.UtcNow.AddSeconds(-2))
-                    {
-                        await _cache.ResetCache();
-                        await _hub.Clients.All.SendAsync("receiveMessage", message);
-                        _latestSignals[key] = DateTime.UtcNow;
-                    }
+                    await _cache.ResetCache();
+                    await _hub.Clients.All.SendAsync("receiveMessage", message);
+                    _latestSignals[key] = DateTime.UtcNow;
 
                     consumer.Commit(cr);
                     _logger.LogInformation("Live Meeting Consumer event successfully received.");
