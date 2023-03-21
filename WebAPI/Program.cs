@@ -63,7 +63,7 @@ namespace WebAPI
                 options.AddSimpleConsole(c =>
                 {
                     c.IncludeScopes = true;
-                    c.SingleLine = true;
+                    c.SingleLine = false;
                     c.TimestampFormat = "dd.MM.yyyy HH:mm:ss ";
                 });
             });
