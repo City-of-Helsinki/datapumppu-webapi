@@ -33,7 +33,8 @@ namespace WebAPI
             builder.Services.AddSingleton<IVotingDataProvider, VotingDataProvider>();
             builder.Services.AddSingleton<IStatementsDataProvider, StatementsDataProvider>();
             builder.Services.AddSingleton<ISeatsDataProvider, SeatsDataProvider>();
-            
+            builder.Services.AddSingleton<IAgendaSubItemsProvider, AgendaSubItemsProvider>();
+
             builder.Services.AddSingleton<ICache, Cache>();
 
             builder.Services.AddScoped<IStorageApiClient, StorageApiClient>();

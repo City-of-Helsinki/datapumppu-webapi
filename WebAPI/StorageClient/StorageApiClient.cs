@@ -7,6 +7,8 @@ namespace WebAPI.StorageClient
     {
         Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language);
 
+        Task<List<StorageAgendaSubItemDTO>> RequestAgendaPointSubItemsg(string meetingId, int agendaPoint);
+
         Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language);
 
         Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
@@ -96,6 +98,19 @@ namespace WebAPI.StorageClient
             }
 
             return await response.Content.ReadFromJsonAsync<StorageMeetingDTO>();
+        }
+
+        public async Task<List<StorageAgendaSubItemDTO>> RequestAgendaPointSubItemsg(string meetingId, int agendaPoint)
+        {
+            _logger.LogInformation("Executing RequestAgendaPointSubItemsg()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/meetinginfo/meeting/{meetingId}/{agendaPoint}");
+            if ((int)response.StatusCode == StatusCodes.Status204NoContent)
+            {
+                return new List<StorageAgendaSubItemDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<StorageAgendaSubItemDTO>>() ?? new List<StorageAgendaSubItemDTO>();
         }
 
         public async Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language)
