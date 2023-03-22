@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import SeatMap from './SeatMap'
 import Voting from './Voting'
 import Statements from './Statements'
@@ -12,7 +11,6 @@ import {
     contentStyle,
     attachmentTable,
     linkStyle,
-    headingStyle
 } from './styles';
 import EditableItem from './EditableItem';
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
@@ -30,11 +28,17 @@ export default function AgendaItem(props) {
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (agenda.agendaPoint == updatedCaseNumber && accordionOpen) {
+        if (agenda.agendaPoint != updatedCaseNumber) {
+            return;
+        }
+
+        if (accordionOpen) {
             fetchSubItems();
             fetchStatementsData()
             fetchVotingData()
             fetchReservationsData()
+        } else {
+            setAccordionOpen(true)
         }
     }, [updated, updatedCaseNumber])
 
