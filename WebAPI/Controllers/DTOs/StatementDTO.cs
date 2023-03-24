@@ -22,6 +22,8 @@
 
         public int? CaseNumber { get; set; }
 
+        public string ItemNumber { get; set; } = "0";
+
         public string? Title { get; set; }
 
         public string? MeetingId { get; set; }

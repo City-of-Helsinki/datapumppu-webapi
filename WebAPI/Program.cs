@@ -33,7 +33,8 @@ namespace WebAPI
             builder.Services.AddSingleton<IVotingDataProvider, VotingDataProvider>();
             builder.Services.AddSingleton<IStatementsDataProvider, StatementsDataProvider>();
             builder.Services.AddSingleton<ISeatsDataProvider, SeatsDataProvider>();
-            
+            builder.Services.AddSingleton<IAgendaSubItemsProvider, AgendaSubItemsProvider>();
+
             builder.Services.AddSingleton<ICache, Cache>();
 
             builder.Services.AddScoped<IStorageApiClient, StorageApiClient>();
@@ -54,9 +55,19 @@ namespace WebAPI
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT_KEY"]))
                 };
             });
-            // Removed for now, until we know what to do about it
-            //builder.Services.AddHostedService<LiveMeetingObserver>();
+
             builder.Services.AddHostedService<KafkaLiveMeetingObserver>();
+
+            builder.Services.AddLogging(options =>
+            {
+                options.AddSimpleConsole(c =>
+                {
+                    c.IncludeScopes = true;
+                    c.SingleLine = false;
+                    c.TimestampFormat = "dd.MM.yyyy HH:mm:ss ";
+                });
+            });
+
 
             var app = builder.Build();
 

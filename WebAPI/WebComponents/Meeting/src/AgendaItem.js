@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import SeatMap from './SeatMap'
 import Voting from './Voting'
 import Statements from './Statements'
@@ -12,7 +11,6 @@ import {
     contentStyle,
     attachmentTable,
     linkStyle,
-    headingStyle
 } from './styles';
 import EditableItem from './EditableItem';
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
@@ -23,21 +21,30 @@ export default function AgendaItem(props) {
     const [voting, setVoting] = useState(undefined)
     const [statements, setStatements] = useState(undefined)
     const [reservations, setReservations] = useState(undefined)
+    const [subItems, setSubItems] = useState(undefined)
     const [editableHTML, setEditableHTML] = useState(null)
     const [readonlyHTML, setReadonlyHTML] = useState(null)
     const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (agenda.agendaPoint == updatedCaseNumber && accordionOpen) {
+        if (agenda.agendaPoint != updatedCaseNumber) {
+            return;
+        }
+
+        if (accordionOpen) {
+            fetchSubItems();
             fetchStatementsData()
             fetchVotingData()
             fetchReservationsData()
+        } else {
+            setAccordionOpen(true)
         }
     }, [updated, updatedCaseNumber])
 
     useEffect(() => {
         if (accordionOpen === true) {
+            fetchSubItems();
             fetchStatementsData()
             fetchVotingData()
             fetchReservationsData()
@@ -48,6 +55,14 @@ export default function AgendaItem(props) {
         setEditableHTML(manageContent(agenda.html))
         setReadonlyHTML(getReadonlyContent(agenda.html))
     }, [])
+
+    const fetchSubItems = async () => {
+        const response = await fetch(`#--API_URL--#/agendapoint/${meetingId}/${agenda.agendaPoint}`)
+        if (response.status === 200) {
+            const data = await response.json()
+            setSubItems(data)
+        }
+    }
 
     const fetchReservationsData = async () => {
         const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
@@ -228,7 +243,12 @@ export default function AgendaItem(props) {
                         }
                     </div>
 
-                    {(statements || reservations) && <Statements statements={statements} reservations={reservations}></Statements>}
+                    {subItems?.length > 0 && subItems.map(item => 
+                        <Statements itemNumber={item.itemNumber} itemTextFi={item.itemTextFi} statements={statements?.filter(s => s.itemNumber === item.itemNumber)} reservations={reservations?.filter(s => s.itemNumber === item.itemNumber)}></Statements>
+                    )}
+
+                    {((!subItems || subItems.length === 0) && (statements || reservations)) && <Statements statements={statements} reservations={reservations}></Statements>}
+
                     <div style={{ padding: "30px 10px 0 0" }}>
                         <button style={agendaButtonStyle} onClick={() => setShowSeatMap(!showSeatMap)}>
                             <div style={{ paddingRight: "10px", marginTop: "4px" }}>
