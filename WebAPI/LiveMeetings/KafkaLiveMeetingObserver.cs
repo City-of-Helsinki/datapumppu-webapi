@@ -14,6 +14,7 @@ namespace WebAPI.LiveMeetings
         private readonly ICache _cache;
 
         private readonly Dictionary<string, DateTime> _latestSignals = new Dictionary<string, DateTime>();
+        private readonly Dictionary<string, Waiter> _waiters = new Dictionary<string, Waiter>();
 
         public KafkaLiveMeetingObserver(
             IHubContext<LiveMeetingsHub> hub,
@@ -45,28 +46,35 @@ namespace WebAPI.LiveMeetings
             {
                 try
                 {
-                    var cr = consumer.Consume(stoppingToken);
-                    var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
-                    _logger.LogInformation(cr.Message.Value);
-
-                    var key = message.MeetingId + "-" + message.CaseNumber;
-                    if (!_latestSignals.ContainsKey(key))
+                    var cr = consumer.Consume(1000);
+                    if (cr != null && cr.Message.Value != null)
                     {
-                        _latestSignals[key] = DateTime.MinValue;
+                        var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
+                        _logger.LogInformation(cr.Message.Value);
+
+                        var key = message.MeetingId + "-" + message.CaseNumber;
+                        if (!_waiters.ContainsKey(key))
+                        {
+                            _waiters[key] = new Waiter
+                            {
+                                Timestamp = DateTime.Now,
+                                Message = message,
+                            };
+                        }
+
+                        consumer.Commit(cr);
                     }
 
-                    if (_latestSignals[key] < DateTime.Now.AddSeconds(-4))
+                    foreach (var waiterKey in _waiters.Keys)
                     {
-                        _latestSignals[key] = DateTime.Now;
-                        _ = Task.Delay(5000, stoppingToken).ContinueWith(async (task) =>
+                        if (_waiters[waiterKey].Timestamp < DateTime.Now.AddSeconds(-4))
                         {
                             await _cache.ResetCache();
-                            await _hub.Clients.All.SendAsync("receiveMessage", message);
-                        });
-                        
+                            await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
+                            _waiters[waiterKey].Timestamp = DateTime.Now;
+                        }
                     }
 
-                    consumer.Commit(cr);
                     _logger.LogInformation("Live Meeting Consumer event successfully received.");
                 }
                 catch (OperationCanceledException)
@@ -128,6 +136,13 @@ namespace WebAPI.LiveMeetings
             var certEnd = "\n-----END CERTIFICATE-----";
 
             return certBegin + cert + certEnd;
+        }
+
+        private class Waiter
+        {
+            public DateTime Timestamp { get; set; }
+
+            public StorageEventDTO? Message { get; set; }
         }
     }
 }
