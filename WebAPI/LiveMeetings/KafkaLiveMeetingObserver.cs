@@ -49,7 +49,7 @@ namespace WebAPI.LiveMeetings
                     var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
                     _logger.LogInformation(cr.Message.Value);
 
-                    var key = message.MeetingId;
+                    var key = message.MeetingId + "-" + message.CaseNumber;
                     if (!_latestSignals.ContainsKey(key))
                     {
                         _latestSignals[key] = DateTime.MinValue;
