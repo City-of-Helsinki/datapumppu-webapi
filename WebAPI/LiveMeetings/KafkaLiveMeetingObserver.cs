@@ -49,15 +49,22 @@ namespace WebAPI.LiveMeetings
                     var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
                     _logger.LogInformation(cr.Message.Value);
 
-                    var key = message.MeetingId + "---" + message.CaseNumber;
+                    var key = message.MeetingId;
                     if (!_latestSignals.ContainsKey(key))
                     {
                         _latestSignals[key] = DateTime.MinValue;
                     }
 
-                    await _cache.ResetCache();
-                    await _hub.Clients.All.SendAsync("receiveMessage", message);
-                    _latestSignals[key] = DateTime.UtcNow;
+                    if (_latestSignals[key] < DateTime.Now.AddSeconds(-4))
+                    {
+                        _latestSignals[key] = DateTime.Now;
+                        _ = Task.Delay(5000, stoppingToken).ContinueWith(async (task) =>
+                        {
+                            await _cache.ResetCache();
+                            await _hub.Clients.All.SendAsync("receiveMessage", message);
+                        });
+                        
+                    }
 
                     consumer.Commit(cr);
                     _logger.LogInformation("Live Meeting Consumer event successfully received.");
