@@ -142,18 +142,17 @@ export default function Voting(props) {
             if (!isNaN(seat.seatId)) {
                 let voteType = 3;
                 const vote = voting.votes.find(vote => vote.name === seat.person)
-                if (vote !== undefined) {
-                    voteType = vote.voteType
-                }
-                let name = seat.person;
-                if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
-                    name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
-                } else {
-                    name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
-                }
-                tempSeatMap[Number(seat.seatId)] = {
-                    name,
-                    voteType
+                if (vote) {
+                    let name = seat.person;
+                    if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+                        name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
+                    } else {
+                        name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
+                    }
+                    tempSeatMap[Number(seat.seatId)] = {
+                        name,
+                        voteType
+                    }
                 }
             }
         })
