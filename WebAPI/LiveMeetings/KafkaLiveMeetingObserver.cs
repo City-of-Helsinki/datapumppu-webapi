@@ -46,7 +46,7 @@ namespace WebAPI.LiveMeetings
             {
                 try
                 {
-                    var cr = consumer.Consume(1000);
+                    var cr = consumer.Consume(2000);
                     if (cr != null && cr.Message.Value != null)
                     {
                         var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
@@ -65,13 +65,18 @@ namespace WebAPI.LiveMeetings
                         consumer.Commit(cr);
                     }
 
-                    foreach (var waiterKey in _waiters.Keys)
+                    foreach (var waiterKey in _waiters.Keys.ToList())
                     {
                         if (_waiters[waiterKey].Timestamp < DateTime.Now.AddSeconds(-4))
                         {
                             await _cache.ResetCache();
                             await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
                             _waiters[waiterKey].Timestamp = DateTime.Now;
+                        }
+
+                        if (_waiters[waiterKey].Timestamp < DateTime.Now.AddDays(-1))
+                        {
+                            _waiters.Remove(waiterKey);
                         }
                     }
 
