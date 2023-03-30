@@ -40,7 +40,7 @@ export default function  Statements(props) {
 
 
     const getTimespan = (seconds) => {
-        return `${ Math.round(seconds / 60) }:${ String(Math.round(seconds % 60)).padStart(2, '0') }`
+        return `${ Math.floor(seconds / 60) }:${ String(Math.round(seconds % 60)).padStart(2, '0') }`
     }
 
     const getStatement = (statement) => {
