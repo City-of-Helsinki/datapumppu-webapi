@@ -34,6 +34,7 @@ namespace WebAPI
             builder.Services.AddSingleton<IStatementsDataProvider, StatementsDataProvider>();
             builder.Services.AddSingleton<ISeatsDataProvider, SeatsDataProvider>();
             builder.Services.AddSingleton<IAgendaSubItemsProvider, AgendaSubItemsProvider>();
+            builder.Services.AddSingleton<IReservationsDataProvider, ReservationsDataProvider>();
 
             builder.Services.AddSingleton<ICache, Cache>();
 

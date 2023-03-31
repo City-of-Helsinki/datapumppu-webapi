@@ -1,24 +1,24 @@
-﻿using Microsoft.Extensions.Azure;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using WebAPI.Controllers.DTOs;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
-    public interface ISeatsDataProvider
+    public interface IReservationsDataProvider
     {
-        Task<List<SeatDTO>?> GetSeats(string meetingId, string caseNumber);
+        Task<List<ReservationDTO>?> GetReservations(string meetingId, string caseNumber);
 
         Task ResetCache();
     }
 
-    public class SeatsDataProvider : ISeatsDataProvider
+
+    public class ReservationsDataProvider : IReservationsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, DataCache> _dataCache = new ConcurrentDictionary<string, DataCache>();
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public SeatsDataProvider(IServiceProvider serviceProvider)
+        public ReservationsDataProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -30,7 +30,7 @@ namespace WebAPI.Data
             _semaphore.Release();
         }
 
-        public async Task<List<SeatDTO>?> GetSeats(string meetingId, string caseNumber)
+        public async Task<List<ReservationDTO>?> GetReservations(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
             await _semaphore.WaitAsync();
@@ -41,7 +41,7 @@ namespace WebAPI.Data
                 {
                     if (dataCache?.Timestamp > DateTime.UtcNow.AddMinutes(-5))
                     {
-                        return dataCache.Seats;
+                        return dataCache.Reservations;
                     }
                 }
 
@@ -52,26 +52,27 @@ namespace WebAPI.Data
                     throw new InvalidOperationException();
                 }
 
-                var seats = await apiClient.RequestSeats(meetingId, caseNumber);
+                var reservations = await apiClient.GetReservations(meetingId, caseNumber);
                 _dataCache[dataKey] = new DataCache
                 {
-                    Seats = seats,
+                    Reservations = reservations,
                     Timestamp = DateTime.UtcNow,
                 };
 
-                return seats;
+                return reservations;
             }
             finally
             {
                 _semaphore.Release();
-            }     
+            }
         }
 
         class DataCache
         {
             public DateTime Timestamp { get; set; }
 
-            public List<SeatDTO>? Seats { get; set; }
+            public List<ReservationDTO>? Reservations { get; set; }
         }
+
     }
 }

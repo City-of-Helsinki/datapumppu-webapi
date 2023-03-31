@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Filters;
+using WebAPI.Data;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
@@ -9,14 +10,14 @@ namespace WebAPI.Controllers
     [TypeFilter(typeof(WebAPIExceptionFilter))]
     public class ReservationsController: ControllerBase
     {
-        private readonly IStorageApiClient _storageApiClient;
+        private readonly IReservationsDataProvider _reservationsDataProvider;
         private readonly ILogger<ReservationsController> _logger;
 
         public ReservationsController(
-            IStorageApiClient storageApiClient,
+            IReservationsDataProvider reservationsDataProvider,
             ILogger<ReservationsController> logger)
         {
-            _storageApiClient = storageApiClient;
+            _reservationsDataProvider = reservationsDataProvider;
             _logger = logger;
         }
 
@@ -25,7 +26,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetReservations(string meetingId, string caseNumber)
         {
             _logger.LogInformation("Executing GetReservations()");
-            var reservations = await _storageApiClient.GetReservations(meetingId, caseNumber);
+            var reservations = await _reservationsDataProvider.GetReservations(meetingId, caseNumber);
             
             return new OkObjectResult(reservations);
         }
