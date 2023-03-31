@@ -123,7 +123,7 @@ namespace WebAPI.LiveMeetings
                 SaslUsername = _configuration["KAFKA_USER_USERNAME"],
                 SaslPassword = _configuration["KAFKA_USER_PASSWORD"],
                 SslCaPem = cert,
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                AutoOffsetReset = AutoOffsetReset.Latest
             };
         }
 
