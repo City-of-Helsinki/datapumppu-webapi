@@ -50,7 +50,7 @@ namespace WebAPI.LiveMeetings
                     if (cr != null && cr.Message.Value != null)
                     {
                         var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
-                        _logger.LogInformation(cr.Message.Value);
+                        _logger.LogInformation("message received: " + cr.Message.Value);
 
                         var key = message.MeetingId + "-" + message.CaseNumber;
                         if (!_waiters.ContainsKey(key))
@@ -63,19 +63,19 @@ namespace WebAPI.LiveMeetings
                         }
 
                         consumer.Commit(cr);
+                        _logger.LogInformation("Live Meeting Consumer event successfully received.");
                     }
 
                     foreach (var waiterKey in _waiters.Keys.ToList())
                     {
                         if (_waiters[waiterKey].Timestamp < DateTime.Now.AddSeconds(-4))
                         {
+                            _logger.LogInformation("Cache reset key: ", waiterKey);
                             await _cache.ResetCache();
                             await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
                             _waiters.Remove(waiterKey);
                         }
                     }
-
-                    _logger.LogInformation("Live Meeting Consumer event successfully received.");
                 }
                 catch (OperationCanceledException)
                 {
