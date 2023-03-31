@@ -71,11 +71,6 @@ namespace WebAPI.LiveMeetings
                         {
                             await _cache.ResetCache();
                             await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
-                            _waiters[waiterKey].Timestamp = DateTime.Now;
-                        }
-
-                        if (_waiters[waiterKey].Timestamp < DateTime.Now.AddDays(-1))
-                        {
                             _waiters.Remove(waiterKey);
                         }
                     }
