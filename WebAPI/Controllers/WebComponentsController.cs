@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
             }
 
             string lowerLang = lang.ToLower();
-            if (lowerLang != "en" && lowerLang != "fi" && lowerLang == "sv")
+            if (lowerLang != "en" && lowerLang != "fi" && lowerLang != "sv")
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
