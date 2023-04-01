@@ -15,8 +15,8 @@ namespace WebAPI.Data
     public class ReservationsDataProvider : IReservationsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ConcurrentDictionary<string, DataCache> _dataCache = new ConcurrentDictionary<string, DataCache>();
-        //private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private readonly Dictionary<string, DataCache> _dataCache = new Dictionary<string, DataCache>();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public ReservationsDataProvider(IServiceProvider serviceProvider)
         {
@@ -25,15 +25,15 @@ namespace WebAPI.Data
 
         public async Task ResetCache()
         {
-            //await _semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
             _dataCache.Clear();
-            //_semaphore.Release();
+            _semaphore.Release();
         }
 
         public async Task<List<ReservationDTO>?> GetReservations(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
-            //await _semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
 
             try
             {
@@ -63,7 +63,7 @@ namespace WebAPI.Data
             }
             finally
             {
-                //_semaphore.Release();
+                _semaphore.Release();
             }
         }
 

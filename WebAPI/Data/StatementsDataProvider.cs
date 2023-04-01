@@ -22,8 +22,8 @@ namespace WebAPI.Data
     public class StatementsDataProvider : IStatementsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ConcurrentDictionary<string, StatementsDataCache> _dataCache = new ConcurrentDictionary<string, StatementsDataCache>();
-        //private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private readonly Dictionary<string, StatementsDataCache> _dataCache = new Dictionary<string, StatementsDataCache>();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public StatementsDataProvider(IServiceProvider serviceProvider)
         {
@@ -32,15 +32,15 @@ namespace WebAPI.Data
 
         public async Task ResetCache()
         {
-            //await _semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
             _dataCache.Clear();
-            //_semaphore.Release();
+            _semaphore.Release();
         }
 
         public async Task<List<StatementDTO>?> GetStatements(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
-            //await _semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
 
             try
             {
@@ -70,7 +70,7 @@ namespace WebAPI.Data
             }
             finally
             {
-                //_semaphore.Release();
+                _semaphore.Release();
             }
         }
     }
