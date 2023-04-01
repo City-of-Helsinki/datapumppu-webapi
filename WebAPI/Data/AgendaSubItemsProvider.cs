@@ -24,7 +24,7 @@ namespace WebAPI.Data
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, AgendaSubItemDataCache> _dataCache = new ConcurrentDictionary<string, AgendaSubItemDataCache>();
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        //private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public AgendaSubItemsProvider(IServiceProvider serviceProvider)
         {
@@ -33,15 +33,15 @@ namespace WebAPI.Data
 
         public async Task ResetCache()
         {
-            await _semaphore.WaitAsync();
+            //await _semaphore.WaitAsync();
             _dataCache.Clear();
-            _semaphore.Release();
+            //_semaphore.Release();
         }
 
         public async Task<List<StorageAgendaSubItemDTO>> GetAgendaPointSubItems(string meetingId, int agendaPoint)
         {
             var dataKey = $"{meetingId}-{agendaPoint}";
-            await _semaphore.WaitAsync();
+            //await _semaphore.WaitAsync();
             try
             {
                 if (_dataCache.TryGetValue(dataKey, out AgendaSubItemDataCache? dataCache))
@@ -70,7 +70,7 @@ namespace WebAPI.Data
             }
             finally
             {
-                _semaphore.Release();
+                //_semaphore.Release();
             }
         }
     }

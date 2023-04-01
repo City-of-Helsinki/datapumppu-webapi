@@ -23,7 +23,7 @@ namespace WebAPI.Data
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, VoteDataCache> _dataCache = new ConcurrentDictionary<string, VoteDataCache>();
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        //private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public VotingDataProvider(IServiceProvider serviceProvider)
         {
@@ -32,16 +32,16 @@ namespace WebAPI.Data
 
         public async Task ResetCache()
         {
-            await _semaphore.WaitAsync();
+            //await _semaphore.WaitAsync();
             _dataCache.Clear();
-            _semaphore.Release();
+            //_semaphore.Release();
         }
 
         public async Task<List<StorageVotingDTO>?> GetVoting(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
 
-            await _semaphore.WaitAsync();
+            //await _semaphore.WaitAsync();
             try
             {
                 if (_dataCache.TryGetValue(dataKey, out VoteDataCache? dataCache))
@@ -70,7 +70,7 @@ namespace WebAPI.Data
             }
             finally
             {
-                _semaphore.Release();
+                //_semaphore.Release();
             }
         }
     }

@@ -16,7 +16,7 @@ namespace WebAPI.Data
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, DataCache> _dataCache = new ConcurrentDictionary<string, DataCache>();
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        //private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public SeatsDataProvider(IServiceProvider serviceProvider)
         {
@@ -25,15 +25,15 @@ namespace WebAPI.Data
 
         public async Task ResetCache()
         {
-            await _semaphore.WaitAsync();
+            //await _semaphore.WaitAsync();
             _dataCache.Clear();
-            _semaphore.Release();
+            //_semaphore.Release();
         }
 
         public async Task<List<SeatDTO>?> GetSeats(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
-            await _semaphore.WaitAsync();
+            //await _semaphore.WaitAsync();
 
             try
             {
@@ -63,7 +63,7 @@ namespace WebAPI.Data
             }
             finally
             {
-                _semaphore.Release();
+                //_semaphore.Release();
             }     
         }
 
