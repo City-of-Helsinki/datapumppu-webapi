@@ -37,6 +37,7 @@ namespace WebAPI.LiveMeetings
 
         private async void MessageHandler(CancellationToken stoppingToken)
         {
+            const int WaitTimeMS = 2000;
             var topic = _configuration["KAFKA_CONSUMER_TOPIC"];
             var consumer = CreateConsumer();
 
@@ -46,7 +47,7 @@ namespace WebAPI.LiveMeetings
             {
                 try
                 {
-                    var cr = consumer.Consume(2000);
+                    var cr = consumer.Consume(WaitTimeMS);
                     if (cr != null && cr.Message.Value != null)
                     {
                         var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
@@ -68,7 +69,7 @@ namespace WebAPI.LiveMeetings
 
                     foreach (var waiterKey in _waiters.Keys.ToList())
                     {
-                        if (_waiters[waiterKey].Timestamp < DateTime.Now.AddSeconds(-4))
+                        if (_waiters[waiterKey].Timestamp < DateTime.Now.AddMilliseconds(-WaitTimeMS))
                         {
                             _logger.LogInformation("Cache reset key: " + waiterKey);
                             await _cache.ResetCache();
