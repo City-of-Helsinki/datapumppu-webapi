@@ -21,11 +21,11 @@ namespace WebAPI
 
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
+                options.AddDefaultPolicy(policy =>
                 {
-                    builder.AllowAnyHeader();
-                    builder.AllowCredentials();
-                    builder.SetIsOriginAllowed(_ => true);
+                    policy.AllowAnyHeader();
+                    policy.AllowCredentials();
+                    policy.WithOrigins(new string[] { builder.Configuration["ALLOWED_HOSTS"] });
                 });
             });
 
