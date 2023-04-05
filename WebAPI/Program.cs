@@ -71,15 +71,14 @@ namespace WebAPI
 
 
             var app = builder.Build();
+            app.UseRouting();
 
             app.UseCors();
 
-            app.MapControllers();
-
-            app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapControllers();
 
             app.UseEndpoints(endpoints =>
             {
