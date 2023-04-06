@@ -43,6 +43,14 @@ export default function  Statements(props) {
         return `${ Math.floor(seconds / 60) }:${ String(Math.round(seconds % 60)).padStart(2, '0') }`
     }
 
+    const getAdditionalInfo = (statement) => {
+        if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+            return statement.additionalInfoFI
+        } else {
+            return statement.additionalInfoSV
+        }
+    }
+
     const getStatement = (statement) => {
 
         if (statement.isReservation) {
@@ -52,7 +60,7 @@ export default function  Statements(props) {
         return (
             <div>
                 <a href={`#T${statement.videoPosition}`} style={linkStyle}>
-                    { statement.person }: { getTimespan(statement.durationSeconds) }
+                    { `${statement.person} (${getAdditionalInfo(statement)}) ${getTimespan(statement.durationSeconds)}` }
                 </a>
             </div>
         )
@@ -62,7 +70,7 @@ export default function  Statements(props) {
         return (
             <div style={reservationsRowStyle}>
                 <div style={reservation.active ? linkStyle : null}>
-                    {reservation.person}
+                    {`${reservation.person} (${getAdditionalInfo(statement)}) `}
                 </div>
                 {reservation.active && <FaMicrophone />}
             </div>

@@ -139,8 +139,8 @@ export default function Voting(props) {
     useEffect(() => {
         const tempSeatMap = []
         seats.forEach(seat => {
-            if (!isNaN(seat.seatId)) {
-                let voteType = 4;
+            if (!isNaN(seat.seatId) && seat.seatId < 100) {
+                let voteType = 3;
                 const vote = voting.votes.find(vote => vote.name === seat.person)
                 if (vote !== undefined) {
                     voteType = vote.voteType

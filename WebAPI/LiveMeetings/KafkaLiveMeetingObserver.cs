@@ -47,8 +47,8 @@ namespace WebAPI.LiveMeetings
             {
                 try
                 {
-                    var cr = consumer.Consume(WaitTimeMS);
-                    if (cr != null && cr.Message.Value != null)
+                    var cr = consumer.Consume(1000);
+                    if (cr != null && !string.IsNullOrEmpty(cr.Message.Value))
                     {
                         var message = JsonConvert.DeserializeObject<StorageEventDTO>(cr.Message.Value);
                         _logger.LogInformation("message received: " + cr.Message.Value);
