@@ -24,30 +24,30 @@ export default function AgendaItem(props) {
     const [subItems, setSubItems] = useState(undefined)
     const [editableHTML, setEditableHTML] = useState(null)
     const [readonlyHTML, setReadonlyHTML] = useState(null)
+    const [automaticallyOpened, setAutomaticallyOpened] = useState(false)
     const { agenda, index, meetingId, decision, editable, updated, updatedCaseNumber } = props
-    const { t } = useTranslation();
+    const { t } = useTranslation()
 
     useEffect(() => {
-        if (agenda.agendaPoint != updatedCaseNumber) {
-            return;
-        }
 
-        if (accordionOpen) {
-            fetchSubItems();
-            fetchStatementsData()
-            fetchVotingData()
-            fetchReservationsData()
+        if (agenda.agendaPoint != updatedCaseNumber) {
+
+            // if the accordion was automatically opened, it should also be closed automatically.
+            if (accordionOpen === true && automaticallyOpened === true) {
+                setAutomaticallyOpened(false)
+                setAccordionOpen(false)
+            }
+        } else if (accordionOpen) {
+            fetchData()
         } else {
+            setAutomaticallyOpened(true)
             setAccordionOpen(true)
         }
     }, [updated, updatedCaseNumber])
 
     useEffect(() => {
         if (accordionOpen === true) {
-            fetchSubItems();
-            fetchStatementsData()
-            fetchVotingData()
-            fetchReservationsData()
+            fetchData()
         }
     }, [accordionOpen])
 
@@ -55,6 +55,13 @@ export default function AgendaItem(props) {
         setEditableHTML(manageContent(agenda.html))
         setReadonlyHTML(getReadonlyContent(agenda.html))
     }, [])
+
+    const fetchData = async () => {
+        await fetchSubItems();
+        await fetchStatementsData()
+        await fetchVotingData()
+        await fetchReservationsData()
+    }
 
     const fetchSubItems = async () => {
         const response = await fetch(`#--API_URL--#/agendapoint/${meetingId}/${agenda.agendaPoint}`)
@@ -91,7 +98,7 @@ export default function AgendaItem(props) {
     const onHtmlUpdated = (html) => {
         setEditableHTML(manageContent(html))
         setReadonlyHTML(getReadonlyContent(html))
-    } 
+    }
 
     const manageContent = (html) => {
         var div = document.createElement('div')
@@ -110,7 +117,7 @@ export default function AgendaItem(props) {
                 if (element.textContent === t('Decision resolution')) {
                     newDiv.appendChild(document.createElement('br'))
                 }
-                
+
                 if (element.nodeType == 3) {
                     var p = document.createElement('p')
                     p.textContent = element.textContent
@@ -139,7 +146,7 @@ export default function AgendaItem(props) {
         const nodes = section.childNodes
         for (var i = 0; i < nodes.length; i++) {
             var element = nodes[i].cloneNode(true)
-                
+
             if (element.nodeType == 3) {
                 var p = document.createElement('p')
                 p.textContent = element.textContent
@@ -223,7 +230,7 @@ export default function AgendaItem(props) {
                                 <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
                                 {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
                             </>
-                        )}             
+                        )}
                     </div>
                     <div style={attachmentTable.table}>
                         {agenda.attachments?.sort((a, b) => (a.attachmentNumber - b.attachmentNumber)).map((attachment, index) => {
@@ -243,7 +250,7 @@ export default function AgendaItem(props) {
                         }
                     </div>
 
-                    {subItems?.length > 0 && subItems.map(item => 
+                    {subItems?.length > 0 && subItems.map(item =>
                         <Statements itemNumber={item.itemNumber} itemTextFi={item.itemTextFi} statements={statements?.filter(s => s.itemNumber === item.itemNumber)} reservations={reservations?.filter(s => s.itemNumber === item.itemNumber)}></Statements>
                     )}
 
