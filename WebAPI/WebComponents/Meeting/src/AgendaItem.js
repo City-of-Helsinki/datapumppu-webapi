@@ -136,7 +136,6 @@ export default function AgendaItem(props) {
     const getReadonlyContent = (html) => {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
-        html = html.replace(/<ul>/gi, "<ul style='list-style: disc;'>")
         div.innerHTML = html
         const section = div.querySelector(".SisaltoSektio")
         if (!section) {
@@ -172,7 +171,7 @@ export default function AgendaItem(props) {
             divTags.item(i).style.color = "#414143"
             divTags.item(i).style.lineHeight = "1.4"
         }
-        
+
         return section?.innerHTML
     }
 
