@@ -15,15 +15,6 @@ import {
 import EditableItem from './EditableItem';
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 
-const globalStyles = {
-    '@global': {
-      ul: {
-        listStyle: 'disc outside'
-      },
-    }
-}
-  
-
 export default function AgendaItem(props) {
     const [accordionOpen, setAccordionOpen] = useState(false)
     const [showSeatMap, setShowSeatMap] = useState(false)
@@ -223,7 +214,7 @@ export default function AgendaItem(props) {
                             </div>
                         }
                     </div>
-                    <div style={{...globalStyles, padding: "20px 0px 20px 0px" }}>
+                    <div style={{padding: "20px 0px 20px 0px" }}>
                         <h3>{decisionText}</h3>
                         {agenda.html && (editable ?
                             <>
