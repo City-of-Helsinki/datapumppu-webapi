@@ -159,6 +159,20 @@ export default function AgendaItem(props) {
             element.style.lineHeight = "1.4"
             newDiv.appendChild(element)
         }
+
+        const ulTags = section.getElementsByTagName("ul");
+        for (let i = 0; i < ulTags?.length; i++) {
+            ulTags.item(i).style.listStyle = "disc"
+        }
+
+        const divTags = section.getElementsByTagName("div");
+        for (let i = 0; i < divTags?.length; i++) {
+            divTags.item(i).style.fontSize = "16px"
+            divTags.item(i).style.fontFamily = "Verdana, Arial, sans-serif"
+            divTags.item(i).style.color = "#414143"
+            divTags.item(i).style.lineHeight = "1.4"
+        }
+        
         return section?.innerHTML
     }
 
