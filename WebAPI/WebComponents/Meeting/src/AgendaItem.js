@@ -95,6 +95,16 @@ export default function AgendaItem(props) {
         }
     }
 
+    const updateTextTagsStyle = (node, tagName) => {
+        const tags = node.getElementsByTagName(tagName)
+        for (let i = 0; i < tags?.length; i++) {
+            tags.item(i).style.fontSize = "16px"
+            tags.item(i).style.fontFamily = "Verdana, Arial, sans-serif"
+            tags.item(i).style.color = "#414143"
+            tags.item(i).style.lineHeight = "1.4"
+        }
+    }
+
     const onHtmlUpdated = (html) => {
         setEditableHTML(manageContent(html))
         setReadonlyHTML(getReadonlyContent(html))
@@ -130,6 +140,9 @@ export default function AgendaItem(props) {
                 newDiv.appendChild(element)
             }
         }
+
+        updateTextTagsStyle(newDiv, "p");
+
         return newDiv.innerHTML
     }
 
@@ -164,21 +177,8 @@ export default function AgendaItem(props) {
             ulTags.item(i).style.listStyle = "disc"
         }
 
-        const divTags = section.getElementsByTagName("div");
-        for (let i = 0; i < divTags?.length; i++) {
-            divTags.item(i).style.fontSize = "16px"
-            divTags.item(i).style.fontFamily = "Verdana, Arial, sans-serif"
-            divTags.item(i).style.color = "#414143"
-            divTags.item(i).style.lineHeight = "1.4"
-        }
-
-        const pTags = section.getElementsByTagName("p");
-        for (let i = 0; i < pTags?.length; i++) {
-            pTags.item(i).style.fontSize = "16px"
-            pTags.item(i).style.fontFamily = "Verdana, Arial, sans-serif"
-            pTags.item(i).style.color = "#414143"
-            pTags.item(i).style.lineHeight = "1.4"
-        }
+        updateTextTagsStyle(section, "div");
+        updateTextTagsStyle(section, "p");
 
         return section?.innerHTML
     }
