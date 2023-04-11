@@ -172,6 +172,14 @@ export default function AgendaItem(props) {
             divTags.item(i).style.lineHeight = "1.4"
         }
 
+        const pTags = section.getElementsByTagName("p");
+        for (let i = 0; i < pTags?.length; i++) {
+            pTags.item(i).style.fontSize = "16px"
+            pTags.item(i).style.fontFamily = "Verdana, Arial, sans-serif"
+            pTags.item(i).style.color = "#414143"
+            pTags.item(i).style.lineHeight = "1.4"
+        }
+
         return section?.innerHTML
     }
 
