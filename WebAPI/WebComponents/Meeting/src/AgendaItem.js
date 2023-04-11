@@ -145,6 +145,7 @@ export default function AgendaItem(props) {
     const getReadonlyContent = (html) => {
         var div = document.createElement('div')
         var newDiv = document.createElement('div')
+        html = html.replace(/<ul>/gi, "<ul style='list-style: disc;'>")
         div.innerHTML = html
         const section = div.querySelector(".SisaltoSektio")
         if (!section) {
