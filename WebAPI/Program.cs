@@ -21,11 +21,11 @@ namespace WebAPI
 
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
+                options.AddDefaultPolicy(policy =>
                 {
-                    builder.AllowAnyHeader();
-                    builder.AllowCredentials();
-                    builder.SetIsOriginAllowed(_ => true);
+                    policy.AllowAnyHeader();
+                    policy.AllowCredentials();
+                    policy.WithOrigins(new string[] { builder.Configuration["ALLOWED_HOSTS"] });
                 });
             });
 
@@ -35,6 +35,7 @@ namespace WebAPI
             builder.Services.AddSingleton<ISeatsDataProvider, SeatsDataProvider>();
             builder.Services.AddSingleton<IAgendaSubItemsProvider, AgendaSubItemsProvider>();
             builder.Services.AddSingleton<IReservationsDataProvider, ReservationsDataProvider>();
+            builder.Services.AddSingleton<IPersonStatementsProvider, PersonStatementsProvider>();
 
             builder.Services.AddSingleton<ICache, Cache>();
 
@@ -71,15 +72,14 @@ namespace WebAPI
 
 
             var app = builder.Build();
+            app.UseRouting();
 
             app.UseCors();
 
-            app.MapControllers();
-
-            app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapControllers();
 
             app.UseEndpoints(endpoints =>
             {

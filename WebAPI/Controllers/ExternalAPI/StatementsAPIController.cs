@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Filters;
+using WebAPI.Data;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers.ExternalAPI
@@ -9,17 +10,15 @@ namespace WebAPI.Controllers.ExternalAPI
     [TypeFilter(typeof(WebAPIExceptionFilter))]
     public class StatementsAPIController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly IStorageApiClient _storageApiClient;
+        private readonly IPersonStatementsProvider _personStatementsProvider;
         private readonly ILogger<StatementsAPIController> _logger;
 
         public StatementsAPIController(
             IConfiguration configuration,
-            IStorageApiClient storageApiClient,
+            IPersonStatementsProvider personStatementsProvider,
             ILogger<StatementsAPIController> logger)
         {
-            _configuration = configuration;
-            _storageApiClient = storageApiClient;
+            _personStatementsProvider = personStatementsProvider;
             _logger = logger;
         }
 
@@ -29,8 +28,8 @@ namespace WebAPI.Controllers.ExternalAPI
             [FromQuery] int year,
             [FromQuery] string lang)
         {
-            _logger.LogInformation($"GetStatementsByPerson {name} {year}");
-            return new OkObjectResult(await _storageApiClient.GetStatementsByPerson(name, year, lang));
+            _logger.LogInformation($"GetStatementsByPerson {name} {year} {lang}");
+            return new OkObjectResult(await _personStatementsProvider.GetStatements(name, year, lang));
         }
     }
 }
