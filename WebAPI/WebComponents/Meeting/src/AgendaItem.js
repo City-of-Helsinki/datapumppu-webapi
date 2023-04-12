@@ -95,6 +95,16 @@ export default function AgendaItem(props) {
         }
     }
 
+    const updateTextTagsStyle = (node, tagName) => {
+        const tags = node.getElementsByTagName(tagName)
+        for (let i = 0; i < tags?.length; i++) {
+            tags.item(i).style.fontSize = "16px"
+            tags.item(i).style.fontFamily = "Verdana, Arial, sans-serif"
+            tags.item(i).style.color = "#414143"
+            tags.item(i).style.lineHeight = "1.4"
+        }
+    }
+
     const onHtmlUpdated = (html) => {
         setEditableHTML(manageContent(html))
         setReadonlyHTML(getReadonlyContent(html))
@@ -106,6 +116,9 @@ export default function AgendaItem(props) {
         div.innerHTML = html
         const section = div.querySelector(".SisaltoSektio")
         if (section) {
+            updateTextTagsStyle(section.previousElementSibling, "div");
+            updateTextTagsStyle(section.previousElementSibling, "p");
+    
             return section.previousElementSibling?.innerHTML ?? document.createElement('div')
         }
         const nodes = div.childNodes
@@ -130,34 +143,47 @@ export default function AgendaItem(props) {
                 newDiv.appendChild(element)
             }
         }
+
+        updateTextTagsStyle(newDiv, "div");
+        updateTextTagsStyle(newDiv, "p");
+
         return newDiv.innerHTML
     }
 
     const getReadonlyContent = (html) => {
         var div = document.createElement('div')
-        var newDiv = document.createElement('div')
+        //var newDiv = document.createElement('div')
         div.innerHTML = html
         const section = div.querySelector(".SisaltoSektio")
         if (!section) {
             return undefined
         }
 
-        var newDiv = document.createElement('div')
-        const nodes = section.childNodes
-        for (var i = 0; i < nodes.length; i++) {
-            var element = nodes[i].cloneNode(true)
+        //var newDiv = document.createElement('div')
+        // const nodes = section.childNodes
+        // for (var i = 0; i < nodes.length; i++) {
+        //     var element = nodes[i].cloneNode(true)
 
-            if (element.nodeType == 3) {
-                var p = document.createElement('p')
-                p.textContent = element.textContent
-                element = p
-            }
-            element.style.fontSize = "16px"
-            element.style.fontFamily = "Verdana, Arial, sans-serif"
-            element.style.color = "#414143"
-            element.style.lineHeight = "1.4"
-            newDiv.appendChild(element)
+        //     if (element.nodeType == 3) {
+        //         var p = document.createElement('p')
+        //         p.textContent = element.textContent
+        //         element = p
+        //     }
+        //     element.style.fontSize = "16px"
+        //     element.style.fontFamily = "Verdana, Arial, sans-serif"
+        //     element.style.color = "#414143"
+        //     element.style.lineHeight = "1.4"
+        //     newDiv.appendChild(element)
+        // }
+
+        const ulTags = section.getElementsByTagName("ul");
+        for (let i = 0; i < ulTags?.length; i++) {
+            ulTags.item(i).style.listStyle = "disc"
         }
+
+        updateTextTagsStyle(section, "div");
+        updateTextTagsStyle(section, "p");
+
         return section?.innerHTML
     }
 
@@ -213,7 +239,7 @@ export default function AgendaItem(props) {
                             </div>
                         }
                     </div>
-                    <div style={{ padding: "20px 0px 20px 0px" }}>
+                    <div style={{padding: "20px 0px 20px 0px" }}>
                         <h3>{decisionText}</h3>
                         {agenda.html && (editable ?
                             <>
