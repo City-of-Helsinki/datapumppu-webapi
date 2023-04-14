@@ -74,7 +74,7 @@ export default function  Statements(props) {
         return (
             <div style={reservationsRowStyle}>
                 <div style={reservation.active ? linkStyle : null}>
-                    {`${reservation.person} (${getAdditionalInfo(statement)}) `}
+                    {`${reservation.person} (${getAdditionalInfo(reservation)}) `}
                 </div>
                 {reservation.active && <FaMicrophone />}
             </div>
