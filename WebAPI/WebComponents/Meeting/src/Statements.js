@@ -53,7 +53,11 @@ export default function  Statements(props) {
 
     const getStatement = (statement) => {
 
-        if (statement.isReservation) {
+        if (statement) {
+            return;
+        }
+
+        if (statement?.isReservation) {
             return getReservation(statement)
         }
 
