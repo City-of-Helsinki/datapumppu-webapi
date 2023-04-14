@@ -38,6 +38,7 @@ namespace WebAPI.Controllers
         {
             _logger.LogInformation($"Executing Login() {userLogin.Username}");
 
+            await Task.Delay(1000);
             if (await _storageApiClient.CheckLogin(userLogin.Username, userLogin.Password))
             {
                 _logger.LogInformation($"Login success {userLogin.Username}");
@@ -47,6 +48,7 @@ namespace WebAPI.Controllers
             }
 
             _logger.LogInformation($"Login failed {userLogin.Username}");
+            await Task.Delay(5000);
 
             return Forbid();
         }
