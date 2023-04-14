@@ -53,7 +53,7 @@ export default function  Statements(props) {
 
     const getStatement = (statement) => {
 
-        if (statement) {
+        if (!statement) {
             return;
         }
 
