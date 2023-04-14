@@ -45,9 +45,9 @@ export default function  Statements(props) {
 
     const getAdditionalInfo = (statement) => {
         if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
-            return statement.additionalInfoFI
+            return statement?.additionalInfoFI
         } else {
-            return statement.additionalInfoSV
+            return statement?.additionalInfoSV
         }
     }
 
@@ -63,8 +63,8 @@ export default function  Statements(props) {
 
         return (
             <div>
-                <a href={`#T${statement.videoPosition}`} style={linkStyle}>
-                    { `${statement.person} (${getAdditionalInfo(statement)}) ${getTimespan(statement.durationSeconds)}` }
+                <a href={`#T${statement?.videoPosition}`} style={linkStyle}>
+                    { `${statement?.person} (${getAdditionalInfo(statement)}) ${getTimespan(statement?.durationSeconds ?? 0)}` }
                 </a>
             </div>
         )
