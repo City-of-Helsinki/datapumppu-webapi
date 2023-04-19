@@ -45,9 +45,9 @@ export default function  Statements(props) {
 
     const getAdditionalInfo = (statement) => {
         if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
-            return statement?.additionalInfoFI
+            return statement?.additionalInfoFI ?? " - "
         } else {
-            return statement?.additionalInfoSV
+            return statement?.additionalInfoSV ?? " - "
         }
     }
 

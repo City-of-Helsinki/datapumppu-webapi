@@ -267,7 +267,7 @@ export default function AgendaItem(props) {
                                     </div>
                                     <div style={attachmentTable.cell}>
                                         {attachment.fileURI ?
-                                            <a style={linkStyle} href={attachment.fileURI}>{attachment.title}</a>
+                                            <a style={linkStyle} href={attachment.fileURI} target="_blank">{attachment.title}</a>
                                             : t("Non-public")}
                                     </div>
                                 </div>
