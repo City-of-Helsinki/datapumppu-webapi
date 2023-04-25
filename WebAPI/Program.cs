@@ -25,8 +25,7 @@ namespace WebAPI
                 {
                     policy.AllowAnyHeader();
                     policy.AllowCredentials();
-                    policy.SetIsOriginAllowed((_) => true);
-                    //policy.WithOrigins(new string[] { builder.Configuration["ALLOWED_HOSTS"] });
+                    policy.SetIsOriginAllowed((host) => builder?.Configuration["ALLOWED_HOSTS"].Split(",").Contains(host) ?? false);
                 });
             });
 
