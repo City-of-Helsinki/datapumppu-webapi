@@ -44,11 +44,14 @@ export default function  Statements(props) {
     }
 
     const getAdditionalInfo = (statement) => {
+        let addInfo = ""
         if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
-            return statement?.additionalInfoFI ?? " - "
+            addInfo = statement?.additionalInfoFI
         } else {
-            return statement?.additionalInfoSV ?? " - "
+            addInfo = statement?.additionalInfoSV
         }
+
+        return addInfo?.length > 0 ? `(${addInfo})` : ""
     }
 
     const getStatement = (statement) => {
@@ -64,7 +67,7 @@ export default function  Statements(props) {
         return (
             <div>
                 <a href={`#T${statement?.videoPosition}`} style={linkStyle}>
-                    { `${statement?.person} (${getAdditionalInfo(statement)}) ${getTimespan(statement?.durationSeconds ?? 0)}` }
+                    { `${statement?.person} ${getAdditionalInfo(statement)} ${getTimespan(statement?.durationSeconds ?? 0)}` }
                 </a>
             </div>
         )
@@ -74,7 +77,7 @@ export default function  Statements(props) {
         return (
             <div style={reservationsRowStyle}>
                 <div style={reservation.active ? linkStyle : null}>
-                    {`${reservation.person} (${getAdditionalInfo(reservation)}) `}
+                    {`${reservation.person} ${getAdditionalInfo(reservation)} `}
                 </div>
                 {reservation.active && <FaMicrophone />}
             </div>
