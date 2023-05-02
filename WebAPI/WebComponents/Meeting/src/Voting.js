@@ -141,12 +141,12 @@ export default function Voting(props) {
         let unknownSeatCount = 0;
         seats.forEach(seat => {
             let seatId = seat.seatId;
-            if (!isNaN(seatId)) {
+            if (isNaN(seatId)) {
                 seatId = 1000 + unknownSeatCount++
             } else if (seatId > 100) {
                 return
             }
-            
+
             let voteType = 3;
             let voted = false;
             const vote = voting.votes.find(vote => vote.name === seat.person)
