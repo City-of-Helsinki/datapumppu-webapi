@@ -142,8 +142,7 @@ export default function Voting(props) {
         seats.forEach(seat => {
             let seatId = seat.seatId;
             if (!isNaN(seatId)) {
-                seatId = 1000 + unknownSeatCount
-                unknownSeatCount++
+                seatId = 1000 + unknownSeatCount++
             }
             let voteType = 3;
             let voted = false;
