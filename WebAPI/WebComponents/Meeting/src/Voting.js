@@ -138,32 +138,30 @@ export default function Voting(props) {
 
     useEffect(() => {
         const tempSeatMap = []
-        let unknownSeatCount = 0;
         seats.forEach(seat => {
             let seatId = Number(seat.seatId);
-            if (isNaN(seatId)) {
-                seatId = 1000 + unknownSeatCount++
-            } else if (seatId > 100) {
+            if (seatId > 100) {
                 return
             }
 
-            let voteType = 3;
-            let voted = false;
-            const vote = voting.votes.find(vote => vote.name === seat.person)
-            if (vote !== undefined) {
-                voteType = vote.voteType
-                voted = true
-            }
             let name = seat.person;
             if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
                 name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
             } else {
                 name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
             }
-            tempSeatMap[Number(seat.seatId)] = {
-                name,
-                voteType,
-                voted
+
+            const vote = voting?.votes?.find(vote => vote.name === seat.person)
+            const voteType = vote ? vote.voteType : 3
+            if (vote !== undefined) {
+                vote.name = name
+            }
+
+            if (!isNaN(seatId)) {
+                tempSeatMap[seatId] = {
+                    name,
+                    voteType,
+                }
             }
         })
         setSeatMap(tempSeatMap)
@@ -331,19 +329,19 @@ export default function Voting(props) {
                         <div style={voteListContainerStyle} data-html2canvas-ignore={"true"}>
                             <div>{t("FOR")}</div>
                             <br />
-                            {voting && seatMap.filter(vote => vote.voted === true && vote.voteType === 0).map(vote => createVoterElement(vote))}
+                            {voting && voting.votes.filter(vote => vote.voteType === 0).map(vote => createVoterElement(vote))}
                             <br />
                             <div>{t("AGAINST")}</div>
                             <br />
-                            {voting && seatMap.filter(vote => vote.voted === true && vote.voteType === 1).map(vote => createVoterElement(vote))}
+                            {voting && voting.votes.filter(vote => vote.voteType === 1).map(vote => createVoterElement(vote))}
                             <br />
                             <div>{t("EMPTY")}</div>
                             <br />
-                            {voting && seatMap.filter(vote => vote.voted === true && vote.voteType === 2).map(vote => createVoterElement(vote))}
+                            {voting && voting.votes.filter(vote => vote.voteType === 2).map(vote => createVoterElement(vote))}
                             <br />
                             <div>{t("ABSENT")}</div>
                             <br />
-                            {voting && seatMap.filter(vote => vote.voted === true && vote.voteType === 3).map(vote => createVoterElement(vote))}
+                            {voting && voting.votes.filter(vote => vote.voteType === 3).map(vote => createVoterElement(vote))}
                         </div>
                     </div>
                 }
