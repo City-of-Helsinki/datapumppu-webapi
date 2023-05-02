@@ -144,7 +144,6 @@ export default function Voting(props) {
                 return
             }
 
-            let voteType = 3;
             let name = seat.person;
             if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
                 name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
@@ -152,7 +151,8 @@ export default function Voting(props) {
                 name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
             }
 
-            const vote = voting.votes.find(vote => vote.name === seat.person)
+            const vote = voting?.votes?.find(vote => vote.name === seat.person)
+            const voteType = vote ? vote.voteType : 3
             if (vote !== undefined) {
                 vote.name = name
             }
