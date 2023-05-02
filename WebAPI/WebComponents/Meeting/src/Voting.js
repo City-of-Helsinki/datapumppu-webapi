@@ -140,7 +140,6 @@ export default function Voting(props) {
         const tempSeatMap = []
         let unknownSeatCount = 0;
         seats.forEach(seat => {
-            //if (!isNaN(seat.seatId)) {
             let seatId = seat.seatId;
             if (!isNaN(seatId)) {
                 seatId = 1000 + unknownSeatCount
