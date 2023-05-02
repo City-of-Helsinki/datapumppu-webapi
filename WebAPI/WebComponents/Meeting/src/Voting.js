@@ -157,7 +157,7 @@ export default function Voting(props) {
                 vote.name = name
             }
 
-            if (!isNaN(seatId)) {
+            if (seatId > 0) {
                 tempSeatMap[seatId] = {
                     name,
                     voteType,
