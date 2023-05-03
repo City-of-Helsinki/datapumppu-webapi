@@ -18,16 +18,13 @@ namespace WebAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILogger<EditorController> _logger;
         private readonly IStorageApiClient _storageApiClient;
-        private readonly IMeetingDataProvider _cache;
 
         public EditorController(IConfiguration configuration,
             ILogger<EditorController> logger,
-            IMeetingDataProvider cache,
             IStorageApiClient storageApiClient)
         {
             _configuration = configuration;
             _logger = logger;
-            _cache = cache;
             _storageApiClient = storageApiClient;
         }
 
@@ -59,7 +56,6 @@ namespace WebAPI.Controllers
         {
             _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint}");
             await _storageApiClient.UpdateAgendaPoint(editItem);
-            await _cache.ResetCache();
             return Ok();
         }
 
