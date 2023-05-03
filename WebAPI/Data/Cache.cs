@@ -2,7 +2,7 @@
 {
     public interface ICache
     {
-        Task ResetCache();
+        Task ResetCache(bool liveEvent);
     }
 
     public class Cache : ICache
@@ -32,7 +32,7 @@
             _meetingDataProvider = meetingDataProvider;
         }
 
-        public async Task ResetCache()
+        public async Task ResetCache(bool liveEvent)
         {
             await _statementsDataProvider.ResetCache();
             await _votingDataProvider.ResetCache();
@@ -40,7 +40,13 @@
             await _agendaSubItemsProvider.ResetCache();
             await _reservationsDataProvider.ResetCache();
             await _personStatementsProvider.ResetCache();
-            await _meetingDataProvider.ResetCache();
+
+            // meeting data provider do not contain live data, so this should be resetted only if 
+            // event is not live event
+            if (!liveEvent)
+            {
+                await _meetingDataProvider.ResetCache();
+            }
         }
     }
 }
