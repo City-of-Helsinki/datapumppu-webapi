@@ -73,7 +73,10 @@ namespace WebAPI.LiveMeetings
                         {
                             _logger.LogInformation("Cache reset key: " + waiterKey);
                             await _cache.ResetCache();
-                            await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
+                            if (_waiters[waiterKey].Message?.IsLiveEvent == true)
+                            {
+                                await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
+                            }
                             _waiters.Remove(waiterKey);
                         }
                     }
