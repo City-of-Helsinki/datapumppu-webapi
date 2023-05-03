@@ -72,7 +72,7 @@ namespace WebAPI.LiveMeetings
                         if (_waiters[waiterKey].Timestamp < DateTime.Now.AddMilliseconds(-WaitTimeMS))
                         {
                             _logger.LogInformation("Cache reset key: " + waiterKey);
-                            await _cache.ResetCache(_waiters[waiterKey].Message?.IsLiveEvent);
+                            await _cache.ResetCache(_waiters[waiterKey].Message?.IsLiveEvent ?? false);
                             if (_waiters[waiterKey].Message?.IsLiveEvent == true)
                             {
                                 await _hub.Clients.All.SendAsync("receiveMessage", _waiters[waiterKey].Message);
