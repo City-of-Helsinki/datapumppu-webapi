@@ -46,7 +46,7 @@ namespace WebAPI.Data
             {
                 if (_dataCache.TryGetValue(dataKey, out MeetingDataCache? meetingDataCache))
                 {
-                    if (meetingDataCache?.Timestamp > DateTime.UtcNow.AddMinutes(-2))
+                    if (meetingDataCache?.Timestamp > DateTime.UtcNow.AddMinutes(-5))
                     {
                         return meetingDataCache.Meeting;
                     }
