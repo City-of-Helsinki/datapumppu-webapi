@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         [Route("{meetingId}/{caseNumber}")]
         public async Task<IActionResult> GetSeats(string meetingId, string caseNumber)
         {
-            _logger.LogInformation("Executing GetSeats()");
+            _logger.LogInformation("Executing GetSeats() {0}, {1}", meetingId, caseNumber);
             var seats = await _seatsProvider.GetSeats(meetingId, caseNumber);
             
             return new OkObjectResult(seats);

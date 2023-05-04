@@ -9,8 +9,6 @@ namespace WebAPI.StorageClient
 
         Task<List<StorageAgendaSubItemDTO>> RequestAgendaPointSubItemsg(string meetingId, int agendaPoint);
 
-        Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language);
-
         Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
 
         Task<List<StorageVotingDTO>?> RequestVote(string meetingId, string caseNumber);
@@ -111,16 +109,6 @@ namespace WebAPI.StorageClient
             }
 
             return await response.Content.ReadFromJsonAsync<List<StorageAgendaSubItemDTO>>() ?? new List<StorageAgendaSubItemDTO>();
-        }
-
-        public async Task<StorageDecisionDTO?> RequestDecision(string caseIdLabel, string language)
-        {
-            _logger.LogInformation("Executing RequestDecision()");
-            using var connection = _storageConnection.CreateConnection();
-            var response = await connection.GetAsync($"api/decisions/{caseIdLabel}/{language}");
-            var decision = await response.Content.ReadFromJsonAsync<StorageDecisionDTO>();
-
-            return decision;
         }
 
         public async Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber)

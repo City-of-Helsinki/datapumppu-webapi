@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         [Route("{meetingId}/{caseNumber}")]
         public async Task<List<StorageVotingDTO>> GetVoting(string meetingId, string caseNumber)
         {
-            _logger.LogInformation("Executing GetVoting()");
+            _logger.LogInformation("Executing GetVoting() {0}, {1}", meetingId, caseNumber);
             var voting = await _dataProvider.GetVoting(meetingId, caseNumber);
             
             return voting ?? new List<StorageVotingDTO>();

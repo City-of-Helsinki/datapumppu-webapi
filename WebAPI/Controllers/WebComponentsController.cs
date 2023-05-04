@@ -21,28 +21,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("signalrexample.js")]
-        public async Task<IActionResult> GetSignalRExample()
-        {
-            var text = await System.IO.File
-                .ReadAllTextAsync("./ScriptFiles/components/signalrexample.js");
-            var apiUrl = _configuration["API_URL"];
-
-            if (apiUrl == null) 
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            text = text.Replace("#--API_URL--#", apiUrl);
-
-            return File(Encoding.UTF8.GetBytes(text), "application/javascript");
-        }
-
-        [HttpGet]
         [Route("meeting.js")]
         public async Task<IActionResult> GetMeeting(string year, string sequenceNumber, string lang)
         {
-            _logger.LogInformation("GET meeting.js");
+            _logger.LogInformation("GET meeting.js {0} {1} {2}", year, sequenceNumber, lang);
 
             var text = await System.IO.File
                 .ReadAllTextAsync("./ScriptFiles/components/meeting.js");

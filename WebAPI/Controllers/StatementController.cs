@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         [Route("{meetingId}/{caseNumber}")]
         public async Task<IActionResult> GetStatements(string meetingId, string caseNumber)
         {
-            _logger.LogInformation("Executing GetStatements()");
+            _logger.LogInformation("Executing GetStatements() {0}, {1}", meetingId, caseNumber);
             var turns = await _statementsDataProvider.GetStatements(meetingId, caseNumber);
             
             return new OkObjectResult(turns);
