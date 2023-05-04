@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         [Route("meeting")]
         public async Task<IActionResult> GetMeeting(string year, string sequenceNumber, string lang)
         {
-            _logger.LogInformation("Executing GetMeeting()");
+            _logger.LogInformation("Executing GetMeeting() {0} {1} {2}", year, sequenceNumber, lang);
 
             var meeting = await _meetingDataProvider.GetMeeting(year, sequenceNumber, lang);
             if (meeting == null)

@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         [Route("{meetingId}/{agendaPoint}")]
         public async Task<IActionResult> GetSubItems(string meetingId, int agendaPoint)
         {
-            _logger.LogInformation("Executing GetSubItems()");
+            _logger.LogInformation("Executing GetSubItems() {0} {1}", meetingId, agendaPoint);
 
             var items = await _agendaSubItemsProvider.GetAgendaPointSubItems(meetingId, agendaPoint);
             if (items == null)
