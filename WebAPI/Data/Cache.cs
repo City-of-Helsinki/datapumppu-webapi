@@ -2,7 +2,7 @@
 {
     public interface ICache
     {
-        Task ResetCache();
+        Task ResetCache(bool liveEvent);
     }
 
     public class Cache : ICache
@@ -13,13 +13,15 @@
         private readonly IAgendaSubItemsProvider _agendaSubItemsProvider;
         private readonly IReservationsDataProvider _reservationsDataProvider;
         private readonly IPersonStatementsProvider _personStatementsProvider;
+        private readonly IMeetingDataProvider _meetingDataProvider;
 
         public Cache(IStatementsDataProvider statementsDataProvider,
             IVotingDataProvider votingDataProvider,
             ISeatsDataProvider seatsDataProvider,
             IAgendaSubItemsProvider agendaSubItemsProvider,
             IReservationsDataProvider reservationsDataProvider,
-            IPersonStatementsProvider personStatementsProvider)
+            IPersonStatementsProvider personStatementsProvider,
+            IMeetingDataProvider meetingDataProvider)
         {
             _statementsDataProvider = statementsDataProvider;
             _votingDataProvider = votingDataProvider;
@@ -27,9 +29,10 @@
             _agendaSubItemsProvider = agendaSubItemsProvider;
             _reservationsDataProvider = reservationsDataProvider;
             _personStatementsProvider = personStatementsProvider;
+            _meetingDataProvider = meetingDataProvider;
         }
 
-        public async Task ResetCache()
+        public async Task ResetCache(bool liveEvent)
         {
             await _statementsDataProvider.ResetCache();
             await _votingDataProvider.ResetCache();
@@ -37,6 +40,13 @@
             await _agendaSubItemsProvider.ResetCache();
             await _reservationsDataProvider.ResetCache();
             await _personStatementsProvider.ResetCache();
+
+            // meeting data provider do not contain live data, so this should be resetted only if 
+            // event is not live event
+            if (!liveEvent)
+            {
+                await _meetingDataProvider.ResetCache();
+            }
         }
     }
 }

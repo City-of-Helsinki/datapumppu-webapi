@@ -165,7 +165,7 @@ export default function Voting(props) {
             }
         })
         setSeatMap(tempSeatMap)
-    }, [seats])
+    }, [seats, voting])
 
     const fetchData = async () => {
         const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
