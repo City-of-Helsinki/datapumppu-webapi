@@ -117,24 +117,13 @@ const seatColorStyles = {
 }
 
 export default function Voting(props) {
-    const [seats, setSeats] = useState([]);
     const [showColors, setShowColors] = useState(true);
     const [seatMap, setSeatMap] = useState([]);
     const [showVotes, setShowVotes] = useState(false)
     const [pdfStyle, setPdfStyle] = useState(false)
     const { t } = useTranslation();
 
-    const { meetingId, caseNumber, voting, index, title, updated, updatedCaseNumber } = props
-
-    useEffect(() => {
-        if (updatedCaseNumber == caseNumber) {
-            fetchData()
-        }
-    }, [updated, updatedCaseNumber])
-
-    useEffect(() => {
-        fetchData()
-    }, [])
+    const { caseNumber, voting, seats, index, title } = props
 
     useEffect(() => {
         const tempSeatMap = []
@@ -166,14 +155,6 @@ export default function Voting(props) {
         })
         setSeatMap(tempSeatMap)
     }, [seats, voting])
-
-    const fetchData = async () => {
-        const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
-        if (response.status === 200) {
-            const data = await response.json();
-            setSeats(data)
-        }
-    }
 
     const createVoterElement = (vote) => {
         return (

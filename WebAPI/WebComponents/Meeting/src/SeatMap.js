@@ -12,29 +12,9 @@ const chamberStyle = {
 }
 
 export default function SeatMap(props) {
-    const [seats, setSeats] = useState([]);
     const [seatMap, setSeatMap] = useState([]);
 
-    const { meetingId, caseNumber, updated, updatedCaseNumber } = props
-
-    const fetchData = async () => {
-        const response = await fetch(`#--API_URL--#/seats/${meetingId}/${caseNumber}`)
-        if (response.status === 200) {
-            const data = await response.json();
-            setSeats(data)
-        }
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-
-        if (updatedCaseNumber == caseNumber) {
-            fetchData()
-        }
-    }, [updated, updatedCaseNumber])
+    const { seats } = props
 
     useEffect(() => {
         const tempSeatMap = []

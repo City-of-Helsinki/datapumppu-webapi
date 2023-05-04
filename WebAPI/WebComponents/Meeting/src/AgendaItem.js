@@ -16,6 +16,7 @@ import EditableItem from './EditableItem';
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 
 export default function AgendaItem(props) {
+    const [seats, setSeats] = useState([]);
     const [accordionOpen, setAccordionOpen] = useState(false)
     const [showSeatMap, setShowSeatMap] = useState(false)
     const [voting, setVoting] = useState(undefined)
@@ -57,6 +58,7 @@ export default function AgendaItem(props) {
     }, [])
 
     const fetchData = async () => {
+        await fetchSeats();
         await fetchSubItems();
         await fetchStatementsData()
         await fetchVotingData()
@@ -70,6 +72,15 @@ export default function AgendaItem(props) {
             setSubItems(data)
         }
     }
+
+    const fetchSeats = async () => {
+        const response = await fetch(`#--API_URL--#/seats/${meetingId}/${agenda.agendaPoint}`)
+        if (response.status === 200) {
+            const data = await response.json();
+            setSeats(data)
+        }
+    }
+
 
     const fetchReservationsData = async () => {
         const response = await fetch(`#--API_URL--#/reservations/${meetingId}/${agenda.agendaPoint}`)
@@ -294,6 +305,7 @@ export default function AgendaItem(props) {
                     </div>
 
                     {showSeatMap && <SeatMap
+                        seats={seats}
                         meetingId={meetingId}
                         caseNumber={agenda.agendaPoint}
                         updated={updated}
@@ -305,6 +317,7 @@ export default function AgendaItem(props) {
                     {voting &&
                         voting.map((vote, index) => (
                             <Voting
+                                seats={seats}
                                 voting={vote}
                                 meetingId={meetingId}
                                 caseNumber={agenda.agendaPoint}
