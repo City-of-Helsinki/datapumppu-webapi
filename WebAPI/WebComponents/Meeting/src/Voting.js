@@ -158,7 +158,7 @@ export default function Voting(props) {
 
     const createVoterElement = (vote) => {
         return (
-            <div>{vote.name}</div>
+            <div key={vote.name}>{vote.name}</div>
         )
     }
 

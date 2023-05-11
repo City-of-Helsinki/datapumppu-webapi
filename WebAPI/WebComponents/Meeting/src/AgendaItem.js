@@ -288,7 +288,7 @@ export default function AgendaItem(props) {
                     </div>
 
                     {subItems?.length > 0 && subItems.map(item =>
-                        <Statements itemNumber={item.itemNumber} itemTextFi={item.itemTextFi} statements={statements?.filter(s => s.itemNumber === item.itemNumber)} reservations={reservations?.filter(s => s.itemNumber === item.itemNumber)}></Statements>
+                        <Statements key={item.itemNumber} itemNumber={item.itemNumber} itemTextFi={item.itemTextFi} statements={statements?.filter(s => s.itemNumber === item.itemNumber)} reservations={reservations?.filter(s => s.itemNumber === item.itemNumber)}></Statements>
                     )}
 
                     {((!subItems || subItems.length === 0) && (statements || reservations)) && <Statements statements={statements} reservations={reservations}></Statements>}
@@ -317,6 +317,7 @@ export default function AgendaItem(props) {
                     {voting &&
                         voting.map((vote, index) => (
                             <Voting
+                                key={index}
                                 seats={seats}
                                 voting={vote}
                                 meetingId={meetingId}
