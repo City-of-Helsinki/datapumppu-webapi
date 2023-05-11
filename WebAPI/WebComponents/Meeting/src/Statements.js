@@ -65,7 +65,7 @@ export default function  Statements(props) {
         }
 
         return (
-            <div key={statement.person + statement.startTime}>
+            <div key={Math.random()}>
                 <a href={`#T${statement?.videoPosition}`} style={linkStyle}>
                     { `${statement?.person} ${getAdditionalInfo(statement)} ${getTimespan(statement?.durationSeconds ?? 0)}` }
                 </a>
@@ -75,7 +75,7 @@ export default function  Statements(props) {
 
     const getReservation = (reservation) => {
         return (
-            <div style={reservationsRowStyle} key={reservation.name + reservation.ordinal}>
+            <div style={reservationsRowStyle} key={Math.random()}>
                 <div style={reservation.active ? linkStyle : null}>
                     {`${reservation.person} ${getAdditionalInfo(reservation)} `}
                 </div>
