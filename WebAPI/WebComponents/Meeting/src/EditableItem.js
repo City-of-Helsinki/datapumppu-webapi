@@ -48,7 +48,8 @@ export default function EditableItem(props) {
     }
 
     const submitChanges = () => {
-        const editedHtml = repackHtml(stateToHTML(editorState.getCurrentContent()))
+        const editedPart = editorState.getCurrentContent()
+        const editedHtml = repackHtml(stateToHTML(editedPart))
         const agendaPoint = agendaItem.agendaPoint
         const request = {
             method: 'POST',
@@ -58,7 +59,7 @@ export default function EditableItem(props) {
             },
             body: JSON.stringify({
                 html: editedHtml,
-                decision: editableHTML,
+                decision: editedPart,
                 meetingId,
                 agendaPoint,
                 language
