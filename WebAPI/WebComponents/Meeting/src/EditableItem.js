@@ -58,6 +58,7 @@ export default function EditableItem(props) {
             },
             body: JSON.stringify({
                 html: editedHtml,
+                decision: editableHTML,
                 meetingId,
                 agendaPoint,
                 language
