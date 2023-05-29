@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebAPI.Data;
+using WebAPI.Data.Statistics;
 
 namespace WebAPI
 {

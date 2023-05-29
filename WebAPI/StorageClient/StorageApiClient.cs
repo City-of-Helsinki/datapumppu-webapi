@@ -1,5 +1,6 @@
 ﻿
 using WebAPI.Controllers.DTOs;
+using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.StorageClient
 {
@@ -22,6 +23,8 @@ namespace WebAPI.StorageClient
         Task<bool> CheckLogin(string username, string password);
 
         Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto);
+
+        Task<List<StorageStatementStatisticsDTO>?> RequestStorageStatistics(int year);
 
         Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO);
     }
@@ -132,6 +135,19 @@ namespace WebAPI.StorageClient
             }
 
             return await response.Content.ReadFromJsonAsync<List<StorageVotingDTO>>();
+        }
+
+        public async Task<List<StorageStatementStatisticsDTO>?> RequestStorageStatistics(int year)
+        {
+            _logger.LogInformation("Executing RequestStorageStatistics()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statistics/statements/{year}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new List<StorageStatementStatisticsDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<StorageStatementStatisticsDTO>>();
         }
 
         public async Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO)
