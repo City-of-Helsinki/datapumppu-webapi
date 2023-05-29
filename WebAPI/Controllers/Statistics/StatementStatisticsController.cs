@@ -28,13 +28,13 @@ namespace WebAPI.Controllers.Statistics
             _logger.LogInformation("Executing GetStatementStatistics() {0}", year);
 
             var items = await _statementStatisticsDataProvider.GetStatements(year);
-            var csvLines = items?.Select(item => $"{item.MeetingId},{item.CaseNumber},\"{item.Title}\",{item.Count},{item.TotalDuration},{item.IsMotion}");
 
-            var fileContent = new byte[0];            
-            if (csvLines != null)
-            {
-                fileContent = Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, csvLines));
-            }
+            var csvLines = items?.Select(item => $"\"{item.MeetingId}\",{item.CaseNumber},\"{item.Title}\",{item.Count},{item.TotalDuration},{item.IsMotion}").ToList() ?? new List<string>();
+
+            var headers = "meeting_id,case_number,title,statement_count,statement_total_duration_sm,is_motion";
+            csvLines.Insert(0, headers);
+
+            var fileContent = Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, csvLines));
 
             return new FileContentResult(fileContent, "text/csv")
             {

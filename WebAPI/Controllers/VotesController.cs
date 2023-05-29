@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
 using WebAPI.Data;
 using WebAPI.StorageClient;
+using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading;
-using WebAPI.Controllers.DTOs;
 using WebAPI.StorageClient;
+using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data
 {
