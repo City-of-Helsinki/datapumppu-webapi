@@ -55,7 +55,9 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaPointDTO editItem)
         {
             var userNameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
-            _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint} ({userNameClaim})");
+            _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint} ({userNameClaim?.Value})");
+            editItem.EditorUserName = userNameClaim?.Value ?? string.Empty;
+
             await _storageApiClient.UpdateAgendaPoint(editItem);
             return Ok();
         }
