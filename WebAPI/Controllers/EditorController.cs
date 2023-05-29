@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,8 +40,7 @@ namespace WebAPI.Controllers
             if (await _storageApiClient.CheckLogin(userLogin.Username, userLogin.Password))
             {
                 _logger.LogInformation($"Login success {userLogin.Username}");
-
-                var token = GenerateToken();
+                var token = GenerateToken(userLogin.Username);
                 return Ok(new { token });
             }
 
@@ -54,7 +54,8 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaPointDTO editItem)
         {
-            _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint}");
+            var userNameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+            _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint} ({userNameClaim})");
             await _storageApiClient.UpdateAgendaPoint(editItem);
             return Ok();
         }
@@ -76,12 +77,16 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        private string GenerateToken()
+        private string GenerateToken(string userName)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT_KEY"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(_configuration["JWT_ISSUER"],
                 _configuration["JWT_AUDIENCE"],
+                new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, userName)
+                },
                 expires: DateTime.Now.AddHours(12),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
