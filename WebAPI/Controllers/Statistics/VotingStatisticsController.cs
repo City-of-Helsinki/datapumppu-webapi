@@ -38,7 +38,7 @@ namespace WebAPI.Controllers.Statistics
 
             return new FileContentResult(fileContent, "text/csv")
             {
-                FileDownloadName = $"issue_statements-{year}.csv"
+                FileDownloadName = $"votes-{year}.csv"
             };
         }
 
