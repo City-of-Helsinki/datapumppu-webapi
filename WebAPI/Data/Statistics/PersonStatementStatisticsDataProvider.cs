@@ -1,28 +1,26 @@
-﻿using System.Collections.Concurrent;
-using WebAPI.Controllers.DTOs;
-using WebAPI.StorageClient;
+﻿using WebAPI.StorageClient;
 using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data.Statistics
 {
-    public interface IStatementStatisticsDataProvider
+    public interface IPersonStatementStatisticsDataProvider
     {
-        Task<List<StorageStatementStatisticsDTO>?> GetStatements(int year);
+        Task<List<StoragePersonStatementStatisticsDTO>?> GetStatements(int year);
     }
 
 
-    public class StatementStatisticsDataProvider : IStatementStatisticsDataProvider
+    public class PersonStatementStatisticsDataProvider : IPersonStatementStatisticsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly Dictionary<string, DataCache> _dataCache = new Dictionary<string, DataCache>();
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public StatementStatisticsDataProvider(IServiceProvider serviceProvider)
+        public PersonStatementStatisticsDataProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<List<StorageStatementStatisticsDTO>?> GetStatements(int year)
+        public async Task<List<StoragePersonStatementStatisticsDTO>?> GetStatements(int year)
         {
             var dataKey = $"{year}";
             await _semaphore.WaitAsync();
@@ -44,7 +42,7 @@ namespace WebAPI.Data.Statistics
                     throw new InvalidOperationException();
                 }
 
-                var statements = await apiClient.RequestStatementStatistics(year);
+                var statements = await apiClient.RequestPersonStatementStatistics(year);
                 _dataCache[dataKey] = new DataCache
                 {
                     Data = statements,
@@ -63,7 +61,7 @@ namespace WebAPI.Data.Statistics
         {
             public DateTime Timestamp { get; set; }
 
-            public List<StorageStatementStatisticsDTO>? Data { get; set; }
+            public List<StoragePersonStatementStatisticsDTO>? Data { get; set; }
         }
     }
 }

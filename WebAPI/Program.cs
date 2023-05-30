@@ -39,6 +39,8 @@ namespace WebAPI
             builder.Services.AddSingleton<IPersonStatementsProvider, PersonStatementsProvider>();
             builder.Services.AddSingleton<IStatementStatisticsDataProvider, StatementStatisticsDataProvider>();
             builder.Services.AddSingleton<IVotingStatisticsDataProvider, VotingStatisticsDataProvider>();
+            builder.Services.AddSingleton<IPersonStatementStatisticsDataProvider, PersonStatementStatisticsDataProvider>();
+            
 
             builder.Services.AddSingleton<ICache, Cache>();
 
