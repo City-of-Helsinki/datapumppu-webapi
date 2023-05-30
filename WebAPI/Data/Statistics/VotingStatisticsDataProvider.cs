@@ -5,24 +5,23 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data.Statistics
 {
-    public interface IStatementStatisticsDataProvider
+    public interface IVotingStatisticsDataProvider
     {
-        Task<List<StorageStatementStatisticsDTO>?> GetStatements(int year);
+        Task<List<StorageVotingStatisticsDTO>?> GetVotings(int year);
     }
 
-
-    public class StatementStatisticsDataProvider : IStatementStatisticsDataProvider
+    public class VotingStatisticsDataProvider : IVotingStatisticsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly Dictionary<string, DataCache> _dataCache = new Dictionary<string, DataCache>();
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public StatementStatisticsDataProvider(IServiceProvider serviceProvider)
+        public VotingStatisticsDataProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<List<StorageStatementStatisticsDTO>?> GetStatements(int year)
+        public async Task<List<StorageVotingStatisticsDTO>?> GetVotings(int year)
         {
             var dataKey = $"{year}";
             await _semaphore.WaitAsync();
@@ -44,14 +43,14 @@ namespace WebAPI.Data.Statistics
                     throw new InvalidOperationException();
                 }
 
-                var statements = await apiClient.RequestStorageStatistics(year);
+                var votings = await apiClient.RequestVotingStatistics(year);
                 _dataCache[dataKey] = new DataCache
                 {
-                    Data = statements,
+                    Data = votings,
                     Timestamp = DateTime.UtcNow,
                 };
 
-                return statements;
+                return votings;
             }
             finally
             {
@@ -63,7 +62,8 @@ namespace WebAPI.Data.Statistics
         {
             public DateTime Timestamp { get; set; }
 
-            public List<StorageStatementStatisticsDTO>? Data { get; set; }
+            public List<StorageVotingStatisticsDTO>? Data { get; set; }
         }
+
     }
 }
