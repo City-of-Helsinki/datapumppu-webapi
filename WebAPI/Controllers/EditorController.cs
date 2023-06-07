@@ -58,8 +58,7 @@ namespace WebAPI.Controllers
             _logger.LogInformation($"UpdateAgendaPoint {editItem.MeetingId}/{editItem.AgendaPoint} ({userNameClaim?.Value})");
             editItem.EditorUserName = userNameClaim?.Value ?? string.Empty;
 
-            await _storageApiClient.UpdateAgendaPoint(editItem);
-            return Ok();
+            return await _storageApiClient.UpdateAgendaPoint(editItem) ? Ok() : StatusCode(StatusCodes.Status403Forbidden);
         }
 
         [HttpPost("videosync")]
