@@ -30,6 +30,8 @@ namespace WebAPI.StorageClient
 
         Task<List<StorageVotingStatisticsDTO>?> RequestVotingStatistics(int year);
 
+        Task<List<ParticipationsPersonDTO>?> RequestParticipantStatistics(int year);
+
         Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO);
     }
 
@@ -178,6 +180,19 @@ namespace WebAPI.StorageClient
             }
 
             return await response.Content.ReadFromJsonAsync<List<StorageVotingStatisticsDTO>>();
+        }
+
+        public async Task<List<ParticipationsPersonDTO>?> RequestParticipantStatistics(int year)
+        {
+            _logger.LogInformation("Executing RequestParticipantStatistics()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statistics/participants/{year}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new List<ParticipationsPersonDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<ParticipationsPersonDTO>>();
         }
 
         public async Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO)

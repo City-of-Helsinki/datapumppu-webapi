@@ -23,9 +23,9 @@ namespace WebAPI.Controllers.Statistics
 
         [HttpGet]
         [Route("{year}")]
-        public async Task<IActionResult> GetStatementStatistics(int year)
+        public async Task<IActionResult> GetStatistics(int year)
         {
-            _logger.LogInformation("Executing GetStatementStatistics() {0}", year);
+            _logger.LogInformation("Executing GetStatistics() {0}", year);
 
             var items = await _statisticsDataProvider.GetVotings(year);
 

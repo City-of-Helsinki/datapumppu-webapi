@@ -40,7 +40,7 @@ namespace WebAPI
             builder.Services.AddSingleton<IStatementStatisticsDataProvider, StatementStatisticsDataProvider>();
             builder.Services.AddSingleton<IVotingStatisticsDataProvider, VotingStatisticsDataProvider>();
             builder.Services.AddSingleton<IPersonStatementStatisticsDataProvider, PersonStatementStatisticsDataProvider>();
-            
+            builder.Services.AddSingleton<IParticipantStatisticsDataProvider, ParticipantStatisticsDataProvider>();
 
             builder.Services.AddSingleton<ICache, Cache>();
 
