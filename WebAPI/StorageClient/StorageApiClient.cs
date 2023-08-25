@@ -1,5 +1,6 @@
 ﻿
 using WebAPI.Controllers.DTOs;
+using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.StorageClient
 {
@@ -22,6 +23,14 @@ namespace WebAPI.StorageClient
         Task<bool> CheckLogin(string username, string password);
 
         Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto);
+
+        Task<List<StorageStatementStatisticsDTO>?> RequestStatementStatistics(int year);
+
+        Task<List<StoragePersonStatementStatisticsDTO>?> RequestPersonStatementStatistics(int year);
+
+        Task<List<StorageVotingStatisticsDTO>?> RequestVotingStatistics(int year);
+
+        Task<List<ParticipationsPersonDTO>?> RequestParticipantStatistics(int year);
 
         Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO);
     }
@@ -132,6 +141,58 @@ namespace WebAPI.StorageClient
             }
 
             return await response.Content.ReadFromJsonAsync<List<StorageVotingDTO>>();
+        }
+
+        public async Task<List<StorageStatementStatisticsDTO>?> RequestStatementStatistics(int year)
+        {
+            _logger.LogInformation("Executing RequestStatementStatistics()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statistics/statements/{year}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new List<StorageStatementStatisticsDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<StorageStatementStatisticsDTO>>();
+        }
+
+        public async Task<List<StoragePersonStatementStatisticsDTO>?> RequestPersonStatementStatistics(int year)
+        {
+            _logger.LogInformation("Executing RequestPersonStatementStatistics()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statistics/personstatements/{year}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new List<StoragePersonStatementStatisticsDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<StoragePersonStatementStatisticsDTO>>();
+        }
+
+        public async Task<List<StorageVotingStatisticsDTO>?> RequestVotingStatistics(int year)
+        {
+            _logger.LogInformation("Executing RequestVotingStatistics()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statistics/votings/{year}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new List<StorageVotingStatisticsDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<StorageVotingStatisticsDTO>>();
+        }
+
+        public async Task<List<ParticipationsPersonDTO>?> RequestParticipantStatistics(int year)
+        {
+            _logger.LogInformation("Executing RequestParticipantStatistics()");
+            using var connection = _storageConnection.CreateConnection();
+            var response = await connection.GetAsync($"api/statistics/participants/{year}");
+            if (!response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new List<ParticipationsPersonDTO>();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<ParticipationsPersonDTO>>();
         }
 
         public async Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO)

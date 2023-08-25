@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Controllers.DTOs
+﻿namespace WebAPI.StorageClient.DTOs
 {
     public class StorageVoteDTO
     {

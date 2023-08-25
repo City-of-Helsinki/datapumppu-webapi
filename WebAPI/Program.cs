@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebAPI.Data;
+using WebAPI.Data.Statistics;
 
 namespace WebAPI
 {
@@ -36,6 +37,10 @@ namespace WebAPI
             builder.Services.AddSingleton<IAgendaSubItemsProvider, AgendaSubItemsProvider>();
             builder.Services.AddSingleton<IReservationsDataProvider, ReservationsDataProvider>();
             builder.Services.AddSingleton<IPersonStatementsProvider, PersonStatementsProvider>();
+            builder.Services.AddSingleton<IStatementStatisticsDataProvider, StatementStatisticsDataProvider>();
+            builder.Services.AddSingleton<IVotingStatisticsDataProvider, VotingStatisticsDataProvider>();
+            builder.Services.AddSingleton<IPersonStatementStatisticsDataProvider, PersonStatementStatisticsDataProvider>();
+            builder.Services.AddSingleton<IParticipantStatisticsDataProvider, ParticipantStatisticsDataProvider>();
 
             builder.Services.AddSingleton<ICache, Cache>();
 

@@ -2,6 +2,7 @@
 using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
 using WebAPI.Data;
+using WebAPI.Data.Statistics;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
