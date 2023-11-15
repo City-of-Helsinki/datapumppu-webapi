@@ -17,7 +17,7 @@
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
-    "html-react-parser": "^3.0.4",
+    "html-react-parser": "^3.0.16",
     "html2canvas": "^1.4.1",
     "i18next": "^22.4.5",
     "i18next-browser-languagedetector": "^7.0.1",
