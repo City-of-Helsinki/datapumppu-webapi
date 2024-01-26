@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { headingStyle, linkStyle } from "./styles";
 import { FaMicrophone } from "react-icons/fa";
+import hash from 'object-hash';
 
 const speechesContainerStyle = {
     columnCount: 2,
@@ -12,7 +13,7 @@ const speechesContainerStyle = {
 const reservationsRowStyle = {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"    
+    alignItems: "center"
 }
 
 const subItemHeaderStyle = {
@@ -22,7 +23,7 @@ const subItemHeaderStyle = {
     padding: "8px",
 }
 
-export default function  Statements(props) {
+export default function Statements(props) {
     const { statements, reservations, itemNumber, itemTextFi } = props
     const { t } = useTranslation();
 
@@ -34,13 +35,13 @@ export default function  Statements(props) {
         return reservations ?? []
     }
 
-    
+
     const statementList = getStatementArray()
-        .concat(getReservationArray().map(r => ({...r, isReservation: true})))
+        .concat(getReservationArray().map(r => ({ ...r, isReservation: true })))
 
 
     const getTimespan = (seconds) => {
-        return `${ Math.floor(seconds / 60) }:${ String(Math.round(seconds % 60)).padStart(2, '0') }`
+        return `${Math.floor(seconds / 60)}:${String(Math.round(seconds % 60)).padStart(2, '0')}`
     }
 
     const getAdditionalInfo = (statement) => {
@@ -65,9 +66,9 @@ export default function  Statements(props) {
         }
 
         return (
-            <div key={Math.random()}>
+            <div key={hash(statement)}>
                 <a href={`#T${statement?.videoPosition}`} style={linkStyle}>
-                    { `${statement?.person} ${getAdditionalInfo(statement)} ${getTimespan(statement?.durationSeconds ?? 0)}` }
+                    {`${statement?.person} ${getAdditionalInfo(statement)} ${getTimespan(statement?.durationSeconds ?? 0)}`}
                 </a>
             </div>
         )
@@ -75,7 +76,7 @@ export default function  Statements(props) {
 
     const getReservation = (reservation) => {
         return (
-            <div style={reservationsRowStyle} key={Math.random()}>
+            <div style={reservationsRowStyle} key={hash(reservation)}>
                 <div style={reservation.active ? linkStyle : null}>
                     {`${reservation.person} ${getAdditionalInfo(reservation)} `}
                 </div>
@@ -89,7 +90,7 @@ export default function  Statements(props) {
             {itemNumber && <div style={subItemHeaderStyle}>{`${itemNumber} ${itemTextFi}`}</div>}
             <div style={headingStyle}>{t("Speeches")}</div>
             <div style={speechesContainerStyle}>
-                { statementList && statementList.map(statement => getStatement(statement)) }
+                {statementList && statementList.map(statement => getStatement(statement))}
             </div>
         </div>
     );
