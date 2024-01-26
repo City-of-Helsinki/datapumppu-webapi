@@ -58,7 +58,6 @@ const voteLegend = {
     textAlign: 'center',
     boxSizing: 'border-box',
     backgroundColor: "#eeeeee",
-    boxSizing: "border-box",
 }
 
 const voteCount = {

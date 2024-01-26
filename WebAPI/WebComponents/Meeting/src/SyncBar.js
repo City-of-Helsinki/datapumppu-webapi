@@ -28,7 +28,7 @@ export default function SyncBar(props) {
     setInputValue(convertToMMSS(videoPosition))
   }
 
-  const convertToSec = () => {
+  const convertInputToSec = () => {
     var array = inputValue.split(":")
     return parseInt(array[0] * 60) + parseInt(array[1])
   }
@@ -49,7 +49,7 @@ export default function SyncBar(props) {
           style={syncBarStyle.input}
         />
         <button style={syncBarStyle.button} onClick={() => getCurrentVideoPosition()}>SYNC</button>
-        <button style={syncBarStyle.button} onClick={() => submitSync(convertToSec(inputValue))}>SAVE</button>
+        <button style={syncBarStyle.button} onClick={() => submitSync(convertInputToSec())}>SAVE</button>
       </div>
   );
 }
