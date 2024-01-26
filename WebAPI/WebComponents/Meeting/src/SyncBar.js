@@ -49,7 +49,7 @@ export default function SyncBar(props) {
           style={syncBarStyle.input}
         />
         <button style={syncBarStyle.button} onClick={() => getCurrentVideoPosition()}>SYNC</button>
-        <button style={syncBarStyle.button} onClick={() => submitSync(convertToSec(inputValue))}>SAVE</button>
+        <button style={syncBarStyle.button} onClick={() => submitSync(convertToSec())}>SAVE</button>
       </div>
   );
 }
