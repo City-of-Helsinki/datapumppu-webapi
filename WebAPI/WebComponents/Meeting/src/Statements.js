@@ -66,7 +66,7 @@ export default function Statements(props) {
         }
 
         return (
-            <div key={hash(statementƒra)}>
+            <div key={hash(statement)}>
                 <a href={`#T${statement?.videoPosition}`} style={linkStyle}>
                     {`${statement?.person} ${getAdditionalInfo(statement)} ${getTimespan(statement?.durationSeconds ?? 0)}`}
                 </a>
