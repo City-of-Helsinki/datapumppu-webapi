@@ -162,7 +162,7 @@ export default function Voting(props) {
     }
 
     const downloadPDF = (e) => {
-
+        e.preventDefault()
         setPdfStyle(true)
         setTimeout(() => {
             e.preventDefault()
@@ -181,7 +181,8 @@ export default function Voting(props) {
         })
     }
 
-    const toggleColors = () => {
+    const toggleColors = (event) => {
+        event.preventDefault()
         setShowColors(!showColors)
     }
 
@@ -299,10 +300,10 @@ export default function Voting(props) {
                             <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
                         </div>
                         <p>
-                            <a href='javascript:void(0)' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
+                            <a href='#' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
                                 {showColors ? t("Show black and white vote map") : t("Show vote map with colors")}
                             </a><br /> 
-                            <a href="javascript:void(0)" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
+                            <a href="#" onClick={downloadPDF} data-html2canvas-ignore={"true"} style={linkStyle}>
                                 {t("Download voting map pdf")}
                             </a>
                         </p>
