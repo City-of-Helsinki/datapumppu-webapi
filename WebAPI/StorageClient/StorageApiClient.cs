@@ -18,7 +18,7 @@ namespace WebAPI.StorageClient
 
         Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang);
 
-        Task<List<StatementDTO>> GetStatementsByPersonOrDate(string? name, string? startDate, string? endDate);
+        Task<List<StatementDTO>> GetStatementsByPersonOrDate(string? name, string? startDate, string? endDate, string lang);
 
         Task<List<ReservationDTO>> GetReservations(string meetingId, string caseNumber);
 
@@ -76,11 +76,11 @@ namespace WebAPI.StorageClient
             return statements?.ToList() ?? new List<StatementDTO>();
         }
 
-        public async Task<List<StatementDTO>> GetStatementsByPersonOrDate(string? names, string? startDate, string? endDate)
+        public async Task<List<StatementDTO>> GetStatementsByPersonOrDate(string? names, string? startDate, string? endDate, string lang)
         {
             _logger.LogInformation("GetStatementsByPersonOrDate()");
             using var connection = _storageConnection.CreateConnection();
-            var response = await connection.GetAsync($"api/statements/lookup?names={names}&startDate={startDate}&endDate={endDate}");
+            var response = await connection.GetAsync($"api/statements/lookup?names={names}&startDate={startDate}&endDate={endDate}&lang={lang}");
             var statements = await response.Content.ReadFromJsonAsync<StatementDTO[]>();
 
             return statements?.ToList() ?? new List<StatementDTO>();

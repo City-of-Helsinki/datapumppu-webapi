@@ -9,7 +9,7 @@ namespace WebAPI.Data
     {
         Task<List<StatementDTO>> GetStatements(string personName, int year, string lang);
 
-        Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate);
+        Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate, string lang);
 
         Task ResetCache();
     }
@@ -33,9 +33,9 @@ namespace WebAPI.Data
             _semaphore.Release();
         }
 
-        public async Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate)
+        public async Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate, string lang)
         {
-            var dataKey = $"{names}-{startDate}-{endDate}";
+            var dataKey = $"{names}-{startDate}-{endDate}-{lang}";
             try
             {
                 await _semaphore.WaitAsync();
@@ -55,7 +55,7 @@ namespace WebAPI.Data
                     throw new InvalidOperationException();
                 }
 
-                var items = await apiClient.GetStatementsByPersonOrDate(names, startDate, endDate);
+                var items = await apiClient.GetStatementsByPersonOrDate(names, startDate, endDate, lang);
                 _dataCache[dataKey] = new DataCache
                 {
                     Items = items,
