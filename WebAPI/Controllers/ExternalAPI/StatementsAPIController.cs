@@ -36,7 +36,8 @@ namespace WebAPI.Controllers.ExternalAPI
         public async Task<IActionResult> GetStatementsByPersonOrDate(
             [FromQuery] string? names,
             [FromQuery] string? startDate,
-            [FromQuery] string? endDate)
+            [FromQuery] string? endDate,
+            [FromQuery] string lang)
         {
             bool hasNames = !string.IsNullOrWhiteSpace(names);
             bool hasDateRange = !string.IsNullOrWhiteSpace(startDate) && !string.IsNullOrWhiteSpace(endDate);
@@ -46,8 +47,8 @@ namespace WebAPI.Controllers.ExternalAPI
                 return BadRequest("Kyselyssä tulee vähintään olla joko 'names' tai aikaväli 'startDate' ja 'endDate'");
             }
 
-            _logger.LogInformation($"GetStatementsByPersonOrDate {names} {startDate} {endDate}");
-            return new OkObjectResult(await _personStatementsProvider.GetStatementsLookup(names, startDate, endDate));
+            _logger.LogInformation($"GetStatementsByPersonOrDate {names} {startDate} {endDate} {lang}");
+            return new OkObjectResult(await _personStatementsProvider.GetStatementsLookup(names, startDate, endDate, lang));
         }
     }
 }
