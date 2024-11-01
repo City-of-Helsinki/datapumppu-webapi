@@ -9,6 +9,8 @@ namespace WebAPI.Data
     {
         Task<List<StatementDTO>> GetStatements(string personName, int year, string lang);
 
+        Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate, string lang);
+
         Task ResetCache();
     }
 
@@ -29,6 +31,43 @@ namespace WebAPI.Data
             await _semaphore.WaitAsync();
             _dataCache.Clear();
             _semaphore.Release();
+        }
+
+        public async Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate, string lang)
+        {
+            var dataKey = $"{names}-{startDate}-{endDate}-{lang}";
+            try
+            {
+                await _semaphore.WaitAsync();
+
+                if (_dataCache.TryGetValue(dataKey, out DataCache? dataCache))
+                {
+                    if (dataCache?.Timestamp > DateTime.UtcNow.AddHours(-1))
+                    {
+                        return dataCache.Items;
+                    }
+                }
+
+                var scope = _serviceProvider.CreateScope();
+                var apiClient = scope.ServiceProvider.GetService<IStorageApiClient>();
+                if (apiClient == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                var items = await apiClient.GetStatementsByPersonOrDate(names, startDate, endDate, lang);
+                _dataCache[dataKey] = new DataCache
+                {
+                    Items = items,
+                    Timestamp = DateTime.UtcNow,
+                };
+
+                return items;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public async Task<List<StatementDTO>> GetStatements(string personName, int year, string lang)
