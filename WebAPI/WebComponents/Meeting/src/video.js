@@ -1,7 +1,7 @@
 
 export default function GetVideoPosition () {
 
-    const playerApi = window._icareus.playerObject
+    const playerApi = window?.rmpGlobals?.rmpInstances?.[0]
     if (!playerApi) {
         return 0
     }
