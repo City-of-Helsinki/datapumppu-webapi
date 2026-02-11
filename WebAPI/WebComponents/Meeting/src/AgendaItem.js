@@ -106,7 +106,14 @@ export default function AgendaItem(props) {
         }
     }
 
+    /**
+     * 
+     * @param {Element} node 
+     * @param {string} tagName 
+     */
     const updateTextTagsStyle = (node, tagName) => {
+        if (!node) return
+
         const tags = node.getElementsByTagName(tagName)
         for (let i = 0; i < tags?.length; i++) {
             tags.item(i).style.fontSize = "16px"
@@ -122,41 +129,77 @@ export default function AgendaItem(props) {
     }
 
     const manageContent = (html) => {
-        var div = document.createElement('div')
-        var newDiv = document.createElement('div')
+        const div = document.createElement('div')
+        const newDiv = document.createElement('div')
         div.innerHTML = html
-        const section = div.querySelector(".SisaltoSektio")
-        if (section) {
-            updateTextTagsStyle(section.previousElementSibling, "div");
-            updateTextTagsStyle(section.previousElementSibling, "p");
-    
-            return section.previousElementSibling?.innerHTML ?? document.createElement('div')
-        }
-        const nodes = div.childNodes
-        for (var i = 0; i < nodes.length; i++) {
-            var element = nodes[i].cloneNode(true)
-            if (element.nodeName != 'H1' && element.nodeName != 'H2' && element.nodeName != 'H3' && element.nodeName != 'H4'
-                || element.textContent === t('Decision resolution')) {
 
-                if (element.textContent === t('Decision resolution')) {
+        const firstSisalto = div.querySelector('.SisaltoSektio')
+
+        if (firstSisalto) {
+            let target = firstSisalto.previousElementSibling
+
+            if (!target || !target.classList || !target.classList.contains('Viite')) {
+                const viitteet = div.querySelectorAll('.OtsikkoSektio .Viite')
+                if (viitteet.length) {
+                    const viiteWrap = document.createElement('div')
+                    viitteet.forEach(v => viiteWrap.appendChild(v.cloneNode(true)))
+                    updateTextTagsStyle(viiteWrap, 'div')
+                    updateTextTagsStyle(viiteWrap, 'p')
+                    return viiteWrap.innerHTML
+                }
+
+                // If no Viite blocks exist, fallback to returning the whole OtsikkoSektio
+                const otsikko = div.querySelector('.OtsikkoSektio')
+                if (otsikko) {
+                    const otsikkoClone = otsikko.cloneNode(true)
+                    updateTextTagsStyle(otsikkoClone, 'div')
+                    updateTextTagsStyle(otsikkoClone, 'p')
+                    return otsikkoClone.innerHTML
+                }
+            }
+
+            // If we have a usable sibling target (old format), style + return it
+            updateTextTagsStyle(target, 'div')
+            updateTextTagsStyle(target, 'p')
+            return target?.innerHTML ?? ''
+        }
+
+        const nodes = div.childNodes
+        for (let i = 0; i < nodes.length; i++) {
+            let element = nodes[i].cloneNode(true)
+
+            const isHeading =
+                element.nodeName === 'H1' ||
+                element.nodeName === 'H2' ||
+                element.nodeName === 'H3' ||
+                element.nodeName === 'H4'
+
+            const isDecisionResolution = element.textContent === t('Decision resolution')
+
+            if ((!isHeading) || isDecisionResolution) {
+                if (isDecisionResolution) {
                     newDiv.appendChild(document.createElement('br'))
                 }
 
-                if (element.nodeType == 3) {
-                    var p = document.createElement('p')
+                if (element.nodeType === 3) {
+                    const p = document.createElement('p')
                     p.textContent = element.textContent
                     element = p
                 }
-                element.style.fontSize = "16px"
-                element.style.fontFamily = "Verdana, Arial, sans-serif"
-                element.style.color = "#414143"
-                element.style.lineHeight = "1.4"
+
+                if (element.nodeType === 1) {
+                    element.style.fontSize = '16px'
+                    element.style.fontFamily = 'Verdana, Arial, sans-serif'
+                    element.style.color = '#414143'
+                    element.style.lineHeight = '1.4'
+                }
+
                 newDiv.appendChild(element)
             }
         }
 
-        updateTextTagsStyle(newDiv, "div");
-        updateTextTagsStyle(newDiv, "p");
+        updateTextTagsStyle(newDiv, 'div')
+        updateTextTagsStyle(newDiv, 'p')
 
         return newDiv.innerHTML
     }
@@ -250,7 +293,7 @@ export default function AgendaItem(props) {
                             </div>
                         }
                     </div>
-                    <div style={{padding: "20px 0px 20px 0px" }}>
+                    <div style={{ padding: "20px 0px 20px 0px" }}>
                         <h3>{decisionText}</h3>
                         {agenda.html && (editable ?
                             <>
