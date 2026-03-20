@@ -4,13 +4,28 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to voting data from the storage API.
+    /// </summary>
     public interface IVotingDataProvider
     {
+        /// <summary>
+        /// Retrieves voting records for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number.</param>
+        /// <returns>A list of voting records, or null if not found.</returns>
         Task<List<StorageVotingDTO>?> GetVoting(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Clears all cached voting data.
+        /// </summary>
         Task ResetCache();
     }
 
+    /// <summary>
+    /// Cache entry for voting data with a timestamp for expiration.
+    /// </summary>
     public class VoteDataCache
     {
         public DateTime Timestamp { get; set; }
@@ -19,6 +34,10 @@ namespace WebAPI.Data
     }
 
 
+    /// <summary>
+    /// Caching data provider for voting data. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class VotingDataProvider : IVotingDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

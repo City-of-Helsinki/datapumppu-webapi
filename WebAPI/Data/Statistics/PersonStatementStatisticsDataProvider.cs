@@ -3,12 +3,23 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data.Statistics
 {
+    /// <summary>
+    /// Provides cached access to per-person statement statistics from the storage API.
+    /// </summary>
     public interface IPersonStatementStatisticsDataProvider
     {
+        /// <summary>
+        /// Retrieves per-person statement statistics for a given year.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A list of person statement statistics, or null if not found.</returns>
         Task<List<StoragePersonStatementStatisticsDTO>?> GetStatements(int year);
     }
 
-
+    /// <summary>
+    /// Caching data provider for per-person statement statistics. Caches results for 1 day.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class PersonStatementStatisticsDataProvider : IPersonStatementStatisticsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

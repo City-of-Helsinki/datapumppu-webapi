@@ -7,6 +7,9 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for retrieving statement records for meeting cases.
+    /// </summary>
     [ApiController]
     [Route("statement")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -16,6 +19,12 @@ namespace WebAPI.Controllers
         private readonly IStatementsDataProvider _statementsDataProvider;
         private readonly ILogger<StatementController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatementController"/> class.
+        /// </summary>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="statementsDataProvider">The statements data provider.</param>
+        /// <param name="logger">The logger instance.</param>
         public StatementController(
             IConfiguration configuration,
             IStatementsDataProvider statementsDataProvider,
@@ -26,6 +35,12 @@ namespace WebAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves statement records for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number within the meeting.</param>
+        /// <returns>The list of statements for the specified case.</returns>
         [HttpGet]
         [Route("{meetingId}/{caseNumber}")]
         public async Task<IActionResult> GetStatements(string meetingId, string caseNumber)

@@ -6,6 +6,9 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for retrieving seating information for meeting cases.
+    /// </summary>
     [ApiController]
     [Route("seats")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -15,6 +18,12 @@ namespace WebAPI.Controllers
         private readonly ISeatsDataProvider _seatsProvider;
         private readonly ILogger<SeatsController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeatsController"/> class.
+        /// </summary>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="seatsProvider">The seats data provider.</param>
+        /// <param name="logger">The logger instance.</param>
         public SeatsController(
             IConfiguration configuration,
             ISeatsDataProvider seatsProvider,
@@ -25,6 +34,12 @@ namespace WebAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves seating information for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number within the meeting.</param>
+        /// <returns>The seating arrangement data for the specified case.</returns>
         [HttpGet]
         [Route("{meetingId}/{caseNumber}")]
         public async Task<IActionResult> GetSeats(string meetingId, string caseNumber)

@@ -4,13 +4,28 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to statement data from the storage API.
+    /// </summary>
     public interface IStatementsDataProvider
     {
+        /// <summary>
+        /// Retrieves statements for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number.</param>
+        /// <returns>A list of statements, or null if not found.</returns>
         Task<List<StatementDTO>?> GetStatements(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Clears all cached statement data.
+        /// </summary>
         Task ResetCache();
     }
 
+    /// <summary>
+    /// Cache entry for statement data with a timestamp for expiration.
+    /// </summary>
     public class StatementsDataCache
     {
         public DateTime Timestamp { get; set; }
@@ -19,6 +34,10 @@ namespace WebAPI.Data
     }
 
 
+    /// <summary>
+    /// Caching data provider for statement data. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class StatementsDataProvider : IStatementsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
