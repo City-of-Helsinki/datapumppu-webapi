@@ -28,7 +28,8 @@ A public-facing ASP.NET Core Web API microservice in the Datapumppu ecosystem th
     - [API Overview](#api-overview)
     - [Key Endpoints](#key-endpoints)
   - [Deployment](#deployment)
-    - [Kubernetes](#kubernetes)
+    - [Dev/test environment](#devtest-environment)
+    - [Staging/Production environment](#stagingproduction-environment)
     - [CI/CD Pipeline](#cicd-pipeline)
     - [Health Monitoring](#health-monitoring)
   - [Development](#development)
@@ -296,28 +297,13 @@ curl "http://localhost:8080/meetings/meeting?year=2024&sequenceNumber=1&lang=fi"
 
 ## Deployment
 
-### Kubernetes
+### Dev/test environment
 
-Kubernetes manifests are located in the [k8s/](k8s/) directory:
+Open a PR and target the **develop** branch. Once the branch gets merged, Azure pipelines will take care of deployment.
 
-**Deploy to Kubernetes:**
-```bash
-# Apply ConfigMap (environment configuration)
-kubectl apply -f k8s/webapi-configmap.yml
+### Staging/Production environment
 
-# Apply Secrets (sensitive configuration)
-kubectl apply -f k8s/webapi-secret.yml
-
-# Deploy the application
-kubectl apply -f k8s/webapi-deploy.yml
-
-# Apply Ingress (Azure Application Gateway)
-kubectl apply -f k8s/webapi-ingress.yml
-
-# Verify deployment
-kubectl get pods -l app=webapi-deployment -n datapumppu
-kubectl logs -f deployment/webapi-deployment -n datapumppu
-```
+Open a PR from **develop** and target the **master** branch. Once the branch gets merged, Azure pipelines will take care of deployment.
 
 ### CI/CD Pipeline
 
