@@ -5,6 +5,9 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers.ExternalAPI
 {
+    /// <summary>
+    /// External API controller for querying statements by person name, year, or date range.
+    /// </summary>
     [ApiController]
     [Route("api/statements")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -13,6 +16,12 @@ namespace WebAPI.Controllers.ExternalAPI
         private readonly IPersonStatementsProvider _personStatementsProvider;
         private readonly ILogger<StatementsAPIController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatementsAPIController"/> class.
+        /// </summary>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="personStatementsProvider">The person statements data provider.</param>
+        /// <param name="logger">The logger instance.</param>
         public StatementsAPIController(
             IConfiguration configuration,
             IPersonStatementsProvider personStatementsProvider,
@@ -22,6 +31,13 @@ namespace WebAPI.Controllers.ExternalAPI
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves statements for a person by name and year.
+        /// </summary>
+        /// <param name="name">The person's name.</param>
+        /// <param name="year">The year to query.</param>
+        /// <param name="lang">The language code (en, fi, or sv).</param>
+        /// <returns>A list of statements for the specified person and year.</returns>
         [HttpGet()]
         public async Task<IActionResult> GetStatementsByPerson(
             [FromQuery] string name,
@@ -32,6 +48,15 @@ namespace WebAPI.Controllers.ExternalAPI
             return new OkObjectResult(await _personStatementsProvider.GetStatements(name, year, lang));
         }
 
+        /// <summary>
+        /// Retrieves statements by person name(s) and/or date range.
+        /// At least one of names or date range (startDate and endDate) is required.
+        /// </summary>
+        /// <param name="names">Comma-separated person names (optional if date range provided).</param>
+        /// <param name="startDate">Start date in YYYY-MM-DD format (optional if names provided).</param>
+        /// <param name="endDate">End date in YYYY-MM-DD format (optional if names provided).</param>
+        /// <param name="lang">The language code (en, fi, or sv).</param>
+        /// <returns>A list of matching statements, or 400 Bad Request if parameters are missing.</returns>
         [HttpGet("lookup")]
         public async Task<IActionResult> GetStatementsByPersonOrDate(
             [FromQuery] string? names,

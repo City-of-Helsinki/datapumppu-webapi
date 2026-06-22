@@ -5,6 +5,12 @@ using WebAPI.Data;
 
 namespace WebAPI.LiveMeetings
 {
+    /// <summary>
+    /// Background service that consumes Kafka messages for live meeting events.
+    /// On receiving an event, it resets the data cache and broadcasts live updates
+    /// to connected SignalR clients via <see cref="LiveMeetingsHub"/>.
+    /// Uses a 2-second debounce window to batch rapid events for the same meeting case.
+    /// </summary>
     public class KafkaLiveMeetingObserver : BackgroundService
     {
         private readonly IHubContext<LiveMeetingsHub> _hub;

@@ -5,11 +5,23 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data.Statistics
 {
+    /// <summary>
+    /// Provides cached access to participant attendance statistics from the storage API.
+    /// </summary>
     public interface IParticipantStatisticsDataProvider
     {
+        /// <summary>
+        /// Retrieves participant attendance statistics for a given year.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A list of participant statistics, or null if not found.</returns>
         Task<List<ParticipationsPersonDTO>?> GetStatistics(int year);
     }
 
+    /// <summary>
+    /// Caching data provider for participant statistics. Caches results for 1 day.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class ParticipantStatisticsDataProvider : IParticipantStatisticsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

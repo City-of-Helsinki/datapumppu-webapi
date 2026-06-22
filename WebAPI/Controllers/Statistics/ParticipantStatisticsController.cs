@@ -6,6 +6,9 @@ using WebAPI.Data.Statistics;
 
 namespace WebAPI.Controllers.Statistics
 {
+    /// <summary>
+    /// Controller for downloading participant attendance statistics as JSON.
+    /// </summary>
     [ApiController]
     [Route("statistics/participants")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -14,6 +17,11 @@ namespace WebAPI.Controllers.Statistics
         private readonly ILogger<ParticipantsStatisticsController> _logger;
         private readonly IParticipantStatisticsDataProvider _statisticsDataProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParticipantsStatisticsController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="statisticsDataProvider">The participant statistics data provider.</param>
         public ParticipantsStatisticsController(
             ILogger<ParticipantsStatisticsController> logger,
             IParticipantStatisticsDataProvider statisticsDataProvider)
@@ -22,6 +30,11 @@ namespace WebAPI.Controllers.Statistics
             _statisticsDataProvider = statisticsDataProvider;
         }
 
+        /// <summary>
+        /// Downloads participant statistics for a given year as a JSON file.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A JSON file download containing participant statistics.</returns>
         [HttpGet]
         [Route("{year}")]
         public async Task<IActionResult> GetStatistics(int year)

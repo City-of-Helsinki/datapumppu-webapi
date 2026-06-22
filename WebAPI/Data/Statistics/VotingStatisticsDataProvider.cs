@@ -5,11 +5,23 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data.Statistics
 {
+    /// <summary>
+    /// Provides cached access to voting statistics from the storage API.
+    /// </summary>
     public interface IVotingStatisticsDataProvider
     {
+        /// <summary>
+        /// Retrieves voting statistics for a given year.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A list of voting statistics, or null if not found.</returns>
         Task<List<StorageVotingStatisticsDTO>?> GetVotings(int year);
     }
 
+    /// <summary>
+    /// Caching data provider for voting statistics. Caches results for 1 day.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class VotingStatisticsDataProvider : IVotingStatisticsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

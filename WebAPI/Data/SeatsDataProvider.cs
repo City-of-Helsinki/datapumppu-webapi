@@ -5,13 +5,29 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to seating data from the storage API.
+    /// </summary>
     public interface ISeatsDataProvider
     {
+        /// <summary>
+        /// Retrieves seat assignments for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number.</param>
+        /// <returns>A list of seat assignments, or null if not found.</returns>
         Task<List<SeatDTO>?> GetSeats(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Clears all cached seating data.
+        /// </summary>
         Task ResetCache();
     }
 
+    /// <summary>
+    /// Caching data provider for seating data. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class SeatsDataProvider : ISeatsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

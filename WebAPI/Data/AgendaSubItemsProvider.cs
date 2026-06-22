@@ -5,13 +5,28 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to agenda point sub-item data from the storage API.
+    /// </summary>
     public interface IAgendaSubItemsProvider
     {
+        /// <summary>
+        /// Retrieves sub-items for a specific agenda point in a meeting.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="agendaPoint">The agenda point number.</param>
+        /// <returns>A list of agenda sub-items.</returns>
         Task<List<StorageAgendaSubItemDTO>> GetAgendaPointSubItems(string meetingId, int agendaPoint);
 
+        /// <summary>
+        /// Clears all cached agenda sub-item data.
+        /// </summary>
         Task ResetCache();
     }
 
+    /// <summary>
+    /// Cache entry for agenda sub-item data with a timestamp for expiration.
+    /// </summary>
     public class AgendaSubItemDataCache
     {
         public DateTime Timestamp { get; set; }
@@ -20,6 +35,10 @@ namespace WebAPI.Data
     }
 
 
+    /// <summary>
+    /// Caching data provider for agenda sub-items. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class AgendaSubItemsProvider : IAgendaSubItemsProvider
     {
         private readonly IServiceProvider _serviceProvider;
