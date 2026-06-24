@@ -245,10 +245,12 @@ export default function AgendaItem(props) {
     const decisionText = t('Decision')
     const openText = t('Open')
 
-    var motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
-    var decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
+    const isLocalDev = "#--API_URL--#".includes("localhost") || "#--API_URL--#".includes("127.0.0.1") || "#--API_URL--#".includes("#--API_URL--#");
 
-    if (parseInt("#--MEETING_YEAR--#") < 2018 || (parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
+    var motionPath = isLocalDev ? "#" : `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
+    var decisionPath = isLocalDev ? "#" : `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
+
+    if (!isLocalDev && (parseInt("#--MEETING_YEAR--#") < 2018 || (parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4))) {
         motionPath = "https://dev.hel.fi/paatokset/asia/" + agenda?.caseIDLabel?.replace(" ", "-").toLowerCase() + "/kvsto-#--MEETING_YEAR--#-#--MEETING_SEQUENCE_NUM--#"
         decisionPath = "https://dev.hel.fi/paatokset/asia/" + decision?.caseID
     }

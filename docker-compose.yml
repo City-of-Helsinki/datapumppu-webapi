@@ -1,0 +1,23 @@
+name: datapumppu
+
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webapi
+    ports:
+      - "8081:80"
+    environment:
+      - KAFKA_BOOTSTRAP_SERVER=shared-kafka:9092 # Kafka docker compose in datapumppu-storage repository
+      - ASPNETCORE_ENVIRONMENT=Development
+      - API_URL=http://localhost:8081
+      - ALLOWED_HOSTS=http://localhost:8081,null,http://localhost:3000,http://127.0.0.1:5500
+      - STORAGE_URL=http://storage-service
+
+    networks:
+      - datapumppu-network
+
+networks:
+  datapumppu-network:
+    external: true

@@ -1,7 +1,7 @@
 # datapumppu-webapi
 
-![.NET](https://img.shields.io/badge/.NET-6.0-512BD4)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-6.0-purple)
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-10.0-purple)
 ![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-Confluent%202.8.0-231F20)
 ![SignalR](https://img.shields.io/badge/SignalR-Real--time-0078D4)
 
@@ -20,10 +20,6 @@ A public-facing ASP.NET Core Web API microservice in the Datapumppu ecosystem th
   - [Built With](#built-with)
   - [Prerequisites](#prerequisites)
   - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Configuration](#configuration)
-    - [Running Locally](#running-locally)
-    - [Docker Setup](#docker-setup)
   - [API Documentation](#api-documentation)
     - [API Overview](#api-overview)
     - [Key Endpoints](#key-endpoints)
@@ -40,7 +36,7 @@ A public-facing ASP.NET Core Web API microservice in the Datapumppu ecosystem th
 
 ## About
 
-The **datapumppu-webapi** is a .NET 6.0 ASP.NET Core microservice that acts as the public API gateway for the Datapumppu ecosystem. It does not own a database; instead, it proxies all data requests to an external Storage API and caches responses in memory with configurable time-to-live durations.
+The **datapumppu-webapi** is a .NET 10.0 ASP.NET Core microservice that acts as the public API gateway for the Datapumppu ecosystem. It does not own a database; instead, it proxies all data requests to an external Storage API and caches responses in memory with configurable time-to-live durations.
 
 This service handles:
 - **Meeting data retrieval** -- Fetches and caches meeting, voting, statement, seat, and reservation data from the Storage API
@@ -135,110 +131,34 @@ sequenceDiagram
 
 Before you begin, ensure you have the following installed:
 
-- **[.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)** -- Required to build and run the application
+- **[.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** -- Required to build and run the application locally
 - **[Docker](https://www.docker.com/)** -- Required for containerized builds (includes Node.js 16 for web component compilation)
 - **[Node.js 16](https://nodejs.org/)** -- Only needed if building web components outside Docker
 
 **Recommended IDEs:**
-- Visual Studio 2022
+- Visual Studio 2022 / 2025
 - Visual Studio Code with the C# extension
 
 ## Getting Started
 
-### Installation
+This application is designed to be run locally in Docker using **Docker Compose**, which works completely out-of-the-box without the need for manual configuration changes. It automatically builds the .NET 10 WebAPI backend and compiles/embeds the React frontend components.
 
-1. **Clone the repository:**
+### Running Locally with Docker Compose
+
+1. Make sure you have Docker running on your host machine.
+2. Start the services:
    ```bash
-   git clone <repository-url>
-   cd datapumppu-webapi
+   docker-compose up --build
    ```
+3. The WebAPI backend will compile, start, and begin listening on `http://localhost:8081`.
 
-2. **Restore dependencies:**
-   ```bash
-   dotnet restore WebAPI.sln
-   ```
+### Accessing the Frontend Web Component
 
-### Configuration
+A dedicated local test page is provided to let you test and view the embedded frontend React component connected to your running Dockerized backend:
 
-Configure the application using environment variables or `appsettings.Development.json`:
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `STORAGE_URL` | Base URL of the external Storage API | `http://localhost:5154` |
-| `API_URL` | Public base URL of this WebAPI service | `http://localhost:5212` |
-| `JWT_KEY` | Symmetric key for JWT token signing (HS256) | `<JWT_KEY>` |
-| `JWT_ISSUER` | JWT token issuer claim | `http://localhost:5212/` |
-| `JWT_AUDIENCE` | JWT token audience claim | `http://localhost:5212/` |
-| `ALLOWED_HOSTS` | Comma-separated list of allowed CORS origins | `http://localhost:3000` |
-| `KAFKA_BOOTSTRAP_SERVER` | Kafka broker address | `localhost:9092` |
-| `KAFKA_CONSUMER_TOPIC` | Kafka topic for live meeting events | `webapi-topic` |
-| `KAFKA_USER_USERNAME` | Kafka SASL username (production only) | *(set in secrets)* |
-| `KAFKA_USER_PASSWORD` | Kafka SASL password (production only) | *(set in secrets)* |
-| `SSL_CERT_PEM` | PEM certificate for Kafka SSL (production only) | *(set in secrets)* |
-
-**Example `appsettings.Development.json`:**
-```json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "API_URL": "http://localhost:5212",
-  "STORAGE_URL": "http://localhost:5154",
-  "JWT_KEY": "<JWT_KEY>",
-  "JWT_ISSUER": "http://localhost:5212/",
-  "JWT_AUDIENCE": "http://localhost:5212/",
-  "KAFKA_BOOTSTRAP_SERVER": "localhost:9092",
-  "KAFKA_CONSUMER_TOPIC": "webapi-topic"
-}
-```
-
-### Running Locally
-
-1. **Ensure the Storage API is running** at the URL specified in `STORAGE_URL`.
-
-2. **Build and run the application:**
-   ```bash
-   dotnet build WebAPI.sln
-   dotnet run --project WebAPI
-   ```
-
-The application will start on `http://localhost:8080` by default (configurable via `ASPNETCORE_URLS`).
-
-**Verify the application is running:**
-```bash
-curl http://localhost:8080/healthz
-# Expected: Healthy
-```
-
-> **Note:** The web component (`meeting.js`) is only available when built via Docker or by running `npm install && npm run build` in `WebAPI/WebComponents/Meeting/` and copying the output to `WebAPI/ScriptFiles/components/`.
-
-### Docker Setup
-
-**Build Docker image:**
-```bash
-docker build -t datapumppu-webapi:latest .
-```
-
-**Run container:**
-```bash
-docker run -d \
-  --name datapumppu-webapi \
-  -p 8080:8080 \
-  -e STORAGE_URL="http://host.docker.internal:5154" \
-  -e API_URL="http://localhost:8080" \
-  -e JWT_KEY="your-secret-key" \
-  -e JWT_ISSUER="http://localhost:8080/" \
-  -e JWT_AUDIENCE="http://localhost:8080/" \
-  -e ALLOWED_HOSTS="http://localhost:3000" \
-  -e KAFKA_BOOTSTRAP_SERVER="host.docker.internal:9092" \
-  -e KAFKA_CONSUMER_TOPIC="webapi-topic" \
-  datapumppu-webapi:latest
-```
-
-> **Tip:** Use `host.docker.internal` to access services running on the host machine from within the Docker container.
+1. Locate the test file: `WebAPI/WebComponents/Meeting/test-page/test-page-docker.html`.
+2. Open this HTML file **directly in your browser** as a local file (e.g., by double-clicking it in file explorer).
+3. The page will dynamically request and render the fully compiled, templated React frontend module directly from the Dockerized WebAPI instance running at `http://localhost:8081`.
 
 ## API Documentation
 
@@ -460,11 +380,12 @@ Documentation is automatically generated when building with `<GenerateDocumentat
 
 ### Testing
 
-The project does not currently include a unit test project. To build and verify the solution:
+The project includes a robust xUnit unit test suite (`WebAPITests`) to verify core caching, proxy client, and controller logic (such as `MeetingDataProvider` caching behavior and `WebComponentsController` parameter templating).
+
+To run the unit tests:
 
 ```bash
-# Build the solution
-dotnet build WebAPI.sln
+dotnet test
 ```
 
 ---

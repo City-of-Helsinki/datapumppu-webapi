@@ -38,10 +38,10 @@ namespace WebAPI.LiveMeetings
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Task.Run(() => MessageHandler(stoppingToken), stoppingToken);
+            return MessageHandler(stoppingToken);
         }
 
-        private async void MessageHandler(CancellationToken stoppingToken)
+        private async Task MessageHandler(CancellationToken stoppingToken)
         {
             const int WaitTimeMS = 2000;
             var topic = _configuration["KAFKA_CONSUMER_TOPIC"];
