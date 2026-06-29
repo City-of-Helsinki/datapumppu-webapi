@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Editor, EditorState, RichUtils } from 'draft-js';
-import 'draft-js/dist/Draft.css';
-import parse from 'html-react-parser';
-import { stateFromHTML } from 'draft-js-import-html'
-import { stateToHTML } from 'draft-js-export-html'
-import { editorStyle, editableStyle } from './styles'
+import { useState } from "react";
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import { editableStyle } from './styles'
+
+const TOOLBAR = [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['clean']
+]
 
 export default function EditableItem(props) {
     const { agendaItem, editableHTML, meetingId, language, onUpdated } = props
-    const [userInput, setUserInput] = React.useState(false)
-    const [editorState, setEditorState] = useState(EditorState.createEmpty())
-
-    useEffect(() => {
-        setEditorState(EditorState.createWithContent(stateFromHTML(editableHTML)))
-    }, [])
-
-    const onChange = editorState => {
-        setEditorState(editorState)
-    };
-
-    const handleKeyCommand = command => {
-        const newState = RichUtils.handleKeyCommand(
-            editorState,
-            command
-        );
-        if (newState) {
-            onChange(newState);
-            return "handled";
-        }
-        return "not-handled";
-    };
+    const [userInput, setUserInput] = useState(false)
+    const [html, setHtml] = useState(editableHTML)
 
     const repackHtml = (item) => {
         var div = document.createElement('div')
@@ -48,8 +31,7 @@ export default function EditableItem(props) {
     }
 
     const submitChanges = () => {
-        const editedPart = stateToHTML(editorState.getCurrentContent())
-        const editedHtml = repackHtml(editedPart)
+        const editedHtml = repackHtml(html)
         const agendaPoint = agendaItem.agendaPoint
         const request = {
             method: 'POST',
@@ -59,7 +41,7 @@ export default function EditableItem(props) {
             },
             body: JSON.stringify({
                 html: editedHtml,
-                decision: editedPart,
+                decision: html,
                 meetingId,
                 agendaPoint,
                 language
@@ -72,20 +54,22 @@ export default function EditableItem(props) {
 
     return (
         <div>
-            <div  tabIndex="0" onFocus={() => setUserInput(true)} >
-                {
-                    userInput ?
-                        <div style={editorStyle} onBlur={() => submitChanges()}>
-                            <Editor editorState={editorState} onChange={onChange} handleKeyCommand={handleKeyCommand} />
-                        </div> :
-                        <div style={editableStyle}>
-                            {parse(stateToHTML(editorState.getCurrentContent()))}
-                        </div>
+            <div tabIndex="0" onFocus={() => setUserInput(true)}>
+                {userInput ?
+                    <ReactQuill
+                        value={html}
+                        onChange={setHtml}
+                        onBlur={submitChanges}
+                        modules={{ toolbar: TOOLBAR }}
+                        theme="snow"
+                    />
+                    :
+                    <div
+                        style={editableStyle}
+                        dangerouslySetInnerHTML={{ __html: html }}
+                    />
                 }
             </div>
         </div>
     );
 }
-
-
-
