@@ -126,32 +126,34 @@ export default function Voting(props) {
 
     useEffect(() => {
         const tempSeatMap = []
-        seats.forEach(seat => {
-            let seatId = Number(seat.seatId);
-            if (seatId > 100) {
-                return
-            }
-
-            let name = seat.person;
-            if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
-                name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
-            } else {
-                name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
-            }
-
-            const vote = voting?.votes?.find(vote => vote.name === seat.person)
-            const voteType = vote ? vote.voteType : 3
-            if (vote !== undefined) {
-                vote.name = name
-            }
-
-            if (!isNaN(seatId)) {
-                tempSeatMap[seatId] = {
-                    name,
-                    voteType,
+        if (seats) {
+            seats.forEach(seat => {
+                let seatId = Number(seat.seatId);
+                if (seatId > 100) {
+                    return
                 }
-            }
-        })
+
+                let name = seat.person;
+                if ("fi" === "#--LANGUAGE--#".toLowerCase()) {
+                    name += seat.additionalInfoFI?.length > 0 ? ` (${seat.additionalInfoFI})` : ""
+                } else {
+                    name += seat.additionalInfoSV?.length > 0 ? ` (${seat.additionalInfoSV})` : ""
+                }
+
+                const vote = voting?.votes?.find(vote => vote.name === seat.person)
+                const voteType = vote ? vote.voteType : 3
+                if (vote !== undefined) {
+                    vote.name = name
+                }
+
+                if (!isNaN(seatId)) {
+                    tempSeatMap[seatId] = {
+                        name,
+                        voteType,
+                    }
+                }
+            })
+        }
         setSeatMap(tempSeatMap)
     }, [seats, voting])
 

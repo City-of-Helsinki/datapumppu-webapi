@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.DTOs;
 using WebAPI.Controllers.Filters;
 using WebAPI.Data;
@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="meetingId">The meeting identifier.</param>
         /// <param name="caseNumber">The case number within the meeting.</param>
-        /// <returns>The seating arrangement data for the specified case.</returns>
+        /// <returns>The list of seating arrangement layout DTOs for the specified case.</returns>
         [HttpGet]
         [Route("{meetingId}/{caseNumber}")]
         public async Task<IActionResult> GetSeats(string meetingId, string caseNumber)

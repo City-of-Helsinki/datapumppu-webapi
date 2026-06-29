@@ -22,7 +22,7 @@ namespace WebAPI.StorageClient
         /// <summary>
         /// Requests seating information from the storage API.
         /// </summary>
-        Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
+        Task<List<WebApiSeatsDTO>> RequestSeats(string meetingId, string caseNumber);
 
         /// <summary>
         /// Requests voting records from the storage API.
@@ -184,14 +184,14 @@ namespace WebAPI.StorageClient
             return await response.Content.ReadFromJsonAsync<List<StorageAgendaSubItemDTO>>() ?? new List<StorageAgendaSubItemDTO>();
         }
 
-        public async Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber)
+        public async Task<List<WebApiSeatsDTO>> RequestSeats(string meetingId, string caseNumber)
         {
-            _logger.LogInformation("Executing RequestSeats()");
+            _logger.LogInformation("Executing RequestSeats() for {0}, {1}", meetingId, caseNumber);
             using var connection = _storageConnection.CreateConnection();
             var response = await connection.GetAsync($"api/seats/{meetingId}/{caseNumber}");
-            var seats = await response.Content.ReadFromJsonAsync<SeatDTO[]>();
+            var seats = await response.Content.ReadFromJsonAsync<WebApiSeatsDTO[]>();
 
-            return seats?.ToList() ?? new List<SeatDTO>();
+            return seats?.ToList() ?? new List<WebApiSeatsDTO>();
         }
 
         public async Task<List<StorageVotingDTO>?> RequestVote(string meetingId, string caseNumber)

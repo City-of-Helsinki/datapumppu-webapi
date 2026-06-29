@@ -350,7 +350,7 @@ export default function AgendaItem(props) {
                     </div>
 
                     {showSeatMap && <SeatMap
-                        seats={seats}
+                        seats={seats?.find(s => s.votingNumber === 0)?.seats || seats?.[0]?.seats || []}
                         meetingId={meetingId}
                         caseNumber={agenda.agendaPoint}
                         updated={updated}
@@ -363,7 +363,7 @@ export default function AgendaItem(props) {
                         voting.map((vote, index) => (
                             <Voting
                                 key={index}
-                                seats={seats}
+                                seats={seats?.[index]?.seats || seats?.[0]?.seats || []}
                                 voting={vote}
                                 meetingId={meetingId}
                                 caseNumber={agenda.agendaPoint}
