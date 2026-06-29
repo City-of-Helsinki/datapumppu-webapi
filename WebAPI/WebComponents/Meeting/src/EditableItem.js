@@ -1,18 +1,13 @@
-import { useState } from "react";
-import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
+import { useLayoutEffect, useRef } from "react";
 import { editableStyle } from './styles'
-
-const TOOLBAR = [
-    ['bold', 'italic', 'underline'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['clean']
-]
 
 export default function EditableItem(props) {
     const { agendaItem, editableHTML, meetingId, language, onUpdated } = props
-    const [userInput, setUserInput] = useState(false)
-    const [html, setHtml] = useState(editableHTML)
+    const editorRef = useRef(null)
+
+    useLayoutEffect(() => {
+        editorRef.current.innerHTML = editableHTML
+    }, [editableHTML])
 
     const repackHtml = (item) => {
         var div = document.createElement('div')
@@ -30,10 +25,11 @@ export default function EditableItem(props) {
         return newDiv.innerHTML
     }
 
-    const submitChanges = () => {
-        const editedHtml = repackHtml(html)
+    const handleBlur = () => {
+        const edited = editorRef.current.innerHTML
+        const editedHtml = repackHtml(edited)
         const agendaPoint = agendaItem.agendaPoint
-        const request = {
+        fetch('#--API_URL--#/editor/edit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,35 +37,23 @@ export default function EditableItem(props) {
             },
             body: JSON.stringify({
                 html: editedHtml,
-                decision: html,
+                decision: edited,
                 meetingId,
                 agendaPoint,
                 language
             })
-        }
-        fetch('#--API_URL--#/editor/edit', request)
+        })
         onUpdated(editedHtml)
-        setUserInput(false)
     }
 
     return (
-        <div>
-            <div tabIndex="0" onFocus={() => setUserInput(true)}>
-                {userInput ?
-                    <ReactQuill
-                        value={html}
-                        onChange={setHtml}
-                        onBlur={submitChanges}
-                        modules={{ toolbar: TOOLBAR }}
-                        theme="snow"
-                    />
-                    :
-                    <div
-                        style={editableStyle}
-                        dangerouslySetInnerHTML={{ __html: html }}
-                    />
-                }
-            </div>
-        </div>
-    );
+        <div
+            ref={editorRef}
+            contentEditable
+            suppressContentEditableWarning
+            tabIndex="0"
+            style={editableStyle}
+            onBlur={handleBlur}
+        />
+    )
 }
