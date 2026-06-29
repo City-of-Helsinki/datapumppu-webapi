@@ -20,7 +20,7 @@ RUN dotnet build "./WebAPI/WebAPI.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "./WebAPI/WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM node:16 AS node-builder
+FROM node:22 AS node-builder
 
 WORKDIR /components/meeting
 COPY ./WebAPI/WebComponents/Meeting /components/meeting
