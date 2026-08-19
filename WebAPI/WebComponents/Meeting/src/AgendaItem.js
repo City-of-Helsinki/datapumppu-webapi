@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import DOMPurify from 'dompurify'
 import { useTranslation } from 'react-i18next'
 import SeatMap from './SeatMap'
 import Voting from './Voting'
@@ -305,12 +306,12 @@ export default function AgendaItem(props) {
                                     meetingId={meetingId}
                                     onUpdated={onHtmlUpdated}
                                     language={"#--LANGUAGE--#"} />
-                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
+                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(readonlyHTML) }} />}
                             </>
                             :
                             <>
-                                <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
-                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
+                                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(editableHTML) }} />
+                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(readonlyHTML) }} />}
                             </>
                         )}
                     </div>

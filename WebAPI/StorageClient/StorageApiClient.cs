@@ -105,7 +105,7 @@ namespace WebAPI.StorageClient
         {
             _logger.LogInformation("Executing CheckLogin()");
             using var connection = _storageConnection.CreateConnection();
-            var response = await connection.PostAsJsonAsync("api/auth/validate", new { username, password });
+            var response = await connection.PostAsJsonAsync("api/auth/login", new { username, password });
             return response.IsSuccessStatusCode;
         }
 

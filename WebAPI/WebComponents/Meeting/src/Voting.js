@@ -7,11 +7,27 @@ import html2canvas from "html2canvas" // DO NOT REMOVE THIS
 import { agendaButtonStyle, headingStyle, linkStyle } from './styles';
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
+/* 
+    SEAT MAP RESPONSIVENESS
+    
+    min-width of 815px looks arbitrary, but hear me out:
+
+    Each row has 10 seats
+    Each seat width is defined to be 8% of the container width (SeatRow.js > seatStyle)
+
+    We want each seat to be about ~65px wide (based on testing) so that the names are readable
+
+    Therefore the container size is: 65px / 8% = 65px / 0.08 = 812px = ~815px
+
+    So the min-width for the container needs to be about 815px,
+    because that makes the 8% width seats about 65px wide -> names should display fine
+*/
 const chamberStyle = {
     fontSize: "65%",
     height: "50em",
     pageBreakInside: "avoid",
     backgroundColor: "#dedfe1",
+    minWidth: "815px",
     margin: 0,
     padding: 0
 }
@@ -30,7 +46,8 @@ const voteListContainerStyle = {
 
 const miniChamberStyle = {
     height: "200px",
-    width: "25%",
+    flex: "1 0 200px",
+    maxWidth: "350px",
     pageBreakInside: "avoid",
     backgroundColor: "#dedfe1",
     margin: 0,
@@ -40,12 +57,16 @@ const miniChamberStyle = {
 
 const miniChamberPdfStyle = {
     ...miniChamberStyle,
+    flex: "none",
+    maxWidth: undefined,
+    width: "25%",
     backgroundColor: "white",
 }
 
 const votingInfo = {
     display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between",
     width: "90%"
 }
@@ -289,6 +310,7 @@ export default function Voting(props) {
                 </div>
                 {showVotes &&
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ overflowX: "auto" }}>
                         <div style={pdfStyle ? chamberPdfStyle : chamberStyle}>
                             <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} seats={seatMap}></SeatRow>
                             <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={0} seats={seatMap}></SeatRow>
@@ -300,6 +322,7 @@ export default function Voting(props) {
                             <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={6} seats={seatMap}></SeatRow>
                             <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={7} seats={seatMap}></SeatRow>
                             <SeatRow pdfStyle={pdfStyle} showName={true} showColors={showColors} rowNr={8} seats={seatMap}></SeatRow>
+                        </div>
                         </div>
                         <p>
                             <a href='#' onClick={toggleColors} data-html2canvas-ignore={"true"} style={linkStyle}>
