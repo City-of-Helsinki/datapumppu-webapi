@@ -57,7 +57,7 @@ namespace WebAPITests
                "SendAsync",
                Times.Exactly(1),
                ItExpr.Is<HttpRequestMessage>(req =>
-                  req.Method == HttpMethod.Post && req.RequestUri.ToString() == "http://test.com/api/auth/validate"
+                  req.Method == HttpMethod.Post && req.RequestUri.ToString() == "http://test.com/api/auth/login"
                ),
                ItExpr.IsAny<CancellationToken>()
             );
