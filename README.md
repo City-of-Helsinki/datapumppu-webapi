@@ -248,7 +248,7 @@ The application exposes health check endpoints for Kubernetes probes:
 readinessProbe:
   httpGet:
     path: /api/health
-    port: 80
+    port: 8080
   periodSeconds: 3
   timeoutSeconds: 1
 ```
