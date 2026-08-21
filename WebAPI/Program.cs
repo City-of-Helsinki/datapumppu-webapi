@@ -46,6 +46,7 @@ namespace WebAPI
 
             builder.Services.AddScoped<IStorageApiClient, StorageApiClient>();
             builder.Services.AddScoped<IStorageConnection, StorageConnection>();
+            builder.Services.AddHttpClient();
 
             builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
 

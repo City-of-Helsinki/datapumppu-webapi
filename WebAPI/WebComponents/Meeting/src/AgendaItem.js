@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import DOMPurify from 'dompurify'
 import { useTranslation } from 'react-i18next'
 import SeatMap from './SeatMap'
 import Voting from './Voting'
@@ -245,10 +246,12 @@ export default function AgendaItem(props) {
     const decisionText = t('Decision')
     const openText = t('Open')
 
-    var motionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
-    var decisionPath = `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
+    const isLocalDev = "#--API_URL--#".includes("localhost") || "#--API_URL--#".includes("127.0.0.1") || "#--API_URL--#".includes("#--API_URL--#");
 
-    if (parseInt("#--MEETING_YEAR--#") < 2018 || (parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4)) {
+    var motionPath = isLocalDev ? "#" : `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${agenda?.caseIDLabel?.replace(" ", "-")}#`
+    var decisionPath = isLocalDev ? "#" : `https://paatokset.hel.fi/#--LANGUAGE--#/asia/${decision?.caseID}?paatos=${decision?.nativeId.replace("/[{}]/g", "")}`
+
+    if (!isLocalDev && (parseInt("#--MEETING_YEAR--#") < 2018 || (parseInt("#--MEETING_YEAR--#") == 2018 && parseInt("#--MEETING_SEQUENCE_NUM--#") < 4))) {
         motionPath = "https://dev.hel.fi/paatokset/asia/" + agenda?.caseIDLabel?.replace(" ", "-").toLowerCase() + "/kvsto-#--MEETING_YEAR--#-#--MEETING_SEQUENCE_NUM--#"
         decisionPath = "https://dev.hel.fi/paatokset/asia/" + decision?.caseID
     }
@@ -303,12 +306,12 @@ export default function AgendaItem(props) {
                                     meetingId={meetingId}
                                     onUpdated={onHtmlUpdated}
                                     language={"#--LANGUAGE--#"} />
-                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
+                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(readonlyHTML) }} />}
                             </>
                             :
                             <>
-                                <div dangerouslySetInnerHTML={{ __html: editableHTML }} />
-                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: readonlyHTML }} />}
+                                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(editableHTML) }} />
+                                {readonlyHTML && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(readonlyHTML) }} />}
                             </>
                         )}
                     </div>
@@ -348,7 +351,7 @@ export default function AgendaItem(props) {
                     </div>
 
                     {showSeatMap && <SeatMap
-                        seats={seats}
+                        seats={seats?.find(s => s.votingNumber === 0)?.seats || seats?.[0]?.seats || []}
                         meetingId={meetingId}
                         caseNumber={agenda.agendaPoint}
                         updated={updated}
@@ -361,7 +364,7 @@ export default function AgendaItem(props) {
                         voting.map((vote, index) => (
                             <Voting
                                 key={index}
-                                seats={seats}
+                                seats={seats?.[index]?.seats || seats?.[0]?.seats || []}
                                 voting={vote}
                                 meetingId={meetingId}
                                 caseNumber={agenda.agendaPoint}
