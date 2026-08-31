@@ -68,7 +68,8 @@ const votingInfo = {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    width: "90%"
+    width: "90%",
+    gap: "30px"
 }
 
 const voteLegend = {
