@@ -1,5 +1,8 @@
 ﻿namespace WebAPI.LiveMeetings
 {
+    /// <summary>
+    /// Data transfer object representing a storage event received from Kafka.
+    /// </summary>
     public class StorageEventDTO
     {
         public string MeetingId { get; set; } = string.Empty;

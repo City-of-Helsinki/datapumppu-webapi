@@ -5,12 +5,23 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data.Statistics
 {
+    /// <summary>
+    /// Provides cached access to per-issue statement statistics from the storage API.
+    /// </summary>
     public interface IStatementStatisticsDataProvider
     {
+        /// <summary>
+        /// Retrieves per-issue statement statistics for a given year.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A list of statement statistics, or null if not found.</returns>
         Task<List<StorageStatementStatisticsDTO>?> GetStatements(int year);
     }
 
-
+    /// <summary>
+    /// Caching data provider for per-issue statement statistics. Caches results for 1 day.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class StatementStatisticsDataProvider : IStatementStatisticsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

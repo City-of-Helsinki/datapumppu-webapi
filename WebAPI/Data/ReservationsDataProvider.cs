@@ -4,14 +4,29 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to reservation data from the storage API.
+    /// </summary>
     public interface IReservationsDataProvider
     {
+        /// <summary>
+        /// Retrieves reservations for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number.</param>
+        /// <returns>A list of reservations, or null if not found.</returns>
         Task<List<ReservationDTO>?> GetReservations(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Clears all cached reservation data.
+        /// </summary>
         Task ResetCache();
     }
 
-
+    /// <summary>
+    /// Caching data provider for reservation data. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class ReservationsDataProvider : IReservationsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

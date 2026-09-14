@@ -26,6 +26,8 @@
 
         public int AbsentCount { get; set; }
 
+        public int VotingNumber { get; set; }
+
         public StorageVoteDTO[] Votes { get; set; } = new StorageVoteDTO[0];
     }
 }

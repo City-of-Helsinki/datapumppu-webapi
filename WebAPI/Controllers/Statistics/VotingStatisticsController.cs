@@ -5,6 +5,9 @@ using WebAPI.Data.Statistics;
 
 namespace WebAPI.Controllers.Statistics
 {
+    /// <summary>
+    /// Controller for downloading voting statistics as CSV.
+    /// </summary>
     [ApiController]
     [Route("statistics/votings")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -13,6 +16,11 @@ namespace WebAPI.Controllers.Statistics
         private readonly ILogger<VotingStatisticsController> _logger;
         private readonly IVotingStatisticsDataProvider _statisticsDataProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VotingStatisticsController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="statisticsDataProvider">The voting statistics data provider.</param>
         public VotingStatisticsController(
             ILogger<VotingStatisticsController> logger,
             IVotingStatisticsDataProvider statisticsDataProvider)
@@ -21,6 +29,11 @@ namespace WebAPI.Controllers.Statistics
             _statisticsDataProvider = statisticsDataProvider;
         }
 
+        /// <summary>
+        /// Downloads voting statistics for a given year as a CSV file.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A CSV file download containing voting statistics.</returns>
         [HttpGet]
         [Route("{year}")]
         public async Task<IActionResult> GetStatistics(int year)
