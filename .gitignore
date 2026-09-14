@@ -1,7 +1,7 @@
+[Bb]in/
+[Oo]bj/
 .vscode/
 .vs/
-WebAPI/obj/
-WebAPI/bin/
 WebAPI/WebComponents/*/dist/
 WebAPI/WebComponents/*/node_modules/
 WebAPI/ScriptFiles/components/*.js

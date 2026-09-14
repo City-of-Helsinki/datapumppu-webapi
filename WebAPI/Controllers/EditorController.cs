@@ -11,6 +11,10 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for editor authentication and content editing operations.
+    /// Provides JWT-based login and authorized endpoints for agenda point and video sync updates.
+    /// </summary>
     [ApiController]
     [Route("editor")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -20,6 +24,12 @@ namespace WebAPI.Controllers
         private readonly ILogger<EditorController> _logger;
         private readonly IStorageApiClient _storageApiClient;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorController"/> class.
+        /// </summary>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="storageApiClient">The storage API client.</param>
         public EditorController(IConfiguration configuration,
             ILogger<EditorController> logger,
             IStorageApiClient storageApiClient)
@@ -29,6 +39,11 @@ namespace WebAPI.Controllers
             _storageApiClient = storageApiClient;
         }
 
+        /// <summary>
+        /// Authenticates an editor user and returns a JWT token.
+        /// </summary>
+        /// <param name="userLogin">The login credentials.</param>
+        /// <returns>A JWT token on success, or 403 Forbidden on failure.</returns>
         [AllowAnonymous]
         [Route("login")]
         [HttpPost]
@@ -50,6 +65,11 @@ namespace WebAPI.Controllers
             return Forbid();
         }
 
+        /// <summary>
+        /// Updates an agenda point. Requires authorization.
+        /// </summary>
+        /// <param name="editItem">The agenda point edit data.</param>
+        /// <returns>200 OK on success, or 403 Forbidden on failure.</returns>
         [HttpPost("edit")]
         [Authorize]
         public async Task<IActionResult> UpdateAgendaPoint([FromBody] EditAgendaPointDTO editItem)
@@ -61,6 +81,11 @@ namespace WebAPI.Controllers
             return await _storageApiClient.UpdateAgendaPoint(editItem) ? Ok() : StatusCode(StatusCodes.Status403Forbidden);
         }
 
+        /// <summary>
+        /// Updates the video synchronization position. Requires authorization.
+        /// </summary>
+        /// <param name="videoSync">The video sync data.</param>
+        /// <returns>200 OK on success.</returns>
         [HttpPost("videosync")]
         [Authorize]
         public async Task<IActionResult> UpdateVideoSync([FromBody] VideoSyncDTO videoSync)
@@ -70,6 +95,10 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Logs out the current editor user. Requires authorization.
+        /// </summary>
+        /// <returns>200 OK.</returns>
         [HttpGet]
         [Route("logout")]
         [Authorize]

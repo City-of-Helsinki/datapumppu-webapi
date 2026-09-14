@@ -5,16 +5,40 @@ using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to person-specific statement data from the storage API.
+    /// </summary>
     public interface IPersonStatementsProvider
     {
+        /// <summary>
+        /// Retrieves statements for a person by name, year, and language.
+        /// </summary>
+        /// <param name="personName">The person's name.</param>
+        /// <param name="year">The year to query.</param>
+        /// <param name="lang">The language code (en, fi, or sv).</param>
+        /// <returns>A list of statements for the specified person.</returns>
         Task<List<StatementDTO>> GetStatements(string personName, int year, string lang);
 
+        /// <summary>
+        /// Retrieves statements by person name(s) and/or date range.
+        /// </summary>
+        /// <param name="names">Comma-separated person names.</param>
+        /// <param name="startDate">Start date filter.</param>
+        /// <param name="endDate">End date filter.</param>
+        /// <param name="lang">The language code (en, fi, or sv).</param>
+        /// <returns>A list of matching statements.</returns>
         Task<List<StatementDTO>> GetStatementsLookup(string? names, string? startDate, string? endDate, string lang);
 
+        /// <summary>
+        /// Clears all cached person statement data.
+        /// </summary>
         Task ResetCache();
     }
 
-
+    /// <summary>
+    /// Caching data provider for person statements. Caches results for 1 hour.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class PersonStatementsProvider : IPersonStatementsProvider
     {
         private readonly IServiceProvider _serviceProvider;

@@ -4,39 +4,91 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.StorageClient
 {
+    /// <summary>
+    /// Client interface for all operations against the external storage API.
+    /// </summary>
     public interface IStorageApiClient
     {
+        /// <summary>
+        /// Requests meeting data from the storage API.
+        /// </summary>
         Task<StorageMeetingDTO?> RequestMeeting(string year, string sequenceNumber, string language);
 
+        /// <summary>
+        /// Requests agenda point sub-items from the storage API.
+        /// </summary>
         Task<List<StorageAgendaSubItemDTO>> RequestAgendaPointSubItemsg(string meetingId, int agendaPoint);
 
-        Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber);
+        /// <summary>
+        /// Requests seating information from the storage API.
+        /// </summary>
+        Task<List<WebApiSeatsDTO>> RequestSeats(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Requests voting records from the storage API.
+        /// </summary>
         Task<List<StorageVotingDTO>?> RequestVote(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Retrieves statements for a specific meeting case from the storage API.
+        /// </summary>
         Task<List<StatementDTO>> GetStatements(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Retrieves statements by person name and year from the storage API.
+        /// </summary>
         Task<List<StatementDTO>> GetStatementsByPerson(string name, int year, string lang);
 
+        /// <summary>
+        /// Retrieves statements by person name(s) and/or date range from the storage API.
+        /// </summary>
         Task<List<StatementDTO>> GetStatementsByPersonOrDate(string? name, string? startDate, string? endDate, string lang);
 
+        /// <summary>
+        /// Retrieves reservations for a meeting case from the storage API.
+        /// </summary>
         Task<List<ReservationDTO>> GetReservations(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Validates editor credentials against the storage API.
+        /// </summary>
         Task<bool> CheckLogin(string username, string password);
 
+        /// <summary>
+        /// Updates an agenda point via the storage API.
+        /// </summary>
         Task<bool> UpdateAgendaPoint(EditAgendaPointDTO dto);
 
+        /// <summary>
+        /// Requests statement statistics for a year from the storage API.
+        /// </summary>
         Task<List<StorageStatementStatisticsDTO>?> RequestStatementStatistics(int year);
 
+        /// <summary>
+        /// Requests per-person statement statistics for a year from the storage API.
+        /// </summary>
         Task<List<StoragePersonStatementStatisticsDTO>?> RequestPersonStatementStatistics(int year);
 
+        /// <summary>
+        /// Requests voting statistics for a year from the storage API.
+        /// </summary>
         Task<List<StorageVotingStatisticsDTO>?> RequestVotingStatistics(int year);
 
+        /// <summary>
+        /// Requests participant attendance statistics for a year from the storage API.
+        /// </summary>
         Task<List<ParticipationsPersonDTO>?> RequestParticipantStatistics(int year);
 
+        /// <summary>
+        /// Updates the video synchronization position via the storage API.
+        /// </summary>
         Task<bool> UpdateVideoSync(VideoSyncDTO videoSyncDTO);
     }
 
+    /// <summary>
+    /// HTTP client implementation for communicating with the external storage service.
+    /// All data in the WebAPI is sourced through this client.
+    /// </summary>
     public class StorageApiClient : IStorageApiClient
     {
         private readonly IStorageConnection _storageConnection;
@@ -53,7 +105,7 @@ namespace WebAPI.StorageClient
         {
             _logger.LogInformation("Executing CheckLogin()");
             using var connection = _storageConnection.CreateConnection();
-            var response = await connection.GetAsync($"api/auth/validate?username={username}&password={password}");
+            var response = await connection.PostAsJsonAsync("api/auth/login", new { username, password });
             return response.IsSuccessStatusCode;
         }
 
@@ -132,14 +184,14 @@ namespace WebAPI.StorageClient
             return await response.Content.ReadFromJsonAsync<List<StorageAgendaSubItemDTO>>() ?? new List<StorageAgendaSubItemDTO>();
         }
 
-        public async Task<List<SeatDTO>> RequestSeats(string meetingId, string caseNumber)
+        public async Task<List<WebApiSeatsDTO>> RequestSeats(string meetingId, string caseNumber)
         {
-            _logger.LogInformation("Executing RequestSeats()");
+            _logger.LogInformation("Executing RequestSeats() for {0}, {1}", meetingId, caseNumber);
             using var connection = _storageConnection.CreateConnection();
             var response = await connection.GetAsync($"api/seats/{meetingId}/{caseNumber}");
-            var seats = await response.Content.ReadFromJsonAsync<SeatDTO[]>();
+            var seats = await response.Content.ReadFromJsonAsync<WebApiSeatsDTO[]>();
 
-            return seats?.ToList() ?? new List<SeatDTO>();
+            return seats?.ToList() ?? new List<WebApiSeatsDTO>();
         }
 
         public async Task<List<StorageVotingDTO>?> RequestVote(string meetingId, string caseNumber)

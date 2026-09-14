@@ -1,17 +1,37 @@
-﻿using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Azure;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using WebAPI.Controllers.DTOs;
 using WebAPI.StorageClient;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to seating data from the storage API.
+    /// </summary>
     public interface ISeatsDataProvider
     {
-        Task<List<SeatDTO>?> GetSeats(string meetingId, string caseNumber);
+        /// <summary>
+        /// Retrieves seat assignments for a specific meeting case.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="caseNumber">The case number.</param>
+        /// <returns>A list of seat layout snapshots, or null if not found.</returns>
+        Task<List<WebApiSeatsDTO>?> GetSeats(string meetingId, string caseNumber);
 
+        /// <summary>
+        /// Clears all cached seating data.
+        /// </summary>
         Task ResetCache();
     }
 
+    /// <summary>
+    /// Caching data provider for seating data. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class SeatsDataProvider : ISeatsDataProvider
     {
         private readonly IServiceProvider _serviceProvider;
@@ -30,7 +50,7 @@ namespace WebAPI.Data
             _semaphore.Release();
         }
 
-        public async Task<List<SeatDTO>?> GetSeats(string meetingId, string caseNumber)
+        public async Task<List<WebApiSeatsDTO>?> GetSeats(string meetingId, string caseNumber)
         {
             var dataKey = $"{meetingId}-{caseNumber}";
             await _semaphore.WaitAsync();
@@ -71,7 +91,7 @@ namespace WebAPI.Data
         {
             public DateTime Timestamp { get; set; }
 
-            public List<SeatDTO>? Seats { get; set; }
+            public List<WebApiSeatsDTO>? Seats { get; set; }
         }
     }
 }

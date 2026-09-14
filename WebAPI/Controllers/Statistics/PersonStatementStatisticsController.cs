@@ -5,6 +5,9 @@ using WebAPI.Data.Statistics;
 
 namespace WebAPI.Controllers.Statistics
 {
+    /// <summary>
+    /// Controller for downloading per-person statement statistics as CSV.
+    /// </summary>
     [ApiController]
     [Route("statistics/personstatements")]
     [TypeFilter(typeof(WebAPIExceptionFilter))]
@@ -13,6 +16,11 @@ namespace WebAPI.Controllers.Statistics
         private readonly ILogger<PersonStatementStatisticsController> _logger;
         private readonly IPersonStatementStatisticsDataProvider _statementStatisticsDataProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PersonStatementStatisticsController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="statementStatisticsDataProvider">The person statement statistics data provider.</param>
         public PersonStatementStatisticsController(
             ILogger<PersonStatementStatisticsController> logger,
             IPersonStatementStatisticsDataProvider statementStatisticsDataProvider)
@@ -21,6 +29,11 @@ namespace WebAPI.Controllers.Statistics
             _statementStatisticsDataProvider = statementStatisticsDataProvider;
         }
 
+        /// <summary>
+        /// Downloads per-person statement statistics for a given year as a CSV file.
+        /// </summary>
+        /// <param name="year">The year to retrieve statistics for.</param>
+        /// <returns>A CSV file download containing person statement statistics.</returns>
         [HttpGet]
         [Route("{year}")]
         public async Task<IActionResult> GetStatementStatistics(int year)

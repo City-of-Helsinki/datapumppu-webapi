@@ -5,13 +5,29 @@ using WebAPI.StorageClient.DTOs;
 
 namespace WebAPI.Data
 {
+    /// <summary>
+    /// Provides cached access to meeting data from the storage API.
+    /// </summary>
     public interface IMeetingDataProvider
     {
+        /// <summary>
+        /// Retrieves a meeting by year, sequence number, and language.
+        /// </summary>
+        /// <param name="year">The meeting year.</param>
+        /// <param name="sequenceNumber">The sequence number within the year.</param>
+        /// <param name="language">The language code (en, fi, or sv).</param>
+        /// <returns>The meeting data, or null if not found.</returns>
         Task<StorageMeetingDTO?> GetMeeting(string year, string sequenceNumber, string language);
 
+        /// <summary>
+        /// Clears all cached meeting data.
+        /// </summary>
         Task ResetCache();
     }
 
+    /// <summary>
+    /// Cache entry for meeting data with a timestamp for expiration.
+    /// </summary>
     public class MeetingDataCache
     {
         public DateTime Timestamp { get; set; }
@@ -20,6 +36,10 @@ namespace WebAPI.Data
     }
 
 
+    /// <summary>
+    /// Caching data provider for meeting data. Caches results for 5 minutes.
+    /// Thread-safe via <see cref="SemaphoreSlim"/>.
+    /// </summary>
     public class MeetingDataProvider : IMeetingDataProvider
     {
         private readonly IServiceProvider _serviceProvider;

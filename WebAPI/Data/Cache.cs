@@ -1,10 +1,21 @@
 ﻿namespace WebAPI.Data
 {
+    /// <summary>
+    /// Coordinates cache reset operations across all data providers.
+    /// </summary>
     public interface ICache
     {
+        /// <summary>
+        /// Resets all caches. When <paramref name="liveEvent"/> is true, meeting data cache is preserved
+        /// since meeting metadata does not change during live events.
+        /// </summary>
+        /// <param name="liveEvent">Whether the reset is triggered by a live meeting event.</param>
         Task ResetCache(bool liveEvent);
     }
 
+    /// <summary>
+    /// Unified cache manager that resets all registered data provider caches.
+    /// </summary>
     public class Cache : ICache
     {
         private readonly IStatementsDataProvider _statementsDataProvider;

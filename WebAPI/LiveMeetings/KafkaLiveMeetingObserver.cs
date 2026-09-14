@@ -5,6 +5,12 @@ using WebAPI.Data;
 
 namespace WebAPI.LiveMeetings
 {
+    /// <summary>
+    /// Background service that consumes Kafka messages for live meeting events.
+    /// On receiving an event, it resets the data cache and broadcasts live updates
+    /// to connected SignalR clients via <see cref="LiveMeetingsHub"/>.
+    /// Uses a 2-second debounce window to batch rapid events for the same meeting case.
+    /// </summary>
     public class KafkaLiveMeetingObserver : BackgroundService
     {
         private readonly IHubContext<LiveMeetingsHub> _hub;
@@ -32,10 +38,10 @@ namespace WebAPI.LiveMeetings
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Task.Run(() => MessageHandler(stoppingToken), stoppingToken);
+            return MessageHandler(stoppingToken);
         }
 
-        private async void MessageHandler(CancellationToken stoppingToken)
+        private async Task MessageHandler(CancellationToken stoppingToken)
         {
             const int WaitTimeMS = 2000;
             var topic = _configuration["KAFKA_CONSUMER_TOPIC"];
